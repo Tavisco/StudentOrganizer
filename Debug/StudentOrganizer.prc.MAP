@@ -1,0 +1,100 @@
+File:    1	"__RuntimeModule__"
+File:    2	"D:\Arquivos de programas\Metrowerks\CodeWarrior\Palm OS Support\CodeWarrior Libraries\Runtime\PalmOSRuntime_2i_A5.lib"
+File:    3	"CPlusLib68K.cp"
+File:    4	"Exception68K.cp"
+File:    5	"LongLong68K.c"
+File:    6	"MWRTTI.cp"
+File:    7	"NMWException.cp"
+File:    8	"NewMore.cp"
+File:    9	"New.cp"
+File:   10	"PalmOS_AbortExit.cpp"
+File:   11	"PalmOS_GlobalDestructors.c"
+File:   12	"PalmOS_setjmp.c"
+File:   13	"PalmOS_Startup.cpp"
+File:   14	"CWRuntime.c"
+File:   15	"D:\Arquivos de programas\Metrowerks\CodeWarrior\CW for Palm OS Support\MSL\MSL_C++\MSL_Palm_OS\Lib\68K\MSL_C++_PalmOS_2i_Dbg.lib"
+File:   16	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\ios.cpp"
+File:   17	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\iostream.cpp"
+File:   18	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\MSLstring.cpp"
+File:   19	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\mutex.cpp"
+File:   20	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\strstream.cpp"
+File:   21	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\complex.cpp"
+File:   22	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\float.c"
+File:   23	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\errno.c"
+File:   24	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\string.c"
+File:   25	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\qsort.c"
+File:   26	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\arith.c"
+File:   27	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\bsearch.c"
+File:   28	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\rand.c"
+File:   29	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\ctype.c"
+File:   30	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\locale.c"
+File:   31	"G:\Palm\CodeWarrior\Student Organizer\Rsc\StudentOrganizer_Rsc.rcp"
+File:   32	"G:\Palm\CodeWarrior\Student Organizer\Src\StudentOrganizer.c"
+
+Segment:   1    2518 bytes  "Segment 1"
+Code: 000004      12 bytes  "__DummyStartup__"               File: "__RuntimeModule__"
+Code: 000010      12 bytes  "__dthandler__4MTWKFv"           File: "NMWException.cp"
+Code: 00001c      12 bytes  "__duhandler__4MTWKFv"
+Code: 000028      16 bytes  "terminate__3stdFv"
+Code: 000038      24 bytes  "abort"                          File: "PalmOS_AbortExit.cpp"
+Code: 000050      42 bytes  "__destroy_global_chain"         File: "PalmOS_GlobalDestructors.c"
+Code: 00007a      14 bytes  "setjmp"                         File: "PalmOS_setjmp.c"
+Code: 000088      18 bytes  "longjmp"
+Code: 00009a     154 bytes  "__Relocate____4MTWKFPScPScUl"   File: "PalmOS_Startup.cpp"
+Code: 000134     314 bytes  "__Startup__"
+Code: 00026e       8 bytes  "__PreInit__"
+Code: 000276       8 bytes  "__InitCode__"
+Code: 00027e     132 bytes  "__SkipToXREFs____4MTWKFPSc"
+Code: 000302     128 bytes  "__PatchV10Devices____4MTWKFP14SysAppInfoType"
+Code: 000382     234 bytes  "__LoadAndRelocate____4MTWKFUcP7_opaque"
+Code: 00046c      40 bytes  "GetObjectPtr"                   File: "G:\Palm\CodeWarrior\Student Organizer\Src\StudentOrganizer.c"
+Code: 000494     124 bytes  "MainFormInit"
+Code: 000510     458 bytes  "MainFormDoCommand"
+Code: 0006da     130 bytes  "MainFormHandleEvent"
+Code: 00075c      74 bytes  "AppHandleEvent"
+Code: 0007a6      90 bytes  "AppEventLoop"
+Code: 000800      56 bytes  "AppStart"
+Code: 000838      38 bytes  "AppStop"
+Code: 00085e     296 bytes  "RomVersionCompatible"
+Code: 000986      80 bytes  "PilotMain"
+
+Data section below A5:    266 bytes
+Data section above A5:    168 bytes
+
+Uninitialized near data
+Data:     -4       4 bytes  "__CW_FEATURES_PTR"
+Data:     -8       4 bytes  "__global_destructor_chain"
+Data:   -266     258 bytes  "g_prefs"
+
+Initialized far data
+Data:     40     128 bytes  "__segtable__"
+
+-----
+
+PRC DB Name:       StudentOrganizer
+PRC DB Version:    1
+Type:              appl
+Creator:           UWSC
+Resource Count:    13
+Creation Time:     2022-03-03 @ 2045
+Modification Time: 2022-03-03 @ 2045
+Last Backup Time:  
+Attributes:         0x00000009
+                    dmHdrAttrResDB
+                    dmHdrAttrBackup
+
+1:   tAIN           Application Name String            1000 (0x03e8)     18
+[Student Organizer]
+2:   tver           Application Version String         1000 (0x03e8)     4
+[1.0]
+3:   code           68K Object Code                    1 (0x0001)        2518
+4:   data           68K Global Data                    0 (0x0000)        107
+5:   code           68K Object Code                    0 (0x0000)        24
+6:   MBAR           Menu Bar                           1001 (0x03e9)     286
+7:   MBAR           Menu Bar                           1005 (0x03ed)     191
+8:   Talt           Alert                              1007 (0x03ef)     98
+9:   tFRM           Form                               1008 (0x03f0)     198
+10:   tFRM           Form                               1011 (0x03f3)     326
+11:   tFRM           Form                               1016 (0x03f8)     286
+12:   tAIB           Application Icon                   1000 (0x03e8)     2360
+13:   tAIB           Application Icon                   1001 (0x03e9)     692
