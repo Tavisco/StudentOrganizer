@@ -17,17 +17,12 @@
  * Internal Structures
  *********************************************************************/
 
-typedef struct StudentOrganizerPreferenceType
-{
-	Boolean pref1;
-	char pref2[256];
-} StudentOrganizerPreferenceType;
+
 
 /*********************************************************************
  * Global variables
  *********************************************************************/
 
-extern StudentOrganizerPreferenceType g_prefs;
 
 /*********************************************************************
  * Internal Constants

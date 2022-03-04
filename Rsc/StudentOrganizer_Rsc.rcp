@@ -9,22 +9,11 @@ RESETAUTOID 1000
 
 MENU ID MainMenuBar
 BEGIN
-    PULLDOWN "Edit"
-    BEGIN
-		MENUITEM "Undo" ID 10000 "U"
-		MENUITEM "Cut" ID 10001 "X"
-		MENUITEM "Copy"ID 10002 "C"
-		MENUITEM "Paste" ID 10003 "P"
-		MENUITEM "Select All" ID 10004 "S"
-		MENUITEM SEPARATOR ID 10005
-		MENUITEM "Keyboard" ID 10006 "K"
-		MENUITEM "Graffiti Help" ID 10007 "G"
-    END
+    
 
 	PULLDOWN "Options"
 	BEGIN
-		MENUITEM "Preferences..." ID OptionsPreferences "R"
-		MENUITEM "About Student Organizer" ID OptionsAboutStudentOrganizer
+		MENUITEM "About Student Organizer" ID OptionsAboutStudentOrganizer 
 	END
 
 END	
@@ -85,24 +74,6 @@ BEGIN
 	    MAXCHARS 80 
 	    FONT 1 
 	BUTTON "OK" ID AboutOKButton AT (58 133 40 12)
-END
-
-FORM ID PrefsForm AT (2 78 156 80)
-    SAVEBEHIND MODAL
-    MENUID 10000
-    DEFAULTBTNID PrefsCancelButton
-BEGIN
-    TITLE "Preferences"
-    GRAFFITISTATEINDICATOR AT (142 67)
-	CHECKBOX "Setting 1" ID PrefsSetting1Checkbox
-	    AT (10 21 60 12)
-	    LEFTANCHOR CHECKED
-    LABEL "Setting 2:" AUTOID AT (10 41)
-    FIELD ID PrefsSetting2Field AT (51 41 80 12)
-        UNDERLINED
-        MAXCHARS 80
-    BUTTON "OK" ID PrefsOKButton AT (5 63 40 12)
-    BUTTON "Cancel" ID PrefsCancelButton AT (51 63 40 12)
 END
 
 ICONFAMILYEX

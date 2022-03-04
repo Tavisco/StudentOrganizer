@@ -23,13 +23,6 @@
 /*********************************************************************
  * Global variables
  *********************************************************************/
-/* 
- * g_prefs
- * cache for application preferences during program execution 
- */
-StudentOrganizerPreferenceType g_prefs;
-
-
 
 /*********************************************************************
  * Internal Constants
@@ -132,93 +125,6 @@ static Boolean MainFormDoCommand(UInt16 command)
 			handled = true;
 			break;
 		}
-		case OptionsPreferences:
-		{
-			FormType * frmP;
-			ControlType * cbox = NULL;
-			FieldType * field = NULL;			
-			UInt16 controlID = 0;
-			MemHandle handle = 0;
-
-			/* Clear the menu status from the display */
-			MenuEraseStatus(0);
-
-			/* Initialize the preference form. */
-			frmP = FrmInitForm (PrefsForm);
-
-			/* 
-			 * Set the controls in the preference dialog to reflect our 
-			 * preference data structure
-			 */
-			cbox = (ControlType *)FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, PrefsSetting1Checkbox));
-			if (cbox)
-				CtlSetValue(cbox, g_prefs.pref1);
-			
-			field = (FieldType *)FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, PrefsSetting2Field));
-			if (field && (g_prefs.pref2[0] != '\0'))
-			{
-				MemPtr text = NULL;
-				UInt32 len = StrLen(g_prefs.pref2);
-				
-				handle = FldGetTextHandle(field);
-				if (!handle)
-					handle = MemHandleNew(len + 1);
-				else
-					MemHandleResize(handle, len + 1);
-
-				text = MemHandleLock(handle);
-				if (text)
-					StrCopy((char *)text, g_prefs.pref2);
-
-				MemHandleUnlock(handle);
-				FldSetTextHandle(field, handle);
-				
-				handle = 0;
-			}
-
-			/* 
-			 * Display the preferences dialog. The call will block until 
-			 * the dialog is dismissed
-			 */
-			controlID = FrmDoDialog (frmP);
-			
-			/* controlID contains the ID of the button used to dismiss the dialog */
-			if (controlID == PrefsOKButton)
-			{
-				/* 
-				 * The user hit the OK button. Get the value of the controls 
-				 * and store them in our pref struct 
-				 */
-				if (cbox)
-					g_prefs.pref1 = CtlGetValue(cbox);
-					
-				if (field)
-				{
-					handle = FldGetTextHandle(field);
-					if (handle)
-					{				
-						MemPtr text = MemHandleLock(handle);
-						if (text)
-						{
-							/* Guard against the field text being longer than our pref's buffer */
-							UInt32 len = StrLen((const char *)text);
-							UInt32 count = (len > (sizeof(g_prefs.pref2) - 1)) ? (sizeof(g_prefs.pref2) - 1) : len;
-							MemMove(g_prefs.pref2, text, count);
-							g_prefs.pref2[count] = '\0';
-						}
-
-						MemHandleUnlock(handle);
-					}
-				}
-			}
-			
-			/* Clean up */
-			FrmDeleteForm (frmP);
-
-			handled = true;
-			break;
-		}
-
 	}
 
 	return handled;
@@ -365,48 +271,15 @@ static void AppEventLoop(void)
 	} while (event.eType != appStopEvent);
 }
 
-/*
- * FUNCTION: AppStart
- *
- * DESCRIPTION:  Get the current application's preferences.
- *
- * RETURNED:
- *     errNone - if nothing went wrong
- */
-
-static Err AppStart(void)
-{
-	UInt16 prefsSize;
-	/* Read the saved preferences / saved-state information. */
-	prefsSize = sizeof(g_prefs);
-	if (PrefGetAppPreferences(
-		appFileCreator, appPrefID, &g_prefs, &prefsSize, true) == 
-		noPreferenceFound)
-	{
-		/* no prefs; initialize pref struct with default values */
-		g_prefs.pref1 = false;
-		g_prefs.pref2[0] = '\0';
-	}
-
-	return errNone;
-}
 
 /*
  * FUNCTION: AppStop
  *
- * DESCRIPTION: Save the current state of the application.
+ * DESCRIPTION: Close all forms.
  */
 
 static void AppStop(void)
 {
-	/* 
-	 * Write the saved preferences / saved-state information.  This
-	 * data will be saved during a HotSync backup. 
-	 */
-	PrefSetAppPreferences(
-		appFileCreator, appPrefID, appPrefVersionNum, 
-		&g_prefs, sizeof(g_prefs), true);
-        
 	/* Close all the open forms. */
 	FrmCloseAllForms();
 
@@ -494,10 +367,6 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 	switch (cmd)
 	{
 		case sysAppLaunchCmdNormalLaunch:
-			error = AppStart();
-			if (error) 
-				return error;
-
 			/* 
 			 * start application by opening the main form
 			 * and then entering the main event loop 
