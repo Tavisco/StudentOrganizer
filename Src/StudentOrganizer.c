@@ -52,118 +52,13 @@
  *     address of object as a void pointer
  */
 
-static void * GetObjectPtr(UInt16 objectID)
-{
+void * GetObjectPtr(UInt16 objectID) {
 	FormType * frmP;
 
 	frmP = FrmGetActiveForm();
 	return FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, objectID));
 }
 
-/*
- * FUNCTION: MainFormInit
- *
- * DESCRIPTION: This routine initializes the MainForm form.
- *
- * PARAMETERS:
- *
- * frm
- *     pointer to the MainForm form.
- */
-
-static void MainFormInit(FormType *frmP)
-{
-
-}
-
-/*
- * FUNCTION: MainFormDoCommand
- *
- * DESCRIPTION: This routine performs the menu command specified.
- *
- * PARAMETERS:
- *
- * command
- *     menu item id
- */
-
-static Boolean MainFormDoCommand(UInt16 command)
-{
-	Boolean handled = false;
-
-	switch (command)
-	{
-		case OptionsAboutStudentOrganizer:
-		{
-			FormType * frmP;
-
-			/* Clear the menu status from the display */
-			MenuEraseStatus(0);
-
-			/* Display the About Box. */
-			frmP = FrmInitForm (AboutForm);
-			FrmDoDialog (frmP);                    
-			FrmDeleteForm (frmP);
-
-			handled = true;
-			break;
-		}
-	}
-
-	return handled;
-}
-
-/*
- * FUNCTION: MainFormHandleEvent
- *
- * DESCRIPTION:
- *
- * This routine is the event handler for the "MainForm" of this 
- * application.
- *
- * PARAMETERS:
- *
- * eventP
- *     a pointer to an EventType structure
- *
- * RETURNED:
- *     true if the event was handled and should not be passed to
- *     FrmHandleEvent
- */
-
-static Boolean MainFormHandleEvent(EventType * eventP)
-{
-	Boolean handled = false;
-	FormType * frmP;
-
-	switch (eventP->eType) 
-	{
-		case menuEvent:
-			return MainFormDoCommand(eventP->data.menu.itemID);
-
-		case frmOpenEvent:
-			frmP = FrmGetActiveForm();
-			FrmDrawForm(frmP);
-			MainFormInit(frmP);
-			handled = true;
-			break;
-            
-        case frmUpdateEvent:
-			/* 
-			 * To do any custom drawing here, first call
-			 * FrmDrawForm(), then do your drawing, and
-			 * then set handled to true. 
-			 */
-			break;
-			
-		case ctlSelectEvent:
-		{
-			break;
-		}
-	}
-    
-	return handled;
-}
 
 /*
  * FUNCTION: AppHandleEvent
@@ -183,10 +78,9 @@ static Boolean MainFormHandleEvent(EventType * eventP)
  *     to a higher level handler.
  */
 
-static Boolean AppHandleEvent(EventType * eventP)
-{
+Boolean AppHandleEvent(EventPtr eventP) {
 	UInt16 formId;
-	FormType * frmP;
+	FormPtr frmP;
 
 	if (eventP->eType == frmLoadEvent)
 	{
@@ -219,7 +113,7 @@ static Boolean AppHandleEvent(EventType * eventP)
  * DESCRIPTION: This routine is the event loop for the application.
  */
 
-static void AppEventLoop(void)
+void AppEventLoop(void)
 {
 	UInt16 error;
 	EventType event;
@@ -249,7 +143,7 @@ static void AppEventLoop(void)
  * DESCRIPTION: Close all forms.
  */
 
-static void AppStop(void)
+void AppStop(void)
 {
 	/* Close all the open forms. */
 	FrmCloseAllForms();
@@ -278,7 +172,7 @@ static void AppStop(void)
  *     error code or zero if ROM version is compatible
  */
 
-static Err RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags)
+Err RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags)
 {
 	UInt32 romVersion;
 
