@@ -88,3 +88,21 @@ BEGIN
     BITMAP "icon-sm-2-d144.bmp" BPP 2 DENSITY 2
     BITMAP "icon-sm-8-d144.bmp" BPP 8 TRANSPARENTINDEX 210 COMPRESS DENSITY 2 
 END
+
+
+FORM ID ClassesForm  AT ( 0 0 160 160 )
+NOFRAME
+BEGIN
+    TITLE "Classes"
+	BUTTON "Done" ID ClassesDoneButton  AT (123 144 AUTO 12)
+	BUTTON "New class" ID ClassesNewButton  AT (15 144 AUTO 12)
+	PUSHBUTTON  "Sun" ID ViewSunPushButton  AT (27 22 25 12) GROUP 1
+	PUSHBUTTON  "Mon" ID ViewMonPushButton  AT (53 22 25 12) GROUP 1
+	PUSHBUTTON  "Tues" ID ViewTuesPushButton  AT (79 22 28 12) GROUP 1
+	PUSHBUTTON  "Wed" ID ViewWedPushButton  AT (108 22 25 12) GROUP 1
+	PUSHBUTTON  "Thurs" ID ViewThursPushButton  AT (37 35 30 12) GROUP 1
+	PUSHBUTTON  "Fri" ID ViewFriPushButton  AT (68 35 25 12) GROUP 1
+	PUSHBUTTON  "Sat" ID ViewSatPushButton  AT (94 35 25 12) GROUP 1
+	LIST "One" "Two" "Three" "One" "Two" "Three" "One" "Two" "Three"   AUTOID AT (5 56 150 79) VISIBLEITEMS 7
+	BUTTON "Edit class" ID ClassesEditButton  AT (71 144 45 AUTO)
+END

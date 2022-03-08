@@ -99,6 +99,9 @@ Boolean AppHandleEvent(EventPtr eventP) {
 			case MainForm:
 				FrmSetEventHandler(frmP, MainFormHandleEvent);
 				break;
+			case ClassesForm:
+				FrmSetEventHandler(frmP, ClassesFormHandleEvent);
+				break;
 
 		}
 		return true;

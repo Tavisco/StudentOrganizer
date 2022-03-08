@@ -36,6 +36,12 @@ Boolean MainFormDoCommand(UInt16 command)
 			handled = true;
 			break;
 		}
+		
+		case MainManageClassesButton:
+		{
+			FrmGotoForm (ClassesForm);			handled = true;
+			break;
+		}
 	}
 
 	return handled;
@@ -104,7 +110,7 @@ Boolean MainFormHandleEvent(EventPtr eventP)
 			
 		case ctlSelectEvent:
 		{
-			break;
+			return MainFormDoCommand(eventP->data.menu.itemID);
 		}
 	}
     

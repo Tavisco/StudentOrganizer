@@ -1,4 +1,15 @@
 /* pilrc generated file.  Do not edit!*/
+#define ClassesEditButton 1037
+#define ViewSatPushButton 1035
+#define ViewFriPushButton 1034
+#define ViewThursPushButton 1033
+#define ViewWedPushButton 1032
+#define ViewTuesPushButton 1031
+#define ViewMonPushButton 1030
+#define ViewSunPushButton 1029
+#define ClassesNewButton 1028
+#define ClassesDoneButton 1027
+#define ClassesForm 1026
 #define AboutVersionField 1025
 #define AboutOKButton 1022
 #define AboutForm 1021
