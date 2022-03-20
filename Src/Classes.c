@@ -22,6 +22,10 @@ Boolean ClassesFormDoCommand(UInt16 command) {
 			FrmGotoForm (MainForm);
 			handled = true;
 			break;
+		case ClassesNewButton:
+			FrmGotoForm (ManageClassForm);
+			handled = true;
+			break;
 		
 		default:
 			break;

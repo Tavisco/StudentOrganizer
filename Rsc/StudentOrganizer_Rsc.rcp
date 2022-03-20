@@ -96,13 +96,39 @@ BEGIN
     TITLE "Classes"
 	BUTTON "Done" ID ClassesDoneButton  AT (123 144 AUTO 12)
 	BUTTON "New class" ID ClassesNewButton  AT (15 144 AUTO 12)
-	PUSHBUTTON  "Sun" ID ViewSunPushButton  AT (27 22 25 12) GROUP 1
-	PUSHBUTTON  "Mon" ID ViewMonPushButton  AT (53 22 25 12) GROUP 1
-	PUSHBUTTON  "Tues" ID ViewTuesPushButton  AT (79 22 28 12) GROUP 1
-	PUSHBUTTON  "Wed" ID ViewWedPushButton  AT (108 22 25 12) GROUP 1
-	PUSHBUTTON  "Thurs" ID ViewThursPushButton  AT (37 35 30 12) GROUP 1
-	PUSHBUTTON  "Fri" ID ViewFriPushButton  AT (68 35 25 12) GROUP 1
-	PUSHBUTTON  "Sat" ID ViewSatPushButton  AT (94 35 25 12) GROUP 1
-	LIST "One" "Two" "Three" "One" "Two" "Three" "One" "Two" "Three"   AUTOID AT (5 56 150 79) VISIBLEITEMS 7
+	PUSHBUTTON  "Sun" ID ClassesSunPushButton  AT (27 22 25 12) GROUP 1
+	PUSHBUTTON  "Mon" ID ClassesMonPushButton  AT (53 22 25 12) GROUP 1
+	PUSHBUTTON  "Tues" ID ClassesTuesPushButton  AT (79 22 28 12) GROUP 1
+	PUSHBUTTON  "Wed" ID ClassesWedPushButton  AT (108 22 25 12) GROUP 1
+	PUSHBUTTON  "Thurs" ID ClassesThursPushButton  AT (37 35 30 12) GROUP 1
+	PUSHBUTTON  "Fri" ID ClassesFriPushButton  AT (68 35 25 12) GROUP 1
+	PUSHBUTTON  "Sat" ID ClassesSatPushButton  AT (94 35 25 12) GROUP 1
+	LIST "One" "Two" "Three" "One" "Two" "Three" "One" "Two" "Three" ID ClassesViewList     AT (5 56 150 79) VISIBLEITEMS 7
 	BUTTON "Edit class" ID ClassesEditButton  AT (71 144 45 AUTO)
+END
+
+FORM ID ManageClassForm   AT ( 0 0 160 160 )
+NOFRAME
+BEGIN
+        TITLE "Manage Class"
+	LABEL "Name:" ID ManageClassNameLabel  AT (6 22)
+	FIELD ID ManageClassNameField  AT (36 21 114 13) MAXCHARS 255 EDITABLE 
+	LABEL "Room:" ID ManageClassRoomLabel   AT (7 40)
+	FIELD ID ManageClassRoomField  AT (36 40 114 13) MAXCHARS 255 EDITABLE
+	GRAFFITISTATEINDICATOR AT (135 149)
+	BUTTON "Done" ID ManageClassDoneButton  AT (1 147 36 AUTO)
+	BUTTON "Cancel" ID ManageClassCancelButton  AT (42 147 37 AUTO)
+	PUSHBUTTON  "Sun" ID ManageClassSunPushButton  AT (27 62 25 12) GROUP 1
+	PUSHBUTTON  "Mon" ID ManageClassMonPushButton  AT (53 62 25 12) GROUP 1
+	PUSHBUTTON  "Tues" ID ManageClassTuesPushButton  AT (79 62 28 12) GROUP 1
+	PUSHBUTTON  "Wed" ID ManageClassWedPushButton  AT (108 62 25 12) GROUP 1
+	PUSHBUTTON  "Thurs" ID ManageClassThursPushButton  AT (37 75 30 12) GROUP 1
+	PUSHBUTTON  "Fri" ID ManageClassFriPushButton  AT (68 75 25 12) GROUP 1
+	PUSHBUTTON  "Sat" ID ManageClassSatPushButton  AT (94 75 25 12) GROUP 1
+	
+	
+	SELECTORTRIGGER  "Select time..." ID ManageClassStartSelectorTrigger  AT (34 98 AUTO AUTO)
+	LABEL "Start:" ID ManageClassStartLabel  AT (6 99)
+	LABEL "Finish:" ID ManageClassFinishLabel  AT (6 119)
+	SELECTORTRIGGER  "Select time..." ID ManageClassFinishSelectorTrigger  AT (34 118 AUTO AUTO)
 END
