@@ -31,22 +31,22 @@ FORM ID MainForm AT (0 0 160 160)
 	MENUID MainMenuBar
 BEGIN
 	TITLE "Student Organizer"
-    BUTTON "Add homework" ID MainAddHomeworkButton  AT (80 41 70 12)
-	BUTTON "Mng. homework" ID MainManageHomeworkButton  AT (80 59 70 12)
-	BUTTON "Manage classes" ID MainManageClassesButton   AT (80 76 70 12)
-	BUTTON "Grades" ID MainGradesButton  AT (80 93 70 12)
-	BUTTON "Memos" ID MainMemoButton  AT (80 110 70 12)
-	LABEL "Menu:" ID MainMenuLabel  AT (101 26)
+    BUTTON "Add homework" ID MainAddHomeworkButton  AT (1 33 70 12)
+	BUTTON "Mng. homework" ID MainManageHomeworkButton  AT (1 52 70 12)
+	BUTTON "Manage classes" ID MainManageClassesButton   AT (1 71 70 12)
+	BUTTON "Grades" ID MainGradesButton  AT (1 90 70 12)
+	BUTTON "Memos" ID MainMemoButton  AT (1 109 70 12)
+	LABEL "Menu:" ID MainMenuLabel  AT (24 20)
 	LABEL "|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|" ID MainSeparatorLabel  AT (73 16)
-	LABEL "Time is:" ID MainTimeDscLabel  AT (4 17)
-	LABEL "00:00" ID MainTimeLabel  AT (37 18)
-	LABEL "Current class:" ID MainCurrentClassDscrLabel  AT (4 33)
-	LABEL "XXXXXXXXXXX" ID MainCurrentClassLabel  AT (4 43)
-	LABEL "Next class:" ID MainNextClassDscrLabel  AT (4 60)
-	LABEL "XXXXXXXXXXX" ID MainNextClassLabel  AT (4 70)
-	LABEL "Today is:" ID MainWeekdayDscrLabel  AT (4 87)
-	LABEL "Wednesday" ID MainWeekdayLabel  AT (4 99)
-	LABEL "Homework stats:" ID MainHomeworkStatusLabel  AT (2 124)
+	LABEL "Time is:" ID MainTimeDscLabel  AT (77 20)
+	LABEL "00:00" ID MainTimeLabel  AT (111 21)
+	LABEL "Current class:" ID MainCurrentClassDscrLabel  AT (77 34) FONT 1
+	LABEL "XXXXXXXXXXX" ID MainCurrentClassLabel  AT (80 44)
+	LABEL "Next class:" ID MainNextClassDscrLabel  AT (77 57) FONT 1
+	LABEL "XXXXXXXXXXX" ID MainNextClassLabel  AT (80 67)
+	LABEL "Today is:" ID MainWeekdayDscrLabel  AT (77 82) FONT 1
+	LABEL "Wednesday" ID MainWeekdayLabel  AT (80 93)
+	LABEL "Homework\rstatus:" ID MainHomeworkStatusLabel  AT (77 106) FONT 1
 	END
 
 FORM ID AboutForm AT (2 2 156 156)
