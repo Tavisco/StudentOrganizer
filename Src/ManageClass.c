@@ -40,12 +40,24 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 			AskTimeToUser(ManageClassFinishSelectorTrigger);
 			handled = true;
 			break;
+		case ManageClassHasClassCheckbox:
+			ToggleTimeSelectorTrigger();
+			handled = true;
+			break;
 			
 		default:
 			break;
 	}
 
 	return handled;
+}
+
+void ToggleTimeSelectorTrigger() {
+	ControlType *startSelTrigger = GetObjectPtr(ManageClassStartSelectorTrigger);
+	ControlType *finishSelTrigger = GetObjectPtr(ManageClassFinishSelectorTrigger);
+	
+	CtlSetEnabled(startSelTrigger, !CtlEnabled(startSelTrigger));
+	CtlSetEnabled(finishSelTrigger, !CtlEnabled(finishSelTrigger));
 }
 
 void AskTimeToUser(UInt16 field) {

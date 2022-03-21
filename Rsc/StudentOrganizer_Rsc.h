@@ -1,4 +1,5 @@
 /* pilrc generated file.  Do not edit!*/
+#define ManageClassHasClassCheckbox 1056
 #define ManageClassFinishSelectorTrigger 1055
 #define ManageClassFinishLabel 1054
 #define ManageClassStartLabel 1053

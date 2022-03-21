@@ -111,10 +111,10 @@ FORM ID ManageClassForm   AT ( 0 0 160 160 )
 NOFRAME
 BEGIN
         TITLE "Manage Class"
-	LABEL "Name:" ID ManageClassNameLabel  AT (6 22)
-	FIELD ID ManageClassNameField  AT (36 21 114 13) MAXCHARS 255 EDITABLE 
-	LABEL "Room:" ID ManageClassRoomLabel   AT (7 40)
-	FIELD ID ManageClassRoomField  AT (36 40 114 13) MAXCHARS 255 EDITABLE
+	LABEL "Name:" ID ManageClassNameLabel  AT (6 22) FONT 1
+	FIELD ID ManageClassNameField  AT (42 21 70 14) MAXCHARS 255 EDITABLE 
+	LABEL "Room:" ID ManageClassRoomLabel   AT (6 41) FONT 1
+	FIELD ID ManageClassRoomField  AT (42 40 30 14) MAXCHARS 255 EDITABLE
 	GRAFFITISTATEINDICATOR AT (135 149)
 	BUTTON "Done" ID ManageClassDoneButton  AT (1 147 36 AUTO)
 	BUTTON "Cancel" ID ManageClassCancelButton  AT (42 147 37 AUTO)
@@ -127,8 +127,11 @@ BEGIN
 	PUSHBUTTON  "Sat" ID ManageClassSatPushButton  AT (94 75 25 12) GROUP 1
 	
 	
-	SELECTORTRIGGER  "Select time..." ID ManageClassStartSelectorTrigger  AT (34 98 AUTO AUTO)
-	LABEL "Start:" ID ManageClassStartLabel  AT (6 99)
-	LABEL "Finish:" ID ManageClassFinishLabel  AT (6 119)
-	SELECTORTRIGGER  "Select time..." ID ManageClassFinishSelectorTrigger  AT (34 118 AUTO AUTO)
+	SELECTORTRIGGER  "Select time..." ID ManageClassStartSelectorTrigger  AT (76 109 AUTO AUTO) DISABLED
+	LABEL "Start:" ID ManageClassStartLabel  AT (39 110) FONT 1
+	LABEL "Finish:" ID ManageClassFinishLabel  AT (40 129) FONT 1
+	SELECTORTRIGGER  "Select time..." ID ManageClassFinishSelectorTrigger  AT (76 127 AUTO AUTO) DISABLED
+	CHECKBOX "" ID ManageClassHasClassCheckbox  AT (76 94 AUTO AUTO)
+	LABEL "Class this day:" AUTOID AT (2 94) FONT 1
+	
 END
