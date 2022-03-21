@@ -62,34 +62,20 @@ void ToggleTimeSelectorTrigger() {
 
 void AskTimeToUser(UInt16 field) {
 	Boolean ok = false;
-	DateTimeType dateTime;
+	DateTimeType now;
 	Int16 hour, minute;
-	MemHandle hourH, minuteH;
+	char timeStr[timeStringLength];
 	
-	TimSecondsToDateTime(TimGetSeconds(), &dateTime);
-	hour = dateTime.hour;
-	minute = dateTime.minute;
+	TimSecondsToDateTime(TimGetSeconds(), &now);
+	hour = now.hour;
+	minute = now.minute;
 			
 	ok = SelectOneTime(&hour, &minute, "Select time");
 	
 	if (ok) {
 		ControlType *fldP = GetObjectPtr(field);
-		Char *cHour, *cMinute;
-		
-		hourH = MemHandleNew(8);
-		minuteH = MemHandleNew(8);
-		
-		cHour = MemHandleLock(hourH);
-		cMinute = MemHandleLock(minuteH);
-		
-		StrIToA(cHour, hour);
-		StrIToA(cMinute, minute);
-		StrCat(cHour, ":");
-		StrCat(cHour, cMinute);
-		
-		CtlSetLabel(fldP, cHour);
-		MemPtrFree(cHour);
-		MemPtrFree(cMinute);
+		TimeToAscii(hour, minute, tfColon24h, timeStr);
+		CtlSetLabel(fldP, timeStr);
 	}
 }
 
