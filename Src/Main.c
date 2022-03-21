@@ -1,6 +1,8 @@
 #define DO_NOT_ALLOW_ACCESS_TO_INTERNALS_OF_STRUCTS
 
 #include <PalmOS.h>
+#include <SelTime.h>
+#include <StringMgr.h>
 #include "StudentOrganizer_Rsc.h"
 #include "StudentOrganizer.h"
 
@@ -39,7 +41,8 @@ Boolean MainFormDoCommand(UInt16 command)
 		
 		case MainManageClassesButton:
 		{
-			FrmGotoForm (ClassesForm);			handled = true;
+			FrmGotoForm (ClassesForm);
+			handled = true;
 			break;
 		}
 	}
@@ -58,10 +61,31 @@ Boolean MainFormDoCommand(UInt16 command)
  * frm
  *     pointer to the MainForm form.
  */
-
 void MainFormInit(FormType *frmP)
 {
+	ShowCurrentTime(frmP);
+}
 
+
+/*
+ * FUNCTION: ShowCurrentTime
+ *
+ * DESCRIPTION: Update the label on the main form with the current time.
+ *
+ * PARAMETERS:
+ *
+ * frm
+ *     pointer to the MainForm form.
+ */
+ 
+void ShowCurrentTime(FormType *frmP){
+	DateTimeType now;
+	char timeStr[timeStringLength];
+
+	TimSecondsToDateTime(TimGetSeconds(), &now);
+	TimeToAscii(now.hour, now.minute, tfColon24h, timeStr);
+
+	FrmCopyLabel(frmP, MainTimeLabel, timeStr);
 }
 
 

@@ -39,7 +39,7 @@ BEGIN
 	LABEL "Menu:" ID MainMenuLabel  AT (24 20)
 	LABEL "|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|" ID MainSeparatorLabel  AT (73 16)
 	LABEL "Time is:" ID MainTimeDscLabel  AT (77 20)
-	LABEL "00:00" ID MainTimeLabel  AT (111 21)
+	LABEL "00:00" ID MainTimeLabel  AT (110 20)
 	LABEL "Current class:" ID MainCurrentClassDscrLabel  AT (77 34) FONT 1
 	LABEL "XXXXXXXXXXX" ID MainCurrentClassLabel  AT (80 44)
 	LABEL "Next class:" ID MainNextClassDscrLabel  AT (77 57) FONT 1

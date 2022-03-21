@@ -76,9 +76,11 @@ void AskTimeToUser(UInt16 field) {
 		ControlType *fldP = GetObjectPtr(field);
 		Char *cHour, *cMinute;
 		
-		hourH = MemHandleNew(64);		minuteH = MemHandleNew(64);
+		hourH = MemHandleNew(8);
+		minuteH = MemHandleNew(8);
 		
-		cHour = MemHandleLock(hourH);		cMinute = MemHandleLock(minuteH);
+		cHour = MemHandleLock(hourH);
+		cMinute = MemHandleLock(minuteH);
 		
 		StrIToA(cHour, hour);
 		StrIToA(cMinute, minute);
