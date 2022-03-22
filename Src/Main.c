@@ -64,6 +64,7 @@ Boolean MainFormDoCommand(UInt16 command)
 void MainFormInit(FormType *frmP)
 {
 	ShowCurrentTime(frmP);
+	ShowCurrentWeekday(frmP);
 }
 
 
@@ -88,7 +89,18 @@ void ShowCurrentTime(FormType *frmP){
 	FrmCopyLabel(frmP, MainTimeLabel, timeStr);
 }
 
+void ShowCurrentWeekday(FormType *frmP){
+	DateTimeType now;
+	Char dowNameStr[dowDateStringLength];
+	//UInt16 dow;
+	//char weekdayText[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
+	TimSecondsToDateTime(TimGetSeconds(), &now);
+	//dow = DayOfWeek(now.month, now.day, now.year);
+	//DateToDOWDMFormat(now.month, now.day, now.year, dfMYMed, label);
+	DateTemplateToAscii("^1l", now.month, now.day, now.year, dowNameStr, sizeof(dowNameStr));
+	FrmCopyLabel(frmP, MainWeekdayLabel, dowNameStr);
+}
 /*
  * FUNCTION: MainFormHandleEvent
  *

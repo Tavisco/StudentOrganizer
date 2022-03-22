@@ -45,7 +45,7 @@ BEGIN
 	LABEL "Next class:" ID MainNextClassDscrLabel  AT (77 57) FONT 1
 	LABEL "XXXXXXXXXXX" ID MainNextClassLabel  AT (80 67)
 	LABEL "Today is:" ID MainWeekdayDscrLabel  AT (77 82) FONT 1
-	LABEL "Wednesday" ID MainWeekdayLabel  AT (80 93)
+	LABEL "XXXXXXXXXXXXX" ID MainWeekdayLabel  AT (80 93)
 	LABEL "Homework\rstatus:" ID MainHomeworkStatusLabel  AT (77 106) FONT 1
 	END
 
