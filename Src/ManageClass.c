@@ -9,9 +9,10 @@
 /********************************************
  *
  *             GLOBAL VARIABLES
+ *
  ********************************************/
 
-Boolean visible = false;
+Boolean visibleSelectors = false; // handle if time selectors are shown
 
 /*
  * FUNCTION: ManageClassFormDoCommand
@@ -21,7 +22,7 @@ Boolean visible = false;
  * PARAMETERS:
  *
  * command
- *     menu item id
+ *     form item id
  */
 Boolean ManageClassFormDoCommand(UInt16 command) {
 	Boolean handled = false;
@@ -39,7 +40,6 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 			
 		case ManageClassStartSelectorTrigger:
 			AskTimeToUser(ManageClassStartSelectorTrigger);
-			
 			handled = true;
 			break;
 			
@@ -59,6 +59,15 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 	return handled;
 }
 
+/*
+ * FUNCTION: ToggleTimeSelectorTrigger
+ *
+ * DESCRIPTION: This routine shows or hides the time selectors and labels
+ *   based on the state of the checkbox
+ *
+ * PARAMETERS: No parameters
+ *
+ */
 void ToggleTimeSelectorTrigger() {
 	FormType *formP = FrmGetActiveForm();
 	UInt16 startLabelIndex = FrmGetObjectIndex(formP, ManageClassStartLabel);
@@ -67,7 +76,7 @@ void ToggleTimeSelectorTrigger() {
 	UInt16 finishSelectorIndex = FrmGetObjectIndex(formP, ManageClassFinishSelectorTrigger);
 	
 	
-	if (visible) {
+	if (visibleSelectors) {
 		FrmHideObject(formP, startLabelIndex);
 		FrmHideObject(formP, startSelectorIndex);
 		FrmHideObject(formP, finishSelectorIndex);
@@ -79,11 +88,25 @@ void ToggleTimeSelectorTrigger() {
 		FrmShowObject(formP, finishLabelIndex);
 	}
 	
-	visible = !visible;
-	//CtlSetEnabled(startSelTrigger, !CtlEnabled(startSelTrigger));
-	//CtlSetEnabled(finishSelTrigger, !CtlEnabled(finishSelTrigger));
+	visibleSelectors = !visibleSelectors;
 }
 
+
+/*
+ * FUNCTION: AskTimeToUser
+ *
+ * DESCRIPTION: This routine calls a system pop-up that asks the user
+ *   to input time, in this case, the class start/finish time.
+ *
+ *   After a time has been choosen, it then converts it to ASCII and
+ *   updates the selector field label to it.
+ *
+ *
+ * PARAMETERS:
+ *
+ * field
+ *     selector item id
+ */
 void AskTimeToUser(UInt16 field) {
 	Boolean ok = false;
 	DateTimeType now;
