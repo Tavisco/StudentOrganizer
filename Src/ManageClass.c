@@ -137,7 +137,46 @@ void AskTimeToUser(UInt16 field) {
  *     pointer to the ManageClass form.
  */
 void ManageClassFormInit(FormType *frmP) {
+	AutoSelectCurrentDay();
+}
 
+
+void AutoSelectCurrentDay() {
+	Int16 dayOfWeekInt;
+	DateTimeType now;
+
+	TimSecondsToDateTime(TimGetSeconds(), &now);
+	dayOfWeekInt = DayOfWeek(now.month, now.day, now.year);
+	
+	switch (dayOfWeekInt) {
+		case 0 :
+			ActivateSelector(ManageClassSunPushButton);
+			break;
+		case 1 :
+			ActivateSelector(ManageClassMonPushButton);
+			break;
+		case 2 :
+			ActivateSelector(ManageClassTuesPushButton);
+			break;
+		case 3 :
+			ActivateSelector(ManageClassWedPushButton);
+			break;
+		case 4 :
+			ActivateSelector(ManageClassThursPushButton);
+			break;
+		case 5 :
+			ActivateSelector(ManageClassFriPushButton);
+			break;
+		case 6 :
+			ActivateSelector(ManageClassSatPushButton);
+			break;
+	}
+}
+
+
+void ActivateSelector(UInt16 field) {
+	ControlType *ctl = GetObjectPtr(field);
+	CtlSetValue(ctl, 1);
 }
 
 /*
