@@ -127,10 +127,10 @@ BEGIN
 	PUSHBUTTON  "Sat" ID ManageClassSatPushButton  AT (94 75 25 12) GROUP 1
 	
 	
-	SELECTORTRIGGER  "Select time..." ID ManageClassStartSelectorTrigger  AT (78 109 AUTO AUTO) DISABLED
-	LABEL "Start:" ID ManageClassStartLabel  AT (39 110) FONT 1
-	LABEL "Finish:" ID ManageClassFinishLabel  AT (40 129) FONT 1
-	SELECTORTRIGGER  "Select time..." ID ManageClassFinishSelectorTrigger  AT (78 127 AUTO AUTO) DISABLED
+	SELECTORTRIGGER  "Select time..." ID ManageClassStartSelectorTrigger  AT (78 109 AUTO AUTO) NONUSABLE 
+	LABEL "Start:" ID ManageClassStartLabel  AT (39 110) FONT 1 NONUSABLE
+	LABEL "Finish:" ID ManageClassFinishLabel  AT (40 129) FONT 1 NONUSABLE
+	SELECTORTRIGGER  "Select time..." ID ManageClassFinishSelectorTrigger  AT (78 127 AUTO AUTO) NONUSABLE 
 	CHECKBOX "" ID ManageClassHasClassCheckbox  AT (76 94 AUTO AUTO)
 	LABEL "Class this day:" AUTOID AT (2 94) FONT 1
 	

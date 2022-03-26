@@ -6,6 +6,13 @@
 #include "StudentOrganizer_Rsc.h"
 #include "StudentOrganizer.h"
 
+/********************************************
+ *
+ *             GLOBAL VARIABLES
+ ********************************************/
+
+Boolean visible = false;
+
 /*
  * FUNCTION: ManageClassFormDoCommand
  *
@@ -53,11 +60,28 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 }
 
 void ToggleTimeSelectorTrigger() {
-	ControlType *startSelTrigger = GetObjectPtr(ManageClassStartSelectorTrigger);
-	ControlType *finishSelTrigger = GetObjectPtr(ManageClassFinishSelectorTrigger);
+	FormType *formP = FrmGetActiveForm();
+	UInt16 startLabelIndex = FrmGetObjectIndex(formP, ManageClassStartLabel);
+	UInt16 startSelectorIndex = FrmGetObjectIndex(formP, ManageClassStartSelectorTrigger);
+	UInt16 finishLabelIndex = FrmGetObjectIndex(formP, ManageClassFinishLabel);
+	UInt16 finishSelectorIndex = FrmGetObjectIndex(formP, ManageClassFinishSelectorTrigger);
 	
-	CtlSetEnabled(startSelTrigger, !CtlEnabled(startSelTrigger));
-	CtlSetEnabled(finishSelTrigger, !CtlEnabled(finishSelTrigger));
+	
+	if (visible) {
+		FrmHideObject(formP, startLabelIndex);
+		FrmHideObject(formP, startSelectorIndex);
+		FrmHideObject(formP, finishSelectorIndex);
+		FrmHideObject(formP, finishLabelIndex);
+	} else {
+		FrmShowObject(formP, startLabelIndex);
+		FrmShowObject(formP, startSelectorIndex);
+		FrmShowObject(formP, finishSelectorIndex);
+		FrmShowObject(formP, finishLabelIndex);
+	}
+	
+	visible = !visible;
+	//CtlSetEnabled(startSelTrigger, !CtlEnabled(startSelTrigger));
+	//CtlSetEnabled(finishSelTrigger, !CtlEnabled(finishSelTrigger));
 }
 
 void AskTimeToUser(UInt16 field) {
