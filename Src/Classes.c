@@ -45,8 +45,66 @@ Boolean ClassesFormDoCommand(UInt16 command) {
  *     pointer to the MainForm form.
  */
 void ClassesFormInit(FormType *frmP) {
-
+	ClassesAutoSelectCurrentDay();
 }
+
+/*
+ * FUNCTION: ClassesAutoSelectCurrentDay
+ *
+ * DESCRIPTION: This routine selects the  pushbutton relative to current DoW
+ *
+ * PARAMETERS: No parameters
+ *
+ */
+void ClassesAutoSelectCurrentDay() {
+	Int16 dayOfWeekInt;
+	DateTimeType now;
+
+	TimSecondsToDateTime(TimGetSeconds(), &now);
+	dayOfWeekInt = DayOfWeek(now.month, now.day, now.year);
+	
+	switch (dayOfWeekInt) {
+		case 0 :
+			activateSelector(ClassesSunPushButton);
+			break;
+		case 1 :
+			activateSelector(ClassesMonPushButton);
+			break;
+		case 2 :
+			activateSelector(ClassesTuesPushButton);
+			break;
+		case 3 :
+			activateSelector(ClassesWedPushButton);
+			break;
+		case 4 :
+			activateSelector(ClassesThursPushButton);
+			break;
+		case 5 :
+			activateSelector(ClassesFriPushButton);
+			break;
+		case 6 :
+			activateSelector(ClassesSatPushButton);
+			break;
+	}
+}
+
+
+/*
+ * FUNCTION: ClassesActivateSelector
+ *
+ * DESCRIPTION: This routine make the referenced PushButton active.
+ *
+ * PARAMETERS: 
+ * 
+ * field
+ *     The ID of the selected day of week
+ *
+ */
+void ClassesActivateSelector(UInt16 field) {
+	ControlType *ctl = GetObjectPtr(field);
+	CtlSetValue(ctl, 1);
+}
+
 
 /*
  * FUNCTION: ClassesFormHandleEvent

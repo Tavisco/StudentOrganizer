@@ -137,11 +137,19 @@ void AskTimeToUser(UInt16 field) {
  *     pointer to the ManageClass form.
  */
 void ManageClassFormInit(FormType *frmP) {
-	AutoSelectCurrentDay();
+	autoSelectCurrentDay();
 }
 
 
-void AutoSelectCurrentDay() {
+/*
+ * FUNCTION: AutoSelectCurrentDay
+ *
+ * DESCRIPTION: This routine selects the  pushbutton relative to current DoW
+ *
+ * PARAMETERS: No parameters
+ *
+ */
+void autoSelectCurrentDay() {
 	Int16 dayOfWeekInt;
 	DateTimeType now;
 
@@ -150,31 +158,42 @@ void AutoSelectCurrentDay() {
 	
 	switch (dayOfWeekInt) {
 		case 0 :
-			ActivateSelector(ManageClassSunPushButton);
+			activateSelector(ManageClassSunPushButton);
 			break;
 		case 1 :
-			ActivateSelector(ManageClassMonPushButton);
+			activateSelector(ManageClassMonPushButton);
 			break;
 		case 2 :
-			ActivateSelector(ManageClassTuesPushButton);
+			activateSelector(ManageClassTuesPushButton);
 			break;
 		case 3 :
-			ActivateSelector(ManageClassWedPushButton);
+			activateSelector(ManageClassWedPushButton);
 			break;
 		case 4 :
-			ActivateSelector(ManageClassThursPushButton);
+			activateSelector(ManageClassThursPushButton);
 			break;
 		case 5 :
-			ActivateSelector(ManageClassFriPushButton);
+			activateSelector(ManageClassFriPushButton);
 			break;
 		case 6 :
-			ActivateSelector(ManageClassSatPushButton);
+			activateSelector(ManageClassSatPushButton);
 			break;
 	}
 }
 
 
-void ActivateSelector(UInt16 field) {
+/*
+ * FUNCTION: ActivateSelector
+ *
+ * DESCRIPTION: This routine make the referenced PushButton active.
+ *
+ * PARAMETERS: 
+ * 
+ * field
+ *     The ID of the selected day of week
+ *
+ */
+void activateSelector(UInt16 field) {
 	ControlType *ctl = GetObjectPtr(field);
 	CtlSetValue(ctl, 1);
 }
