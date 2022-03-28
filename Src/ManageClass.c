@@ -137,6 +137,7 @@ void AskTimeToUser(UInt16 field) {
  *     pointer to the ManageClass form.
  */
 void ManageClassFormInit(FormType *frmP) {
+	visibleSelectors = false;
 	autoSelectCurrentDay();
 }
 
