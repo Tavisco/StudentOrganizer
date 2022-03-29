@@ -14,7 +14,7 @@
 
 //Boolean visibleSelectors = false; // Handle if time selectors are shown
 Int16 selectedDoW; // Selected Day of Week by the pushbuttons
-ClassDB record; // Current database record
+ClassDB *record; // Current database record
 Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 
 /*
@@ -109,6 +109,8 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 
 
 void LoadDoW() {
+	SetTimeSelectorLabels(ManageClassStartSelectorTrigger);
+	SetTimeSelectorLabels(ManageClassFinishSelectorTrigger);
 	SetTimeSelectorVisibility();
 }
 
@@ -122,27 +124,29 @@ void LoadDoW() {
  *
  */
 void ToggleTimeSelectorTrigger() {
-	record.classOcurrence[selectedDoW].active = !record.classOcurrence[selectedDoW].active;
+	record->classOcurrence[selectedDoW].active = !record->classOcurrence[selectedDoW].active;
 	SetTimeSelectorVisibility();
 }
 
 void SetTimeSelectorVisibility() {
-	Boolean status = record.classOcurrence[selectedDoW].active;
+	Boolean status = record->classOcurrence[selectedDoW].active;
 	FormType *formP = FrmGetActiveForm();
 	UInt16 startLabelIndex = FrmGetObjectIndex(formP, ManageClassStartLabel);
 	UInt16 startSelectorIndex = FrmGetObjectIndex(formP, ManageClassStartSelectorTrigger);
 	UInt16 finishLabelIndex = FrmGetObjectIndex(formP, ManageClassFinishLabel);
 	UInt16 finishSelectorIndex = FrmGetObjectIndex(formP, ManageClassFinishSelectorTrigger);
-	ControlType *ctl = GetObjectPtr(ManageClassHasClassCheckbox);
+	ControlType *chkBoxCtl = GetObjectPtr(ManageClassHasClassCheckbox);
 	
 	if (status) {
-		CtlSetValue(ctl, 1);
+		CtlSetValue(chkBoxCtl, 1);
 		FrmShowObject(formP, startLabelIndex);
 		FrmShowObject(formP, startSelectorIndex);
 		FrmShowObject(formP, finishSelectorIndex);
-		FrmShowObject(formP, finishLabelIndex);	
+		FrmShowObject(formP, finishLabelIndex);
+		SetTimeSelectorLabels(ManageClassStartSelectorTrigger);
+		SetTimeSelectorLabels(ManageClassFinishSelectorTrigger);	
 	} else {
-		CtlSetValue(ctl, 0);
+		CtlSetValue(chkBoxCtl, 0);
 		FrmHideObject(formP, startLabelIndex);
 		FrmHideObject(formP, startSelectorIndex);
 		FrmHideObject(formP, finishSelectorIndex);
@@ -169,8 +173,7 @@ void AskTimeToUser(UInt16 field) {
 	Boolean ok = false;
 	DateTimeType now;
 	Int16 hour, minute;
-	char timeStr[timeStringLength];
-	//ClassOccurrenceDB db;
+	
 	
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	hour = now.hour;
@@ -179,10 +182,32 @@ void AskTimeToUser(UInt16 field) {
 	ok = SelectOneTime(&hour, &minute, "Select time");
 	
 	if (ok) {
-		ControlType *fldP = GetObjectPtr(field);
-		TimeToAscii(hour, minute, tfColon24h, timeStr);
-		CtlSetLabel(fldP, timeStr);
+		if (field == ManageClassStartSelectorTrigger) {
+			record->classOcurrence[selectedDoW].sHour = hour;
+			record->classOcurrence[selectedDoW].sMinute = minute;
+		} else {
+			record->classOcurrence[selectedDoW].fHour = hour;
+			record->classOcurrence[selectedDoW].fMinute = minute;
+		}
+		
 	}
+	
+	SetTimeSelectorLabels(field);
+}
+
+void SetTimeSelectorLabels(UInt16 field) {
+	ControlType *fldP;
+	char timeStr[timeStringLength];
+	
+	if (field == ManageClassStartSelectorTrigger) {
+		TimeToAscii(record->classOcurrence[selectedDoW].sHour, record->classOcurrence[selectedDoW].sMinute, tfColon24h, timeStr);
+	} else {
+		TimeToAscii(record->classOcurrence[selectedDoW].fHour, record->classOcurrence[selectedDoW].fMinute, tfColon24h, timeStr);
+	}
+	
+
+	fldP = GetObjectPtr(field);
+	CtlSetLabel(fldP, timeStr);
 }
 
 /*
@@ -196,6 +221,7 @@ void AskTimeToUser(UInt16 field) {
  *     pointer to the ManageClass form.
  */
 void ManageClassFormInit(FormType *frmP) {
+	record = MemPtrNew(sizeof(ClassDB));
 	autoSelectCurrentDay();
 	LoadDoW();
 }
@@ -265,6 +291,12 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP) {
 			ManageClassFormInit(frmP);
 			handled = true;
 			break;
+        }
+        
+        case frmCloseEvent:
+        {
+        	MemPtrFree(record);
+        	break;
         }    
 			
 		case ctlSelectEvent:
