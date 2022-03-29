@@ -12,7 +12,7 @@
  *
  ********************************************/
 
-Boolean visibleSelectors = false; // Handle if time selectors are shown
+//Boolean visibleSelectors = false; // Handle if time selectors are shown
 Int16 selectedDoW; // Selected Day of Week by the pushbuttons
 ClassDB record; // Current database record
 Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
@@ -109,7 +109,7 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 
 
 void LoadDoW() {
-
+	SetTimeSelectorVisibility();
 }
 
 /*
@@ -122,29 +122,33 @@ void LoadDoW() {
  *
  */
 void ToggleTimeSelectorTrigger() {
+	record.classOcurrence[selectedDoW].active = !record.classOcurrence[selectedDoW].active;
+	SetTimeSelectorVisibility();
+}
+
+void SetTimeSelectorVisibility() {
+	Boolean status = record.classOcurrence[selectedDoW].active;
 	FormType *formP = FrmGetActiveForm();
 	UInt16 startLabelIndex = FrmGetObjectIndex(formP, ManageClassStartLabel);
 	UInt16 startSelectorIndex = FrmGetObjectIndex(formP, ManageClassStartSelectorTrigger);
 	UInt16 finishLabelIndex = FrmGetObjectIndex(formP, ManageClassFinishLabel);
 	UInt16 finishSelectorIndex = FrmGetObjectIndex(formP, ManageClassFinishSelectorTrigger);
+	ControlType *ctl = GetObjectPtr(ManageClassHasClassCheckbox);
 	
-	
-	if (visibleSelectors) {
+	if (status) {
+		CtlSetValue(ctl, 1);
+		FrmShowObject(formP, startLabelIndex);
+		FrmShowObject(formP, startSelectorIndex);
+		FrmShowObject(formP, finishSelectorIndex);
+		FrmShowObject(formP, finishLabelIndex);	
+	} else {
+		CtlSetValue(ctl, 0);
 		FrmHideObject(formP, startLabelIndex);
 		FrmHideObject(formP, startSelectorIndex);
 		FrmHideObject(formP, finishSelectorIndex);
 		FrmHideObject(formP, finishLabelIndex);
-	} else {
-		FrmShowObject(formP, startLabelIndex);
-		FrmShowObject(formP, startSelectorIndex);
-		FrmShowObject(formP, finishSelectorIndex);
-		FrmShowObject(formP, finishLabelIndex);
 	}
-	
-	visibleSelectors = !visibleSelectors;
-	record.classOcurrence[selectedDoW].active = visibleSelectors;
 }
-
 
 /*
  * FUNCTION: AskTimeToUser
@@ -192,7 +196,6 @@ void AskTimeToUser(UInt16 field) {
  *     pointer to the ManageClass form.
  */
 void ManageClassFormInit(FormType *frmP) {
-	visibleSelectors = false;
 	autoSelectCurrentDay();
 	LoadDoW();
 }
