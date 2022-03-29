@@ -12,7 +12,10 @@
  *
  ********************************************/
 
-Boolean visibleSelectors = false; // handle if time selectors are shown
+Boolean visibleSelectors = false; // Handle if time selectors are shown
+Int16 selectedDoW; // Selected Day of Week by the pushbuttons
+ClassDB record; // Current database record
+Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 
 /*
  * FUNCTION: ManageClassFormDoCommand
@@ -39,7 +42,9 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 			break;
 			
 		case ManageClassStartSelectorTrigger:
-			AskTimeToUser(ManageClassStartSelectorTrigger);
+			AskTimeToUser(ManageClassStartSelectorTrigger); // make this return time
+			// with the returned data, create function to parse it to inner object
+			// with the inner object, correctly attribute it to the DB here.
 			handled = true;
 			break;
 			
@@ -47,8 +52,51 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 			AskTimeToUser(ManageClassFinishSelectorTrigger);
 			handled = true;
 			break;
+		
 		case ManageClassHasClassCheckbox:
 			ToggleTimeSelectorTrigger();
+			handled = true;
+			break;
+		
+		case ManageClassSunPushButton:
+			selectedDoW = 0;
+			LoadDoW();
+			handled = true;
+			break;
+		
+		case ManageClassMonPushButton:
+			selectedDoW = 1;
+			LoadDoW();
+			handled = true;
+			break;
+		
+		case ManageClassTuesPushButton:
+			selectedDoW = 2;
+			LoadDoW();
+			handled = true;
+			break;
+			
+		case ManageClassWedPushButton:
+			selectedDoW = 3;
+			LoadDoW();
+			handled = true;
+			break;
+			
+		case ManageClassThursPushButton:
+			selectedDoW = 4;
+			LoadDoW();
+			handled = true;
+			break;
+			
+		case ManageClassFriPushButton:
+			selectedDoW = 5;
+			LoadDoW();
+			handled = true;
+			break;
+			
+		case ManageClassSatPushButton:
+			selectedDoW = 6;
+			LoadDoW();
 			handled = true;
 			break;
 			
@@ -57,6 +105,11 @@ Boolean ManageClassFormDoCommand(UInt16 command) {
 	}
 
 	return handled;
+}
+
+
+void LoadDoW() {
+
 }
 
 /*
@@ -89,6 +142,7 @@ void ToggleTimeSelectorTrigger() {
 	}
 	
 	visibleSelectors = !visibleSelectors;
+	record.classOcurrence[selectedDoW].active = visibleSelectors;
 }
 
 
@@ -112,6 +166,7 @@ void AskTimeToUser(UInt16 field) {
 	DateTimeType now;
 	Int16 hour, minute;
 	char timeStr[timeStringLength];
+	//ClassOccurrenceDB db;
 	
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	hour = now.hour;
@@ -139,6 +194,7 @@ void AskTimeToUser(UInt16 field) {
 void ManageClassFormInit(FormType *frmP) {
 	visibleSelectors = false;
 	autoSelectCurrentDay();
+	LoadDoW();
 }
 
 
@@ -151,35 +207,12 @@ void ManageClassFormInit(FormType *frmP) {
  *
  */
 void autoSelectCurrentDay() {
-	Int16 dayOfWeekInt;
 	DateTimeType now;
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
-	dayOfWeekInt = DayOfWeek(now.month, now.day, now.year);
+	selectedDoW = DayOfWeek(now.month, now.day, now.year);
 	
-	switch (dayOfWeekInt) {
-		case 0 :
-			activateSelector(ManageClassSunPushButton);
-			break;
-		case 1 :
-			activateSelector(ManageClassMonPushButton);
-			break;
-		case 2 :
-			activateSelector(ManageClassTuesPushButton);
-			break;
-		case 3 :
-			activateSelector(ManageClassWedPushButton);
-			break;
-		case 4 :
-			activateSelector(ManageClassThursPushButton);
-			break;
-		case 5 :
-			activateSelector(ManageClassFriPushButton);
-			break;
-		case 6 :
-			activateSelector(ManageClassSatPushButton);
-			break;
-	}
+	activateSelector(dowPushButtons[selectedDoW]);
 }
 
 
