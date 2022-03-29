@@ -12,7 +12,6 @@
  *
  ********************************************/
 
-//Boolean visibleSelectors = false; // Handle if time selectors are shown
 Int16 selectedDoW; // Selected Day of Week by the pushbuttons
 ClassDB *record; // Current database record
 Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
@@ -174,22 +173,22 @@ void AskTimeToUser(UInt16 field) {
 	DateTimeType now;
 	Int16 hour, minute;
 	
-	
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	hour = now.hour;
 	minute = now.minute;
 			
 	ok = SelectOneTime(&hour, &minute, "Select time");
-	
 	if (ok) {
 		if (field == ManageClassStartSelectorTrigger) {
 			record->classOcurrence[selectedDoW].sHour = hour;
 			record->classOcurrence[selectedDoW].sMinute = minute;
+			
 		} else {
 			record->classOcurrence[selectedDoW].fHour = hour;
 			record->classOcurrence[selectedDoW].fMinute = minute;
 		}
 		
+		record->classOcurrence[selectedDoW].timeHasBeenSet = true;
 	}
 	
 	SetTimeSelectorLabels(field);
@@ -198,6 +197,14 @@ void AskTimeToUser(UInt16 field) {
 void SetTimeSelectorLabels(UInt16 field) {
 	ControlType *fldP;
 	char timeStr[timeStringLength];
+
+	fldP = GetObjectPtr(field);
+	
+	if (!record->classOcurrence[selectedDoW].timeHasBeenSet) {
+		CtlSetLabel(fldP, "Select time...");
+		return;
+	}
+	
 	
 	if (field == ManageClassStartSelectorTrigger) {
 		TimeToAscii(record->classOcurrence[selectedDoW].sHour, record->classOcurrence[selectedDoW].sMinute, tfColon24h, timeStr);
@@ -205,8 +212,6 @@ void SetTimeSelectorLabels(UInt16 field) {
 		TimeToAscii(record->classOcurrence[selectedDoW].fHour, record->classOcurrence[selectedDoW].fMinute, tfColon24h, timeStr);
 	}
 	
-
-	fldP = GetObjectPtr(field);
 	CtlSetLabel(fldP, timeStr);
 }
 
