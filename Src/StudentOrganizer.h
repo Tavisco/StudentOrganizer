@@ -20,7 +20,12 @@
 #define appPrefID				0x00
 #define appPrefVersionNum		0x01
 
+#define kCreator                'UWSC'
+#define kDBType                 'DATA'
+#define kDBClassesName          (char[9])'ClassesD'
+
 #define ftrManageClassNum       0
+#define ftrClassesDBNum         1
  
 
 /*********************************************************************
@@ -46,6 +51,10 @@ typedef struct ClassVariables {
 	Int16 dowPushButtons[7];// = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 } ClassVariables;
 
+//typedef struct GlobalVariables {
+//	DmOp
+//}
+
 /*********************************************************************
  * Global variables
  *********************************************************************/
@@ -64,6 +73,7 @@ extern DmOpenRef gClassesDB;
  void AppStop(void);
  Err RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags);
  UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlahs);
+ Err AppStart(void);
  
  /* Functions in Main.c */
  Boolean MainFormDoCommand(UInt16 command);
@@ -90,3 +100,5 @@ extern DmOpenRef gClassesDB;
  void LoadDoW();
  void SetTimeSelectorVisibility();
  void SetTimeSelectorLabels(UInt16 field, ClassVariables* pstVars);
+ void SaveChanges(ClassVariables* pstVars);
+ Err SaveChangesToDatabase(ClassVariables* pstVars);

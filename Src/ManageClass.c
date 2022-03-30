@@ -21,6 +21,7 @@ Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars) {
 	
 	switch(command) {
 		case ManageClassDoneButton:
+			SaveChanges(pstVars);
 			FrmGotoForm (ClassesForm);
 			handled = true;
 			break;
@@ -94,6 +95,43 @@ Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars) {
 	return handled;
 }
 
+void SaveChanges(ClassVariables* pstVars) {
+	Err error;
+
+	error = SaveChangesToDatabase(pstVars);
+	if (!error) {
+		return;
+	}
+}
+
+Err SaveChangesToDatabase(ClassVariables* pstVars) {
+	Err error = errNone;
+	UInt16 recIndex = dmMaxRecordIndex;
+	MemHandle recH;
+	MemPtr recP;
+	//UInt16 index;
+
+	//recP = MemPtrNew(sizeof(ClassDB));
+	//index = GetClassFromDatabase((ClassDBPtr)recP);
+	//MemPtrFree(recP);
+
+	//if (index == -1) }
+		// New record
+		UInt32 pstInt;
+		FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+		DmOpenRef gDB = (DmOpenRef) pstInt;
+		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record));
+		if (recH) {
+			recP = MemHandleLock(recH);
+			DmWrite(recP, sizeof(pstVars->record), &(pstVars->record), sizeof(pstVars->record));
+			error = DmReleaseRecord(gDB, recIndex, true);
+			MemHandleUnlock(recH);
+		}
+	//} else {
+		// Edit record
+	//}
+	return error;
+}
 
 void LoadDoW(ClassVariables* pstVars) {
 	SetTimeSelectorLabels(ManageClassStartSelectorTrigger, pstVars);
@@ -232,7 +270,6 @@ void autoSelectCurrentDay(ClassVariables* pstVars) {
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
-	
 	Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 	activateSelector(dowPushButtons[pstVars->selectedDoW]);
 }

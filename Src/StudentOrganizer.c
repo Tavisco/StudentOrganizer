@@ -156,6 +156,29 @@ void AppStop(void)
 
 }
 
+Err AppStart(void) {
+	Err error = errNone;
+	DmOpenRef gDB = 0;
+	LocalID dbLocal;
+
+	dbLocal = DmFindDatabase(0, "ClassesD");
+	if (!dbLocal) {
+		error = DmCreateDatabase(0, "ClassesD", kCreator, kDBType, false);
+		if (error)
+			return error;
+		
+		dbLocal = DmFindDatabase(0, "ClassesD");
+		gDB = DmOpenDatabase(0, dbLocal, dmModeReadWrite);
+		if (!gDB)
+			return DmGetLastErr();
+	} else {
+		gDB = DmOpenDatabase(0, dbLocal, dmModeReadWrite);
+	}
+
+	FtrSet(appFileCreator, ftrClassesDBNum, (UInt32)gDB);
+	return error;
+}
+
 /*
  * FUNCTION: RomVersionCompatible
  *
@@ -242,6 +265,9 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 			 * start application by opening the main form
 			 * and then entering the main event loop 
 			 */
+			error = AppStart();
+			if (error)
+				return error;
 			FrmGotoForm(MainForm);
 			AppEventLoop();
 
