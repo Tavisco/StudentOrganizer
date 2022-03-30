@@ -233,7 +233,8 @@ void autoSelectCurrentDay(ClassVariables* pstVars) {
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
 	
-	//activateSelector(dowPushButtons[pstVars->selectedDoW]);
+	Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
+	activateSelector(dowPushButtons[pstVars->selectedDoW]);
 }
 
 
