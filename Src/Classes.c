@@ -1,7 +1,7 @@
 #define DO_NOT_ALLOW_ACCESS_TO_INTERNALS_OF_STRUCTS
 
 #include <PalmOS.h>
-#include "StudentOrganizer_Rsc.h"
+#include "Rsc/StudentOrganizer_Rsc.h"
 #include "StudentOrganizer.h"
 
 /*
