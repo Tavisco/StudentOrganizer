@@ -159,20 +159,16 @@ void AppStop(void)
 Err AppStart(void) {
 	Err error = errNone;
 	DmOpenRef gDB = 0;
-	LocalID dbLocal;
 
-	dbLocal = DmFindDatabase(0, "ClassesD");
-	if (!dbLocal) {
-		error = DmCreateDatabase(0, "ClassesD", kCreator, kDBType, false);
+	gDB = DmOpenDatabaseByTypeCreator(kClassDBType, kCreator, dmModeReadWrite);
+	if (!gDB) {
+		error = DmCreateDatabase(0, kClassesDBName, kCreator, kClassDBType, false);
 		if (error)
 			return error;
 		
-		dbLocal = DmFindDatabase(0, "ClassesD");
-		gDB = DmOpenDatabase(0, dbLocal, dmModeReadWrite);
+		gDB = DmOpenDatabaseByTypeCreator(kClassDBType, kCreator, dmModeReadWrite);
 		if (!gDB)
 			return DmGetLastErr();
-	} else {
-		gDB = DmOpenDatabase(0, dbLocal, dmModeReadWrite);
 	}
 
 	FtrSet(appFileCreator, ftrClassesDBNum, (UInt32)gDB);

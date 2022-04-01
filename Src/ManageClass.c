@@ -97,6 +97,15 @@ Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars) {
 
 void SaveChanges(ClassVariables* pstVars) {
 	Err error;
+	Char *fldNameTxt, *fldRoomTxt = "\n";
+	FieldType *fldNameP = GetObjectPtr(ManageClassNameField);
+	FieldType *fldRoomP = GetObjectPtr(ManageClassRoomField);
+
+	fldNameTxt = FldGetTextPtr(fldNameP);
+	StrCopy(pstVars->record.className, fldNameTxt);
+
+	fldRoomTxt = FldGetTextPtr(fldRoomP);
+	StrCopy(pstVars->record.classRoom, fldRoomTxt);
 
 	error = SaveChangesToDatabase(pstVars);
 	if (!error) {
@@ -111,19 +120,23 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 	MemPtr recP;
 	//UInt16 index;
 
-	//recP = MemPtrNew(sizeof(ClassDB));
+	recP = MemPtrNew(sizeof(ClassDB));
+	//(ClassDBPtr)recP = pstVars->record;
 	//index = GetClassFromDatabase((ClassDBPtr)recP);
-	//MemPtrFree(recP);
+	MemPtrFree(recP);
 
 	//if (index == -1) }
 		// New record
 		UInt32 pstInt;
 		FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 		DmOpenRef gDB = (DmOpenRef) pstInt;
-		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record));
+		//recIndex = DmNumRecords(gDB);
+		recH = DmNewRecord(gDB, &recIndex, sizeof(ClassDB)+1);
 		if (recH) {
 			recP = MemHandleLock(recH);
-			DmWrite(recP, sizeof(pstVars->record), &(pstVars->record), sizeof(pstVars->record));
+			//DmWrite(recP, 0, &(pstVars->record), sizeof(ClassDB));
+			DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
+			//MemPtrUnlock(recP);
 			error = DmReleaseRecord(gDB, recIndex, true);
 			MemHandleUnlock(recH);
 		}

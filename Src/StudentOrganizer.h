@@ -21,8 +21,8 @@
 #define appPrefVersionNum		0x01
 
 #define kCreator                'UWSC'
-#define kDBType                 'DATA'
-#define kDBClassesName          (char[9])'ClassesD'
+#define kClassDBType            'CLSS'
+#define kClassesDBName          "ClassesD"
 
 #define ftrManageClassNum       0
 #define ftrClassesDBNum         1
