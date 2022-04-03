@@ -52,10 +52,13 @@ void ClassesFormInit(FormType *frmP, ClassesVariables* pstVars) {
 void LoadClasses(ClassesVariables* pstVars) {
 	MemHandle recH;
 	UInt32 pstInt;
+	DmOpenRef gDB;
+	UInt16 i, numRecs;
+	
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
-	DmOpenRef gDB = (DmOpenRef) pstInt;
+	gDB = (DmOpenRef) pstInt;
 
-	UInt16 i, numRecs = DmNumRecords(gDB);
+	numRecs = DmNumRecords(gDB);
 
 	for (i = 0; i < numRecs; i++) {
 		recH = DmQueryRecord(gDB, i);
@@ -145,10 +148,12 @@ Boolean ClassesFormHandleEvent(EventPtr eventP) {
 	{
 		case frmOpenEvent: 
 		{
+			ClassesVariables* pstVars;
+			
 			frmP = FrmGetActiveForm();
 			FrmDrawForm(frmP);
 
-			ClassesVariables* pstVars = (ClassesVariables*)MemPtrNew(sizeof(ClassesVariables));
+			pstVars = (ClassesVariables*)MemPtrNew(sizeof(ClassesVariables));
 			if ((UInt32)pstVars == 0) return -1;
 			MemSet(pstVars, sizeof(ClassesVariables), 0);
 			FtrSet(appFileCreator, ftrClassesNum, (UInt32)pstVars);
