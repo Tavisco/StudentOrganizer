@@ -118,6 +118,8 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 	UInt16 recIndex = dmMaxRecordIndex;
 	MemHandle recH;
 	MemPtr recP;
+	UInt32 pstInt;
+	DmOpenRef gDB;
 	//UInt16 index;
 
 	recP = MemPtrNew(sizeof(ClassDB));
@@ -127,11 +129,11 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 
 	//if (index == -1) }
 		// New record
-		UInt32 pstInt;
+		
 		FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
-		DmOpenRef gDB = (DmOpenRef) pstInt;
+		gDB = (DmOpenRef) pstInt;
 		//recIndex = DmNumRecords(gDB);
-		recH = DmNewRecord(gDB, &recIndex, sizeof(ClassDB)+1);
+		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record)+1);
 		if (recH) {
 			recP = MemHandleLock(recH);
 			//DmWrite(recP, 0, &(pstVars->record), sizeof(ClassDB));
@@ -280,10 +282,11 @@ void ManageClassFormInit(FormType *frmP, ClassVariables* pstVars) {
  */
 void autoSelectCurrentDay(ClassVariables* pstVars) {
 	DateTimeType now;
+	Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
+
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
-	Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 	activateSelector(dowPushButtons[pstVars->selectedDoW]);
 }
 
@@ -324,16 +327,20 @@ void activateSelector(UInt16 field) {
 Boolean ManageClassFormHandleEvent(EventPtr eventP) {
 	Boolean handled = false;
 	FormPtr frmP;
+	ClassVariables* pstVars;
 
-	switch (eventP->eType) 
-	{
+	switch (eventP->eType) {
 		case frmOpenEvent: 
 		{
 			frmP = FrmGetActiveForm();
 			FrmDrawForm(frmP);
-			ClassVariables* pstVars = (ClassVariables*)MemPtrNew(sizeof(ClassVariables));
+			
+			pstVars = (ClassVariables*)MemPtrNew(sizeof(ClassVariables));
 			if ((UInt32)pstVars == 0) return -1;
 			MemSet(pstVars, sizeof(ClassVariables), 0);
+			
+			//pstVars->record = (ClassDB*)MemPtrNew(sizeof(ClassDB));
+			
 			FtrSet(appFileCreator, ftrManageClassNum, (UInt32)pstVars);
 			ManageClassFormInit(frmP, pstVars);
 			handled = true;
@@ -342,6 +349,11 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP) {
         
         case frmCloseEvent:
         {
+	        UInt32 pstInt;
+			ClassVariables* pstVars;
+			FtrGet(appFileCreator, ftrManageClassNum, &pstInt);
+			pstVars = (ClassVariables *)pstInt;
+			MemPtrFree((MemPtr) pstVars);
 			FtrPtrFree(appFileCreator, ftrManageClassNum);
         	break;
         }    
@@ -349,8 +361,9 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP) {
 		case ctlSelectEvent:
 		{
 			UInt32 pstInt;
+			ClassVariables* pstVars;
 			FtrGet(appFileCreator, ftrManageClassNum, &pstInt);
-			ClassVariables* pstVars = (ClassVariables *)pstInt;
+			pstVars = (ClassVariables *)pstInt;
 			return ManageClassFormDoCommand(eventP->data.ctlSelect.controlID, pstVars);
 			break;
 		}
