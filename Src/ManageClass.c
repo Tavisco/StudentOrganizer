@@ -133,7 +133,7 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 		FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 		gDB = (DmOpenRef) pstInt;
 		//recIndex = DmNumRecords(gDB);
-		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record)+1);
+		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record));
 		if (recH) {
 			recP = MemHandleLock(recH);
 			//DmWrite(recP, 0, &(pstVars->record), sizeof(ClassDB));
@@ -338,9 +338,6 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP) {
 			pstVars = (ClassVariables*)MemPtrNew(sizeof(ClassVariables));
 			if ((UInt32)pstVars == 0) return -1;
 			MemSet(pstVars, sizeof(ClassVariables), 0);
-			
-			//pstVars->record = (ClassDB*)MemPtrNew(sizeof(ClassDB));
-			
 			FtrSet(appFileCreator, ftrManageClassNum, (UInt32)pstVars);
 			ManageClassFormInit(frmP, pstVars);
 			handled = true;
@@ -349,11 +346,6 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP) {
         
         case frmCloseEvent:
         {
-	        UInt32 pstInt;
-			ClassVariables* pstVars;
-			FtrGet(appFileCreator, ftrManageClassNum, &pstInt);
-			pstVars = (ClassVariables *)pstInt;
-			MemPtrFree((MemPtr) pstVars);
 			FtrPtrFree(appFileCreator, ftrManageClassNum);
         	break;
         }    
