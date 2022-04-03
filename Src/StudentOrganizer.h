@@ -39,7 +39,7 @@ typedef struct ClassOccurrenceDB {
 	} ClassOccurrenceDB;
 
 typedef struct ClassDB {
-	ClassOccurrenceDB classOcurrence[7];
+	struct ClassOccurrenceDB classOcurrence[7];
 	Char className[19];
 	Char classRoom[9];
 	} ClassDB;

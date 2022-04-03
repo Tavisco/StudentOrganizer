@@ -151,9 +151,18 @@ void AppEventLoop(void)
 
 void AppStop(void)
 {
-	/* Close all the open forms. */
+	Err error;
+	
+	UInt32 classesPstInt;
+	DmOpenRef classesGDB;
+	
+	/* Close all the open forms.*/
 	FrmCloseAllForms();
-
+	
+	/* Close all the databases.*/
+	FtrGet(appFileCreator, ftrClassesDBNum, &classesPstInt);
+	classesGDB = (DmOpenRef) classesPstInt;
+	error = DmCloseDatabase(classesGDB);
 }
 
 Err AppStart(void) {
