@@ -22,10 +22,11 @@
 
 #define kCreator                'UWSC'
 #define kClassDBType            'CLSS'
-#define kClassesDBName          "ClassesD"
+#define kClassesDBName          "StudentOrganizerClasses"
 
 #define ftrManageClassNum       0
 #define ftrClassesDBNum         1
+#define ftrClassesNum           2
  
 
 /*********************************************************************
@@ -50,6 +51,11 @@ typedef struct ClassVariables {
 	ClassDB record; // Current database record
 	Int16 dowPushButtons[7];// = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 } ClassVariables;
+
+typedef struct ClassesVariables {
+	int selectedDoW; // Selected Day of Week by the pushbuttons
+	ClassDB records[]; // Records of the database
+} ClassesVariables;
 
 //typedef struct GlobalVariables {
 //	DmOp
@@ -85,9 +91,10 @@ extern DmOpenRef gClassesDB;
  /* Functions in Classes.c */
  Boolean ClassesFormDoCommand(UInt16 command);
  Boolean ClassesFormHandleEvent(EventPtr eventP);
- void ClassesFormInit(FormType *frmP);
- void ClassesAutoSelectCurrentDay();
+ void ClassesFormInit(FormType *frmP, ClassesVariables* pstVars);
+ void ClassesAutoSelectCurrentDay(ClassesVariables* pstVars);
  void ClassesActivateSelector(UInt16 field);
+ void LoadClasses(ClassesVariables* pstVars);
  
   /* Functions in ManageClass.c */
  Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars);

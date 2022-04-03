@@ -44,8 +44,23 @@ Boolean ClassesFormDoCommand(UInt16 command) {
  * frm
  *     pointer to the MainForm form.
  */
-void ClassesFormInit(FormType *frmP) {
-	ClassesAutoSelectCurrentDay();
+void ClassesFormInit(FormType *frmP, ClassesVariables* pstVars) {
+	ClassesAutoSelectCurrentDay(pstVars);
+	LoadClasses(pstVars);
+}
+
+void LoadClasses(ClassesVariables* pstVars) {
+	MemHandle recH;
+	UInt32 pstInt;
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	DmOpenRef gDB = (DmOpenRef) pstInt;
+
+	UInt16 i, numRecs = DmNumRecords(gDB);
+
+	for (i = 0; i < numRecs; i++) {
+		recH = DmQueryRecord(gDB, i);
+	//	pst
+	}
 }
 
 /*
@@ -56,14 +71,13 @@ void ClassesFormInit(FormType *frmP) {
  * PARAMETERS: No parameters
  *
  */
-void ClassesAutoSelectCurrentDay() {
-	Int16 dayOfWeekInt;
+void ClassesAutoSelectCurrentDay(ClassesVariables* pstVars) {
 	DateTimeType now;
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
-	dayOfWeekInt = DayOfWeek(now.month, now.day, now.year);
+	pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
 	
-	switch (dayOfWeekInt) {
+	switch (pstVars->selectedDoW) {
 		case 0 :
 			activateSelector(ClassesSunPushButton);
 			break;
@@ -133,7 +147,12 @@ Boolean ClassesFormHandleEvent(EventPtr eventP) {
 		{
 			frmP = FrmGetActiveForm();
 			FrmDrawForm(frmP);
-			ClassesFormInit(frmP);
+
+			ClassesVariables* pstVars = (ClassesVariables*)MemPtrNew(sizeof(ClassesVariables));
+			if ((UInt32)pstVars == 0) return -1;
+			MemSet(pstVars, sizeof(ClassesVariables), 0);
+			FtrSet(appFileCreator, ftrClassesNum, (UInt32)pstVars);
+			ClassesFormInit(frmP, pstVars);
 			handled = true;
 			break;
         }    
@@ -143,6 +162,12 @@ Boolean ClassesFormHandleEvent(EventPtr eventP) {
 			return ClassesFormDoCommand(eventP->data.ctlSelect.controlID);
 		}
 		
+		case frmCloseEvent:
+        {
+			FtrPtrFree(appFileCreator, ftrClassesNum);
+        	break;
+        }  
+
 		default:
 		{
 			break;
