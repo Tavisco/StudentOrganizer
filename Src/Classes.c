@@ -4,6 +4,23 @@
 #include "Rsc/StudentOrganizer_Rsc.h"
 #include "StudentOrganizer.h"
 
+static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused) {
+	UInt32 pstInt;
+	DmOpenRef gDB;
+	ClassDB *rec;
+	MemHandle recH;
+	
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef) pstInt;
+	
+	recH = DmQueryRecord(gDB, itemNum);
+	rec = MemHandleLock(recH);
+	
+	WinDrawChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y);
+	
+	MemHandleUnlock(recH);
+}
+
 /*
  * FUNCTION: ClassesFormDoCommand
  *
@@ -54,16 +71,29 @@ void LoadClasses(ClassesVariables* pstVars) {
 	UInt32 pstInt;
 	DmOpenRef gDB;
 	UInt16 i, numRecs;
+	ClassDB *rec;
+	FormType *form = FrmGetActiveForm();
+	ListType *list = GetObjectPtr(ClassesViewList);
+	//int numChoices = 0;
+	
+	// Set custom list drawing callback function.
+	LstSetDrawFunction(list, ClassesListDraw);
 	
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef) pstInt;
 
 	numRecs = DmNumRecords(gDB);
+	
+	LstSetListChoices(list, NULL, numRecs);
+	LstDrawList(list);
 
-	for (i = 0; i < numRecs; i++) {
-		recH = DmQueryRecord(gDB, i);
+	//for (i = 0; i < numRecs; i++) {
+	//	recH = DmQueryRecord(gDB, i);
+	//	rec = MemHandleLock(recH);
+		
+	//	MemHandleUnlock(recH);
 	//	pst
-	}
+	//}
 }
 
 /*
