@@ -136,9 +136,7 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record));
 		if (recH) {
 			recP = MemHandleLock(recH);
-			//DmWrite(recP, 0, &(pstVars->record), sizeof(ClassDB));
 			DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
-			//MemPtrUnlock(recP);
 			error = DmReleaseRecord(gDB, recIndex, true);
 			MemHandleUnlock(recH);
 		}
