@@ -31,7 +31,7 @@ static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
  * command
  *     menu item id
  */
-Boolean ClassesFormDoCommand(UInt16 command) {
+Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables* pstVars) {
 	Boolean handled = false;
 	
 	switch(command) {
@@ -43,7 +43,53 @@ Boolean ClassesFormDoCommand(UInt16 command) {
 			FrmGotoForm (ManageClassForm);
 			handled = true;
 			break;
+		case ClassesEditButton:
+			LoadSelectedClassIntoMemory();
+			FrmGotoForm (ManageClassForm);
+			handled = true;
+			break;
+		case ClassesSunPushButton:
+			pstVars->selectedDoW = 0;
+			LoadClasses(pstVars);
+			handled = true;
+			break;
 		
+		case ClassesMonPushButton:
+			pstVars->selectedDoW = 1;
+			LoadClasses(pstVars);
+			handled = true;
+			break;
+		
+		case ClassesTuesPushButton:
+			pstVars->selectedDoW = 2;
+			LoadClasses(pstVars);
+			handled = true;
+			break;
+			
+		case ClassesWedPushButton:
+			pstVars->selectedDoW = 3;
+			LoadClasses(pstVars);
+			handled = true;
+			break;
+			
+		case ClassesThursPushButton:
+			pstVars->selectedDoW = 4;
+			LoadClasses(pstVars);
+			handled = true;
+			break;
+			
+		case ClassesFriPushButton:
+			pstVars->selectedDoW = 5;
+			LoadClasses(pstVars);
+			handled = true;
+			break;
+			
+		case ClassesSatPushButton:
+			pstVars->selectedDoW = 6;
+			LoadClasses(pstVars);
+			handled = true;
+			break;
+			
 		default:
 			break;
 	}
@@ -67,33 +113,50 @@ void ClassesFormInit(FormType *frmP, ClassesVariables* pstVars) {
 }
 
 void LoadClasses(ClassesVariables* pstVars) {
-	MemHandle recH;
 	UInt32 pstInt;
 	DmOpenRef gDB;
-	UInt16 i, numRecs;
-	ClassDB *rec;
+	UInt16 numRecs;
 	FormType *form = FrmGetActiveForm();
 	ListType *list = GetObjectPtr(ClassesViewList);
-	//int numChoices = 0;
 	
 	// Set custom list drawing callback function.
 	LstSetDrawFunction(list, ClassesListDraw);
 	
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef) pstInt;
-
 	numRecs = DmNumRecords(gDB);
-	
 	LstSetListChoices(list, NULL, numRecs);
+	
 	LstDrawList(list);
+}
 
-	//for (i = 0; i < numRecs; i++) {
-	//	recH = DmQueryRecord(gDB, i);
-	//	rec = MemHandleLock(recH);
-		
-	//	MemHandleUnlock(recH);
-	//	pst
-	//}
+
+void LoadSelectedClassIntoMemory() {
+	SharedClassesVariables* vars;
+	Int16 selectedItem;
+	ListType *list;
+	Err error;
+	
+	vars = (SharedClassesVariables*)MemPtrNew(sizeof(SharedClassesVariables));
+	if ((UInt32)vars == 0) return;
+	MemSet(vars, sizeof(SharedClassesVariables), 0);
+	
+	list = GetObjectPtr(ClassesViewList);
+	selectedItem = LstGetSelection(list);
+	
+	if (selectedItem == noListSelection) {
+		// TODO: properly handle error
+		return;
+	}
+	
+	vars->selectedClassIndex = selectedItem;
+	
+	error = FtrSet(appFileCreator, ftrShrdClassesVarsNum, (UInt32)vars);
+	
+	if (error != 0) {
+		// TODO: properly handle error
+		return;
+	}
 }
 
 /*
@@ -194,12 +257,24 @@ Boolean ClassesFormHandleEvent(EventPtr eventP) {
 			
 		case ctlSelectEvent:
 		{
-			return ClassesFormDoCommand(eventP->data.ctlSelect.controlID);
+			UInt32 pstInt;
+			ClassesVariables* pstVars;
+			FtrGet(appFileCreator, ftrClassesNum, &pstInt);
+			pstVars = (ClassesVariables *)pstInt;
+			
+			return ClassesFormDoCommand(eventP->data.ctlSelect.controlID, pstVars);
 		}
 		
 		case frmCloseEvent:
         {
+	        //void *temp;
+
 			FtrPtrFree(appFileCreator, ftrClassesNum);
+			
+			// Free shared variables, if exists    	
+        	//if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == 0) {
+	        //	FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
+	        //}
         	break;
         }  
 

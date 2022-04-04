@@ -265,10 +265,65 @@ void SetTimeSelectorLabels(UInt16 field, ClassVariables* pstVars) {
  *     pointer to the ManageClass form.
  */
 void ManageClassFormInit(FormType *frmP, ClassVariables* pstVars) {
+	CheckForAlreadySelected(pstVars);
 	autoSelectCurrentDay(pstVars);
 	LoadDoW(pstVars);
 }
 
+
+void CheckForAlreadySelected(ClassVariables* pstVars) {
+	UInt32 pstSharedInt, pstDbInt;
+	SharedClassesVariables* pSharedPrefs;
+	DmOpenRef gDB;
+	ClassDB *rec;
+	MemHandle recH, oldTextH, newTextH;
+	FieldType *fldP;
+	char *str;
+	
+	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0) {
+		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
+		
+		FtrGet(appFileCreator, ftrClassesDBNum, &pstDbInt);
+		gDB = (DmOpenRef) pstDbInt;
+		recH = DmQueryRecord(gDB, pSharedPrefs->selectedClassIndex);
+		rec = MemHandleLock(recH);
+		
+		pstVars->record = *rec;
+				
+		MemHandleUnlock(recH);
+		
+		//FieldType *fldP = GetObjectPtr(ManageClassRoomField);
+
+		// Update Class Name field
+		// TODO: Extract this to a function
+		fldP = GetObjectPtr(ManageClassNameField);
+		oldTextH = FldGetTextHandle(fldP);
+		newTextH = MemHandleNew(sizeof(pstVars->record.className));
+		str = MemHandleLock(newTextH);
+		StrCopy(str, pstVars->record.className);
+		MemHandleUnlock(newTextH);
+		FldSetTextHandle(fldP, newTextH);
+		FldDrawField(fldP);
+		if (oldTextH != NULL) {
+			MemHandleFree(oldTextH);
+		}
+		MemHandleUnlock(newTextH);
+		
+		
+		// Update Class Room field
+		fldP = GetObjectPtr(ManageClassRoomField);
+		oldTextH = FldGetTextHandle(fldP);
+		newTextH = MemHandleNew(sizeof(pstVars->record.classRoom));
+		str = MemHandleLock(newTextH);
+		StrCopy(str, pstVars->record.classRoom);
+		MemHandleUnlock(newTextH);
+		FldSetTextHandle(fldP, newTextH);
+		FldDrawField(fldP);
+		if (oldTextH != NULL) {
+			MemHandleFree(oldTextH);
+		}
+	}
+}
 
 /*
  * FUNCTION: AutoSelectCurrentDay
@@ -344,6 +399,13 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP) {
         
         case frmCloseEvent:
         {
+			// Free shared variables, if exists
+        	void *temp;
+        	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == 0) {
+	        	FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
+	        }
+			
+			// Free ManageClass variables
 			FtrPtrFree(appFileCreator, ftrManageClassNum);
         	break;
         }    

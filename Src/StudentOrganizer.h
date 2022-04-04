@@ -24,9 +24,10 @@
 #define kClassDBType            'CLSS'
 #define kClassesDBName          "StudentOrganizerClasses"
 
-#define ftrManageClassNum       0
-#define ftrClassesDBNum         1
-#define ftrClassesNum           2
+#define ftrManageClassNum       (UInt16)0
+#define ftrClassesDBNum         (UInt16)1
+#define ftrClassesNum           (UInt16)2
+#define ftrShrdClassesVarsNum   (UInt16)3
  
 
 /*********************************************************************
@@ -56,6 +57,10 @@ typedef struct ClassesVariables {
 	int selectedDoW; // Selected Day of Week by the pushbuttons
 	ClassDB records[]; // Records of the database
 } ClassesVariables;
+
+typedef struct SharedClassesVariables {
+	UInt16 selectedClassIndex; // DB Index of select class on Classes Form
+} SharedClassesVariables;
 
 //typedef struct GlobalVariables {
 //	DmOp
@@ -89,12 +94,13 @@ extern DmOpenRef gClassesDB;
  void ShowCurrentWeekday(FormType *frmP);
  
  /* Functions in Classes.c */
- Boolean ClassesFormDoCommand(UInt16 command);
+ Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables* pstVars);
  Boolean ClassesFormHandleEvent(EventPtr eventP);
  void ClassesFormInit(FormType *frmP, ClassesVariables* pstVars);
  void ClassesAutoSelectCurrentDay(ClassesVariables* pstVars);
  void ClassesActivateSelector(UInt16 field);
  void LoadClasses(ClassesVariables* pstVars);
+ void LoadSelectedClassIntoMemory();
  
   /* Functions in ManageClass.c */
  Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars);
@@ -109,3 +115,4 @@ extern DmOpenRef gClassesDB;
  void SetTimeSelectorLabels(UInt16 field, ClassVariables* pstVars);
  void SaveChanges(ClassVariables* pstVars);
  Err SaveChangesToDatabase(ClassVariables* pstVars);
+ void CheckForAlreadySelected(ClassVariables* pstVars);
