@@ -3,7 +3,7 @@
 #include <PalmOS.h>
 #include <SelTime.h>
 #include <StringMgr.h>
-#include "StudentOrganizer_Rsc.h"
+#include "Rsc/StudentOrganizer_Rsc.h"
 #include "StudentOrganizer.h"
 
 /*
