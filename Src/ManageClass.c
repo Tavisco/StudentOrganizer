@@ -118,20 +118,25 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 	UInt16 recIndex = dmMaxRecordIndex;
 	MemHandle recH;
 	MemPtr recP;
-	UInt32 pstInt;
+	UInt32 pstInt, pstSharedInt;
 	DmOpenRef gDB;
-	//UInt16 index;
+	SharedClassesVariables* pSharedPrefs;
+	UInt16 index = -1;
+	UInt16 newSize;
+
+	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0) {
+		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
+		index = pSharedPrefs->selectedClassIndex;
+	}
 
 	recP = MemPtrNew(sizeof(ClassDB));
-	//(ClassDBPtr)recP = pstVars->record;
-	//index = GetClassFromDatabase((ClassDBPtr)recP);
 	MemPtrFree(recP);
 
-	//if (index == -1) }
-		// New record
-		
-		FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
-		gDB = (DmOpenRef) pstInt;
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef) pstInt;
+
+	if (index == (UInt16)-1) {
+		// New record	
 		//recIndex = DmNumRecords(gDB);
 		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record));
 		if (recH) {
@@ -140,9 +145,14 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 			error = DmReleaseRecord(gDB, recIndex, true);
 			MemHandleUnlock(recH);
 		}
-	//} else {
+	} else {
 		// Edit record
-	//}
+		newSize = sizeof(pstVars->record);
+		recH = DmResizeRecord(gDB, index, newSize);
+		DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
+		error = DmReleaseRecord(gDB, index, true);
+		MemHandleUnlock(recH);
+	}
 	return error;
 }
 
@@ -289,10 +299,8 @@ void CheckForAlreadySelected(ClassVariables* pstVars) {
 		rec = MemHandleLock(recH);
 		
 		pstVars->record = *rec;
-				
+
 		MemHandleUnlock(recH);
-		
-		//FieldType *fldP = GetObjectPtr(ManageClassRoomField);
 
 		// Update Class Name field
 		// TODO: Extract this to a function
@@ -306,9 +314,7 @@ void CheckForAlreadySelected(ClassVariables* pstVars) {
 		FldDrawField(fldP);
 		if (oldTextH != NULL) {
 			MemHandleFree(oldTextH);
-		}
-		MemHandleUnlock(newTextH);
-		
+		}		
 		
 		// Update Class Room field
 		fldP = GetObjectPtr(ManageClassRoomField);
