@@ -124,6 +124,7 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 	UInt16 index = -1;
 	UInt16 newSize;
 
+	// Check if we are editing, and get the index.
 	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0) {
 		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
 		index = pSharedPrefs->selectedClassIndex;
@@ -149,6 +150,7 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 		// Edit record
 		newSize = sizeof(pstVars->record);
 		recH = DmResizeRecord(gDB, index, newSize);
+		recP = MemHandleLock(recH);
 		DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
 		error = DmReleaseRecord(gDB, index, true);
 		MemHandleUnlock(recH);
