@@ -9,16 +9,24 @@ static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 	DmOpenRef gDB;
 	ClassDB *rec;
 	MemHandle recH;
+	ClassesVariables* pstVars;
+	Boolean hasClass = false;
 	
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef) pstInt;
 	
 	recH = DmQueryRecord(gDB, itemNum);
 	rec = MemHandleLock(recH);
-	
-	WinDrawChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y);
-	
 	MemHandleUnlock(recH);
+	
+	FtrGet(appFileCreator, ftrClassesNum, &pstInt);
+	pstVars = (ClassesVariables *)pstInt;
+
+	hasClass = rec->classOcurrence[pstVars->selectedDoW].active;
+	
+	if (hasClass) {
+		WinDrawChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y);
+	}
 }
 
 /*
@@ -267,14 +275,7 @@ Boolean ClassesFormHandleEvent(EventPtr eventP) {
 		
 		case frmCloseEvent:
         {
-	        //void *temp;
-
 			FtrPtrFree(appFileCreator, ftrClassesNum);
-			
-			// Free shared variables, if exists    	
-        	//if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == 0) {
-	        //	FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
-	        //}
         	break;
         }  
 

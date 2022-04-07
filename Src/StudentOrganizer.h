@@ -48,13 +48,13 @@ typedef struct ClassDB {
 typedef ClassDB* ClassDBPtr;
 
 typedef struct ClassVariables {
-	int selectedDoW; // Selected Day of Week by the pushbuttons
+	Int16 selectedDoW; // Selected Day of Week by the pushbuttons
 	ClassDB record; // Current database record
 	Int16 dowPushButtons[7];// = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 } ClassVariables;
 
 typedef struct ClassesVariables {
-	int selectedDoW; // Selected Day of Week by the pushbuttons
+	Int16 selectedDoW; // Selected Day of Week by the pushbuttons
 	ClassDB records[]; // Records of the database
 } ClassesVariables;
 
