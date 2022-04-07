@@ -124,6 +124,10 @@ void LoadClasses(ClassesVariables* pstVars) {
 	UInt32 pstInt;
 	DmOpenRef gDB;
 	UInt16 numRecs;
+	ClassDB *rec;
+	MemHandle recH;
+	UInt16 itemCount = 0;
+
 	FormType *form = FrmGetActiveForm();
 	ListType *list = GetObjectPtr(ClassesViewList);
 	
@@ -133,11 +137,23 @@ void LoadClasses(ClassesVariables* pstVars) {
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef) pstInt;
 	numRecs = DmNumRecords(gDB);
-	LstSetListChoices(list, NULL, numRecs);
+
+	for (UInt16 i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (rec->classOcurrence[pstVars->selectedDoW].active) {
+			itemCount += 1;
+		}
+	}
+	
+
+	LstSetListChoices(list, NULL, itemCount);
 	
 	LstDrawList(list);
 }
-
 
 void LoadSelectedClassIntoMemory() {
 	SharedClassesVariables* vars;

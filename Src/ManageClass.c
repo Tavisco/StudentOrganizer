@@ -130,6 +130,8 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 		index = pSharedPrefs->selectedClassIndex;
 	}
 
+	// TODO: Check if the class name is unique
+
 	recP = MemPtrNew(sizeof(ClassDB));
 	MemPtrFree(recP);
 
