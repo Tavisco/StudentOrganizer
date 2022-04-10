@@ -6,6 +6,7 @@
 
 static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused) {
 	UInt32 pstInt;
+	UInt16 numRecs, i, iDoW;
 	DmOpenRef gDB;
 	ClassDB *rec;
 	MemHandle recH;
@@ -14,18 +15,27 @@ static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 	
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef) pstInt;
-	
-	recH = DmQueryRecord(gDB, itemNum);
-	rec = MemHandleLock(recH);
-	MemHandleUnlock(recH);
-	
+	//recH = DmQueryRecord(gDB, itemNum);
+	//rec = MemHandleLock(recH);
+	//MemHandleUnlock(recH);
+	numRecs = DmNumRecords(gDB);
 	FtrGet(appFileCreator, ftrClassesNum, &pstInt);
 	pstVars = (ClassesVariables *)pstInt;
 
-	hasClass = rec->classOcurrence[pstVars->selectedDoW].active;
-	
-	if (hasClass) {
-		WinDrawChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y);
+	iDoW = 0;
+
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (rec->classOcurrence[pstVars->selectedDoW].active) {
+			if (iDoW == itemNum) {
+				WinDrawChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y);
+			}
+			iDoW += 1;
+		}
 	}
 }
 
@@ -123,7 +133,7 @@ void ClassesFormInit(FormType *frmP, ClassesVariables* pstVars) {
 void LoadClasses(ClassesVariables* pstVars) {
 	UInt32 pstInt;
 	DmOpenRef gDB;
-	UInt16 numRecs;
+	UInt16 numRecs, i;
 	ClassDB *rec;
 	MemHandle recH;
 	UInt16 itemCount = 0;
@@ -138,20 +148,21 @@ void LoadClasses(ClassesVariables* pstVars) {
 	gDB = (DmOpenRef) pstInt;
 	numRecs = DmNumRecords(gDB);
 
-	for (UInt16 i = 0; i < numRecs; i++)
+	for (i = 0; i < numRecs; i++)
 	{
 		recH = DmQueryRecord(gDB, i);
 		rec = MemHandleLock(recH);
 		MemHandleUnlock(recH);
 
 		if (rec->classOcurrence[pstVars->selectedDoW].active) {
+			// TODO: Save the index on a global to fetch later
+			// in order to avoid reescaning the whole DB on 
+			// every freaking line draw
 			itemCount += 1;
 		}
 	}
-	
 
 	LstSetListChoices(list, NULL, itemCount);
-	
 	LstDrawList(list);
 }
 

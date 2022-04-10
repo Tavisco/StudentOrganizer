@@ -47,6 +47,7 @@ typedef struct ClassDB {
 
 typedef ClassDB* ClassDBPtr;
 
+// TODO: Rename following struct to ManageClassVariables
 typedef struct ClassVariables {
 	Int16 selectedDoW; // Selected Day of Week by the pushbuttons
 	ClassDB record; // Current database record
