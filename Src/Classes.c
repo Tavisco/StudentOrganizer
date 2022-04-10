@@ -173,6 +173,8 @@ void LoadSelectedClassIntoMemory() {
 		return;
 	}
 	
+	// TODO: Get the class name here somehow... And store it in the vars
+
 	vars->selectedClassIndex = selectedItem;
 	
 	error = FtrSet(appFileCreator, ftrShrdClassesVarsNum, (UInt32)vars);
