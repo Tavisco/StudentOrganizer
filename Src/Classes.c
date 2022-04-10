@@ -209,8 +209,8 @@ void LoadSelectedClassIntoMemory() {
 		if (rec->classOcurrence[pstVars->selectedDoW].active) {
 			// Check if the current item matches the selection
 			if (selectedItem == itemNum) {
-				// If it does, copy the class name to sharedVars
-				StrCopy(vars->className, rec->className);
+				// If it does, store the DBIndex to sharedVars
+				vars->selectedClassDbIndex = i;
 				break;
 			}
 			itemNum += 1;

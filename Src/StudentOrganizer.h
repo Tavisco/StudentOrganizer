@@ -60,7 +60,7 @@ typedef struct ClassesVariables {
 } ClassesVariables;
 
 typedef struct SharedClassesVariables {
-	Char className[19]; // Name of the selected class to edit
+	UInt16 selectedClassDbIndex; // DB Index of select class on Classes Form
 } SharedClassesVariables;
 
 //typedef struct GlobalVariables {
