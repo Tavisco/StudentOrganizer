@@ -125,10 +125,10 @@ Err SaveChangesToDatabase(ClassVariables* pstVars) {
 	UInt16 newSize;
 
 	// Check if we are editing, and get the index.
-	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0) {
-		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
-		index = pSharedPrefs->selectedClassIndex;
-	}
+	//if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0) {
+	//	pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
+	//	index = pSharedPrefs->selectedClassIndex;
+	//}
 
 	// TODO: Check if the class name is unique
 

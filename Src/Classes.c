@@ -15,9 +15,6 @@ static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 	
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef) pstInt;
-	//recH = DmQueryRecord(gDB, itemNum);
-	//rec = MemHandleLock(recH);
-	//MemHandleUnlock(recH);
 	numRecs = DmNumRecords(gDB);
 	FtrGet(appFileCreator, ftrClassesNum, &pstInt);
 	pstVars = (ClassesVariables *)pstInt;
@@ -168,14 +165,21 @@ void LoadClasses(ClassesVariables* pstVars) {
 
 void LoadSelectedClassIntoMemory() {
 	SharedClassesVariables* vars;
-	Int16 selectedItem;
+	Int16 selectedItem, numRecs, i, itemNum;
 	ListType *list;
 	Err error;
+	UInt32 pstInt;
+	DmOpenRef gDB;
+	ClassDB *rec;
+	MemHandle recH;
+	ClassesVariables* pstVars;
 	
+	// Load shared Vars
 	vars = (SharedClassesVariables*)MemPtrNew(sizeof(SharedClassesVariables));
 	if ((UInt32)vars == 0) return;
 	MemSet(vars, sizeof(SharedClassesVariables), 0);
 	
+	// Get selected item Index
 	list = GetObjectPtr(ClassesViewList);
 	selectedItem = LstGetSelection(list);
 	
@@ -184,9 +188,34 @@ void LoadSelectedClassIntoMemory() {
 		return;
 	}
 	
-	// TODO: Get the class name here somehow... And store it in the vars
+	// Load current form globals
+	FtrGet(appFileCreator, ftrClassesNum, &pstInt);
+	pstVars = (ClassesVariables *)pstInt;
+	
+	// Load classes DB and get total amount of recs
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef) pstInt;
+	numRecs = DmNumRecords(gDB);
+	
+	// Iterate on every one
+	itemNum = 0;
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
 
-	vars->selectedClassIndex = selectedItem;
+		// Check if the class has current DoW Active
+		if (rec->classOcurrence[pstVars->selectedDoW].active) {
+			// Check if the current item matches the selection
+			if (selectedItem == itemNum) {
+				// If it does, copy the class name to sharedVars
+				StrCopy(vars->className, rec->className);
+				break;
+			}
+			itemNum += 1;
+		}
+	}
 	
 	error = FtrSet(appFileCreator, ftrShrdClassesVarsNum, (UInt32)vars);
 	
