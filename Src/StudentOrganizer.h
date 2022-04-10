@@ -114,6 +114,6 @@ extern DmOpenRef gClassesDB;
  void LoadDoW();
  void SetTimeSelectorVisibility();
  void SetTimeSelectorLabels(UInt16 field, ClassVariables* pstVars);
- void SaveChanges(ClassVariables* pstVars);
+ Err SaveChanges(ClassVariables* pstVars);
  Err SaveChangesToDatabase(ClassVariables* pstVars);
  void CheckForAlreadySelected(ClassVariables* pstVars);

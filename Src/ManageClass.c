@@ -21,8 +21,9 @@ Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars) {
 	
 	switch(command) {
 		case ManageClassDoneButton:
-			SaveChanges(pstVars);
-			FrmGotoForm (ClassesForm);
+			if (SaveChanges(pstVars) == errNone) {			
+				FrmGotoForm (ClassesForm);
+			}
 			handled = true;
 			break;
 			
@@ -95,22 +96,30 @@ Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars) {
 	return handled;
 }
 
-void SaveChanges(ClassVariables* pstVars) {
-	Err error;
+Err SaveChanges(ClassVariables* pstVars) {
+	Err error = errNone;
 	Char *fldNameTxt, *fldRoomTxt = "\n";
 	FieldType *fldNameP = GetObjectPtr(ManageClassNameField);
 	FieldType *fldRoomP = GetObjectPtr(ManageClassRoomField);
 
 	fldNameTxt = FldGetTextPtr(fldNameP);
+	if (fldNameTxt == NULL) {
+		FrmCustomAlert(ManageClassMissingFieldAlert, "Class name", NULL, NULL);
+		error = 1;
+		return error;
+	}
 	StrCopy(pstVars->record.className, fldNameTxt);
 
+
 	fldRoomTxt = FldGetTextPtr(fldRoomP);
+	if (fldRoomTxt == NULL) {
+		FrmCustomAlert(ManageClassMissingFieldAlert, "Class room", NULL, NULL);
+		error = 1;
+		return error;
+	}
 	StrCopy(pstVars->record.classRoom, fldRoomTxt);
 
-	error = SaveChangesToDatabase(pstVars);
-	if (!error) {
-		return;
-	}
+    return SaveChangesToDatabase(pstVars);
 }
 
 Err SaveChangesToDatabase(ClassVariables* pstVars) {
