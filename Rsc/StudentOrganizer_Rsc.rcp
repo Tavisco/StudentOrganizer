@@ -60,15 +60,12 @@ FORM ID AboutForm AT (2 2 156 156)
     DEFAULTBTNID AboutOKButton
 BEGIN
 	TITLE "About Student Organizer"
-	LABEL "Student Organizer"
-	    AUTOID AT (CENTER 23)
+	LABEL "Student Organizer" ID AboutAppTitleLabel
+	     AT (CENTER 23)
 	    FONT 2
 	LABEL 
-		"Use this application as a\r" \
-	    "starting point for your own\r" \
-	    "exciting Palm applications!"
-		AUTOID AT (23 54)
-	FIELD ID AboutVersionField AT (50 100 60 12)
+		"WIP Student Organizer!\rMore details at:\rhttps://palm.otavio.dev.br" ID AboutDescriptionLabel AT (23 54)
+	FIELD ID AboutVersionField AT (47 39 60 12)
 	    NONEDITABLE
 	    MAXCHARS 80 
 	    FONT 1 
@@ -140,4 +137,20 @@ BEGIN
 	CHECKBOX "" ID ManageClassHasClassCheckbox  AT (76 94 AUTO AUTO)
 	LABEL "Class this day:" AUTOID AT (2 94) FONT 1
 	
+END
+
+ALERT ID ManageClassMissingFieldAlert 
+ERROR DEFAULTBUTTON 0
+BEGIN
+     TITLE "Validation error"
+     MESSAGE "^1 field is empty, and it is mandatory!"
+     BUTTONS "OK" 
+END
+
+ALERT ID ManageClassOneWeekdayNeededAlert  
+ERROR
+BEGIN
+     TITLE "Validation error"
+     MESSAGE "No weekdays are active! Activate and set the schedule for at least one, or, delete this class."
+     BUTTONS "OK" 
 END

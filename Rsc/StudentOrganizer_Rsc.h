@@ -1,4 +1,6 @@
 /* pilrc generated file.  Do not edit!*/
+#define ManageClassOneWeekdayNeededAlert 1059
+#define ManageClassMissingFieldAlert 1058
 #define ManageClassHasClassCheckbox 1056
 #define ManageClassFinishSelectorTrigger 1055
 #define ManageClassFinishLabel 1054
@@ -31,6 +33,8 @@
 #define ClassesDoneButton 1027
 #define ClassesForm 1026
 #define AboutVersionField 1025
+#define AboutDescriptionLabel 1024
+#define AboutAppTitleLabel 1023
 #define AboutOKButton 1022
 #define AboutForm 1021
 #define MainHomeworkStatusLabel 1020
