@@ -6,8 +6,9 @@
 
 static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused) {
 	UInt32 pstInt;
-	UInt16 numRecs, i, iDoW;
-	DmOpenRef gDB;
+	UInt16 numRecs, i;
+	Int16 iDoW;
+ 	DmOpenRef gDB;
 	ClassDB *rec;
 	MemHandle recH;
 	ClassesVariables* pstVars;
