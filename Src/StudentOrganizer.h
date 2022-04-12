@@ -117,3 +117,4 @@ extern DmOpenRef gClassesDB;
  Err SaveChanges(ClassVariables* pstVars);
  Err SaveChangesToDatabase(ClassVariables* pstVars);
  void CheckForAlreadySelected(ClassVariables* pstVars);
+ Boolean IsScheduleInvalid(ClassesVariables* pstVars);

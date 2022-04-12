@@ -151,7 +151,7 @@ ALERT ID ManageClassOneWeekdayNeededAlert
 ERROR
 BEGIN
      TITLE "Validation error"
-     MESSAGE "No weekdays are active! Activate and set the schedule for at least one, or, delete this class."
+     MESSAGE "No weekdays are active and have a valid schedule! Activate and set the schedule for at least one, or, delete this class."
      BUTTONS "OK" 
 END
 

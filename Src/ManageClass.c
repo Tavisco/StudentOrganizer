@@ -119,7 +119,17 @@ Err SaveChanges(ClassVariables* pstVars) {
 	}
 	StrCopy(pstVars->record.classRoom, fldRoomTxt);
 
+	if (IsScheduleInvalid(pstVars)) {
+		FrmCustomAlert(ManageClassOneWeekdayNeededAlert, NULL, NULL, NULL);
+		error = 1;
+		return error;
+	}
+
     return SaveChangesToDatabase(pstVars);
+}
+
+Boolean IsScheduleInvalid(ClassesVariables* pstVars) {
+	return false;
 }
 
 Err SaveChangesToDatabase(ClassVariables* pstVars) {
