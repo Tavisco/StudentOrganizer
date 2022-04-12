@@ -47,12 +47,11 @@ typedef struct ClassDB {
 
 typedef ClassDB* ClassDBPtr;
 
-// TODO: Rename following struct to ManageClassVariables
-typedef struct ClassVariables {
+typedef struct ManageClassVariables {
 	Int16 selectedDoW; // Selected Day of Week by the pushbuttons
 	ClassDB record; // Current database record
 	Int16 dowPushButtons[7];// = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
-} ClassVariables;
+} ManageClassVariables;
 
 typedef struct ClassesVariables {
 	Int16 selectedDoW; // Selected Day of Week by the pushbuttons
@@ -104,17 +103,17 @@ extern DmOpenRef gClassesDB;
  void LoadSelectedClassIntoMemory(ClassesVariables* pstVars);
  
   /* Functions in ManageClass.c */
- Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars);
+ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables* pstVars);
  Boolean ManageClassFormHandleEvent(EventPtr eventP);
- void ManageClassFormInit(FormType *frmP, ClassVariables* pstVars);
- void AskTimeToUser(UInt16 field, ClassVariables* pstVars);
+ void ManageClassFormInit(FormType *frmP, ManageClassVariables* pstVars);
+ void AskTimeToUser(UInt16 field, ManageClassVariables* pstVars);
  void ToggleTimeSelectorTrigger();
  void autoSelectCurrentDay();
  void activateSelector(UInt16 field);
  void LoadDoW();
  void SetTimeSelectorVisibility();
- void SetTimeSelectorLabels(UInt16 field, ClassVariables* pstVars);
- Err SaveChanges(ClassVariables* pstVars);
- Err SaveChangesToDatabase(ClassVariables* pstVars);
- void CheckForAlreadySelected(ClassVariables* pstVars);
- Boolean IsScheduleInvalid(ClassesVariables* pstVars);
+ void SetTimeSelectorLabels(UInt16 field, ManageClassVariables* pstVars);
+ Err SaveChanges(ManageClassVariables* pstVars);
+ Err SaveChangesToDatabase(ManageClassVariables* pstVars);
+ void CheckForAlreadySelected(ManageClassVariables* pstVars);
+ Boolean IsScheduleInvalid(ManageClassVariables* pstVars);
