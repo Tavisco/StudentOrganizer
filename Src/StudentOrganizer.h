@@ -101,7 +101,7 @@ extern DmOpenRef gClassesDB;
  void ClassesAutoSelectCurrentDay(ClassesVariables* pstVars);
  void ClassesActivateSelector(UInt16 field);
  void LoadClasses(ClassesVariables* pstVars);
- void LoadSelectedClassIntoMemory();
+ void LoadSelectedClassIntoMemory(ClassesVariables* pstVars);
  
   /* Functions in ManageClass.c */
  Boolean ManageClassFormDoCommand(UInt16 command, ClassVariables* pstVars);

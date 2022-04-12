@@ -60,7 +60,7 @@ Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables* pstVars) {
 			handled = true;
 			break;
 		case ClassesEditButton:
-			LoadSelectedClassIntoMemory();
+			LoadSelectedClassIntoMemory(pstVars);
 			FrmGotoForm (ManageClassForm);
 			handled = true;
 			break;
@@ -164,7 +164,7 @@ void LoadClasses(ClassesVariables* pstVars) {
 	LstDrawList(list);
 }
 
-void LoadSelectedClassIntoMemory() {
+void LoadSelectedClassIntoMemory(ClassesVariables* pstVars) {
 	SharedClassesVariables* vars;
 	Int16 selectedItem, numRecs, i, itemNum;
 	ListType *list;
@@ -173,7 +173,6 @@ void LoadSelectedClassIntoMemory() {
 	DmOpenRef gDB;
 	ClassDB *rec;
 	MemHandle recH;
-	ClassesVariables* pstVars;
 	
 	// Load shared Vars
 	vars = (SharedClassesVariables*)MemPtrNew(sizeof(SharedClassesVariables));
@@ -188,10 +187,6 @@ void LoadSelectedClassIntoMemory() {
 		// TODO: properly handle error
 		return;
 	}
-	
-	// Load current form globals
-	FtrGet(appFileCreator, ftrClassesNum, &pstInt);
-	pstVars = (ClassesVariables *)pstInt;
 	
 	// Load classes DB and get total amount of recs
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
