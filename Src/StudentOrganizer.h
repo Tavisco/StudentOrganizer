@@ -37,20 +37,17 @@
 typedef struct ClassOccurrenceDB {
 	Boolean active, timeHasBeenSet;
 	Int16 dayOfWeekInt, sHour, sMinute, fHour, fMinute;
-	} ClassOccurrenceDB;
+} ClassOccurrenceDB;
 
 typedef struct ClassDB {
 	struct ClassOccurrenceDB classOcurrence[7];
 	Char className[19];
 	Char classRoom[9];
-	} ClassDB;
-
-typedef ClassDB* ClassDBPtr;
+} ClassDB;
 
 typedef struct ManageClassVariables {
 	Int16 selectedDoW; // Selected Day of Week by the pushbuttons
 	ClassDB record; // Current database record
-	Int16 dowPushButtons[7];// = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 } ManageClassVariables;
 
 typedef struct ClassesVariables {
@@ -61,17 +58,6 @@ typedef struct ClassesVariables {
 typedef struct SharedClassesVariables {
 	UInt16 selectedClassDbIndex; // DB Index of select class on Classes Form
 } SharedClassesVariables;
-
-//typedef struct GlobalVariables {
-//	DmOp
-//}
-
-/*********************************************************************
- * Global variables
- *********************************************************************/
-
-extern DmOpenRef gClassesDB;
-
 
 /*********************************************************************
  * Function Prototypes
