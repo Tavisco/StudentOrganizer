@@ -78,6 +78,7 @@ typedef struct SharedClassesVariables {
  void MainFormInit(FormType *frmP);
  void ShowCurrentTime(FormType *frmP);
  void ShowCurrentWeekday(FormType *frmP);
+ void SetCurrentClass(FormType *frmP);
  
  /* Functions in Classes.c */
  Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables* pstVars);

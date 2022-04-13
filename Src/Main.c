@@ -23,33 +23,32 @@ Boolean MainFormDoCommand(UInt16 command)
 
 	switch (command)
 	{
-		case OptionsAboutStudentOrganizer:
-		{
-			FormType * frmP;
+	case OptionsAboutStudentOrganizer:
+	{
+		FormType *frmP;
 
-			/* Clear the menu status from the display */
-			MenuEraseStatus(0);
+		/* Clear the menu status from the display */
+		MenuEraseStatus(0);
 
-			/* Display the About Box. */
-			frmP = FrmInitForm (AboutForm);
-			FrmDoDialog (frmP);                    
-			FrmDeleteForm (frmP);
+		/* Display the About Box. */
+		frmP = FrmInitForm(AboutForm);
+		FrmDoDialog(frmP);
+		FrmDeleteForm(frmP);
 
-			handled = true;
-			break;
-		}
-		
-		case MainManageClassesButton:
-		{
-			FrmGotoForm (ClassesForm);
-			handled = true;
-			break;
-		}
+		handled = true;
+		break;
+	}
+
+	case MainManageClassesButton:
+	{
+		FrmGotoForm(ClassesForm);
+		handled = true;
+		break;
+	}
 	}
 
 	return handled;
 }
-
 
 /*
  * FUNCTION: MainFormInit
@@ -65,8 +64,56 @@ void MainFormInit(FormType *frmP)
 {
 	ShowCurrentTime(frmP);
 	ShowCurrentWeekday(frmP);
+	SetCurrentClass(frmP);
 }
 
+/**
+ * @brief Set the Current Class label.
+ *
+ * @param frmP
+ */
+void SetCurrentClass(FormType *frmP)
+{
+	DateTimeType now, start, finish;
+	UInt32 pstInt, nowSec, startSec, finishSec;
+	DmOpenRef gDB;
+	UInt16 numRecs, i;
+	ClassDB *rec;
+	MemHandle recH;
+
+	nowSec = TimGetSeconds();
+	TimSecondsToDateTime(nowSec, &now);
+	start = now;
+	finish = now;
+
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
+
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (rec->classOcurrence[now.weekDay].active)
+		{
+			start.hour = rec->classOcurrence[now.weekDay].sHour;
+			start.minute = rec->classOcurrence[now.weekDay].sMinute;
+			startSec = TimDateTimeToSeconds(&start);
+
+			finish.hour = rec->classOcurrence[now.weekDay].fHour;
+			finish.minute = rec->classOcurrence[now.weekDay].fMinute;
+			finishSec = TimDateTimeToSeconds(&finish);
+
+			if (nowSec >= startSec && nowSec <= finishSec)
+			{
+				// Truncate characters to no exceed the limit on the resource
+				FrmCopyLabel(frmP, MainCurrentClassLabel, rec->className);	
+			}
+		}
+	}
+}
 
 /*
  * FUNCTION: ShowCurrentTime
@@ -78,8 +125,9 @@ void MainFormInit(FormType *frmP)
  * frm
  *     pointer to the MainForm form.
  */
- 
-void ShowCurrentTime(FormType *frmP){
+
+void ShowCurrentTime(FormType *frmP)
+{
 	DateTimeType now;
 	char timeStr[timeStringLength];
 
@@ -89,7 +137,8 @@ void ShowCurrentTime(FormType *frmP){
 	FrmCopyLabel(frmP, MainTimeLabel, timeStr);
 }
 
-void ShowCurrentWeekday(FormType *frmP){
+void ShowCurrentWeekday(FormType *frmP)
+{
 	DateTimeType now;
 	Char dowNameStr[dowDateStringLength];
 
@@ -102,7 +151,7 @@ void ShowCurrentWeekday(FormType *frmP){
  *
  * DESCRIPTION:
  *
- * This routine is the event handler for the "MainForm" of this 
+ * This routine is the event handler for the "MainForm" of this
  * application.
  *
  * PARAMETERS:
@@ -118,33 +167,33 @@ void ShowCurrentWeekday(FormType *frmP){
 Boolean MainFormHandleEvent(EventPtr eventP)
 {
 	Boolean handled = false;
-	FormType * frmP;
+	FormType *frmP;
 
-	switch (eventP->eType) 
+	switch (eventP->eType)
 	{
-		case menuEvent:
-			return MainFormDoCommand(eventP->data.menu.itemID);
+	case menuEvent:
+		return MainFormDoCommand(eventP->data.menu.itemID);
 
-		case frmOpenEvent:
-			frmP = FrmGetActiveForm();
-			FrmDrawForm(frmP);
-			MainFormInit(frmP);
-			handled = true;
-			break;
-            
-        case frmUpdateEvent:
-			/* 
-			 * To do any custom drawing here, first call
-			 * FrmDrawForm(), then do your drawing, and
-			 * then set handled to true. 
-			 */
-			break;
-			
-		case ctlSelectEvent:
-		{
-			return MainFormDoCommand(eventP->data.menu.itemID);
-		}
+	case frmOpenEvent:
+		frmP = FrmGetActiveForm();
+		FrmDrawForm(frmP);
+		MainFormInit(frmP);
+		handled = true;
+		break;
+
+	case frmUpdateEvent:
+		/*
+		 * To do any custom drawing here, first call
+		 * FrmDrawForm(), then do your drawing, and
+		 * then set handled to true.
+		 */
+		break;
+
+	case ctlSelectEvent:
+	{
+		return MainFormDoCommand(eventP->data.menu.itemID);
 	}
-    
+	}
+
 	return handled;
 }

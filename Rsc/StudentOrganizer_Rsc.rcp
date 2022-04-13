@@ -47,11 +47,11 @@ BEGIN
 	LABEL "Time is:" ID MainTimeDscLabel  AT (77 20)
 	LABEL "00:00" ID MainTimeLabel  AT (110 20)
 	LABEL "Current class:" ID MainCurrentClassDscrLabel  AT (77 34) FONT 1
-	LABEL "XXXXXXXXXXX" ID MainCurrentClassLabel  AT (80 44)
+	LABEL "None. Enjoy!" ID MainCurrentClassLabel  AT (80 44)
 	LABEL "Next class:" ID MainNextClassDscrLabel  AT (77 57) FONT 1
-	LABEL "XXXXXXXXXXX" ID MainNextClassLabel  AT (80 67)
+	LABEL "None. Enjoy!" ID MainNextClassLabel  AT (80 67)
 	LABEL "Today is:" ID MainWeekdayDscrLabel  AT (77 82) FONT 1
-	LABEL "XXXXXXXXXXXXX" ID MainWeekdayLabel  AT (80 93)
+	LABEL "Calculating..." ID MainWeekdayLabel  AT (80 93)
 	LABEL "Homework\rstatus:" ID MainHomeworkStatusLabel  AT (77 106) FONT 1
 	END
 
