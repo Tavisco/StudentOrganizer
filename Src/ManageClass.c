@@ -16,151 +16,162 @@
  * command
  *     form item id
  */
-Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables* pstVars) {
+Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
+{
 	Boolean handled = false;
-	
-	switch(command) {
-		case ManageClassDoneButton:
-			if (SaveChanges(pstVars) == errNone) {			
-				FrmGotoForm (ClassesForm);
-			}
-			handled = true;
-			break;
-			
-		case ManageClassCancelButton:
-			FrmGotoForm (ClassesForm);
-			handled = true;
-			break;
-			
-		case ManageClassStartSelectorTrigger:
-			AskTimeToUser(ManageClassStartSelectorTrigger, pstVars);
-			handled = true;
-			break;
-			
-		case ManageClassFinishSelectorTrigger:
-			AskTimeToUser(ManageClassFinishSelectorTrigger, pstVars);
-			handled = true;
-			break;
-		
-		case ManageClassHasClassCheckbox:
-			ToggleTimeSelectorTrigger(pstVars);
-			handled = true;
-			break;
-		
-		case ManageClassSunPushButton:
-			pstVars->selectedDoW = 0;
-			LoadDoW(pstVars);
-			handled = true;
-			break;
-		
-		case ManageClassMonPushButton:
-			pstVars->selectedDoW = 1;
-			LoadDoW(pstVars);
-			handled = true;
-			break;
-		
-		case ManageClassTuesPushButton:
-			pstVars->selectedDoW = 2;
-			LoadDoW(pstVars);
-			handled = true;
-			break;
-			
-		case ManageClassWedPushButton:
-			pstVars->selectedDoW = 3;
-			LoadDoW(pstVars);
-			handled = true;
-			break;
-			
-		case ManageClassThursPushButton:
-			pstVars->selectedDoW = 4;
-			LoadDoW(pstVars);
-			handled = true;
-			break;
-			
-		case ManageClassFriPushButton:
-			pstVars->selectedDoW = 5;
-			LoadDoW(pstVars);
-			handled = true;
-			break;
-			
-		case ManageClassSatPushButton:
-			pstVars->selectedDoW = 6;
-			LoadDoW(pstVars);
-			handled = true;
-			break;
-			
-		default:
-			break;
+
+	switch (command)
+	{
+	case ManageClassDoneButton:
+		if (SaveChanges(pstVars) == errNone)
+		{
+			FrmGotoForm(ClassesForm);
+		}
+		handled = true;
+		break;
+
+	case ManageClassCancelButton:
+		FrmGotoForm(ClassesForm);
+		handled = true;
+		break;
+
+	case ManageClassStartSelectorTrigger:
+		AskTimeToUser(ManageClassStartSelectorTrigger, pstVars);
+		handled = true;
+		break;
+
+	case ManageClassFinishSelectorTrigger:
+		AskTimeToUser(ManageClassFinishSelectorTrigger, pstVars);
+		handled = true;
+		break;
+
+	case ManageClassHasClassCheckbox:
+		ToggleTimeSelectorTrigger(pstVars);
+		handled = true;
+		break;
+
+	case ManageClassSunPushButton:
+		pstVars->selectedDoW = 0;
+		LoadDoW(pstVars);
+		handled = true;
+		break;
+
+	case ManageClassMonPushButton:
+		pstVars->selectedDoW = 1;
+		LoadDoW(pstVars);
+		handled = true;
+		break;
+
+	case ManageClassTuesPushButton:
+		pstVars->selectedDoW = 2;
+		LoadDoW(pstVars);
+		handled = true;
+		break;
+
+	case ManageClassWedPushButton:
+		pstVars->selectedDoW = 3;
+		LoadDoW(pstVars);
+		handled = true;
+		break;
+
+	case ManageClassThursPushButton:
+		pstVars->selectedDoW = 4;
+		LoadDoW(pstVars);
+		handled = true;
+		break;
+
+	case ManageClassFriPushButton:
+		pstVars->selectedDoW = 5;
+		LoadDoW(pstVars);
+		handled = true;
+		break;
+
+	case ManageClassSatPushButton:
+		pstVars->selectedDoW = 6;
+		LoadDoW(pstVars);
+		handled = true;
+		break;
+
+	default:
+		break;
 	}
 
 	return handled;
 }
 
-Err SaveChanges(ManageClassVariables* pstVars) {
+Err SaveChanges(ManageClassVariables *pstVars)
+{
 	Err error = errNone;
 	Char *fldNameTxt, *fldRoomTxt = "\n";
 	FieldType *fldNameP = GetObjectPtr(ManageClassNameField);
 	FieldType *fldRoomP = GetObjectPtr(ManageClassRoomField);
 
 	fldNameTxt = FldGetTextPtr(fldNameP);
-	if (fldNameTxt == NULL) {
+	if (fldNameTxt == NULL)
+	{
 		FrmCustomAlert(ManageClassMissingFieldAlert, "Class name", NULL, NULL);
 		error = 1;
 		return error;
 	}
 	StrCopy(pstVars->record.className, fldNameTxt);
 
-
 	fldRoomTxt = FldGetTextPtr(fldRoomP);
-	if (fldRoomTxt == NULL) {
+	if (fldRoomTxt == NULL)
+	{
 		FrmCustomAlert(ManageClassMissingFieldAlert, "Class room", NULL, NULL);
 		error = 1;
 		return error;
 	}
 	StrCopy(pstVars->record.classRoom, fldRoomTxt);
 
-	if (IsScheduleInvalid(pstVars)) {
+	if (IsScheduleInvalid(pstVars))
+	{
 		FrmCustomAlert(ManageClassOneWeekdayNeededAlert, NULL, NULL, NULL);
 		error = 1;
 		return error;
 	}
 
-    return SaveChangesToDatabase(pstVars);
+	return SaveChangesToDatabase(pstVars);
 }
 
-Boolean IsScheduleInvalid(ManageClassVariables* pstVars) {
+Boolean IsScheduleInvalid(ManageClassVariables *pstVars)
+{
 	Boolean invalid = false;
 	Boolean oneActive = false;
 
 	for (Int16 i = 0; (i < 7) && !invalid; i++)
 	{
-		if (pstVars->record.classOcurrence[i].active) {
+		if (pstVars->record.classOcurrence[i].active)
+		{
 			oneActive = true;
 
 			invalid = !pstVars->record.classOcurrence[i].timeHasBeenSet; // TODO: Update this to have set status by start and finish fields
 		}
 	}
-	
-	if (!oneActive) {
+
+	if (!oneActive)
+	{
 		invalid = true;
 	}
 
 	return invalid;
 }
 
-Err SaveChangesToDatabase(ManageClassVariables* pstVars) {
+Err SaveChangesToDatabase(ManageClassVariables *pstVars)
+{
 	Err error = errNone;
 	UInt16 recIndex = dmMaxRecordIndex;
 	MemHandle recH;
 	MemPtr recP;
 	UInt32 pstInt, pstSharedInt;
 	DmOpenRef gDB;
-	SharedClassesVariables* pSharedPrefs;
+	SharedClassesVariables *pSharedPrefs;
 	UInt16 index = -1;
 	UInt16 newSize;
 
 	// Check if we are editing, and get the index.
-	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0) {
+	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
+	{
 		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
 		index = pSharedPrefs->selectedClassDbIndex;
 	}
@@ -171,19 +182,23 @@ Err SaveChangesToDatabase(ManageClassVariables* pstVars) {
 	MemPtrFree(recP);
 
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
-	gDB = (DmOpenRef) pstInt;
+	gDB = (DmOpenRef)pstInt;
 
-	if (index == (UInt16)-1) {
-		// New record	
-		//recIndex = DmNumRecords(gDB);
+	if (index == (UInt16)-1)
+	{
+		// New record
+		// recIndex = DmNumRecords(gDB);
 		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record));
-		if (recH) {
+		if (recH)
+		{
 			recP = MemHandleLock(recH);
 			DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
 			error = DmReleaseRecord(gDB, recIndex, true);
 			MemHandleUnlock(recH);
 		}
-	} else {
+	}
+	else
+	{
 		// Edit record
 		newSize = sizeof(pstVars->record);
 		recH = DmResizeRecord(gDB, index, newSize);
@@ -195,7 +210,8 @@ Err SaveChangesToDatabase(ManageClassVariables* pstVars) {
 	return error;
 }
 
-void LoadDoW(ManageClassVariables* pstVars) {
+void LoadDoW(ManageClassVariables *pstVars)
+{
 	SetTimeSelectorLabels(ManageClassStartSelectorTrigger, pstVars);
 	SetTimeSelectorLabels(ManageClassFinishSelectorTrigger, pstVars);
 	SetTimeSelectorVisibility(pstVars);
@@ -210,12 +226,14 @@ void LoadDoW(ManageClassVariables* pstVars) {
  * PARAMETERS: No parameters
  *
  */
-void ToggleTimeSelectorTrigger(ManageClassVariables* pstVars) {
+void ToggleTimeSelectorTrigger(ManageClassVariables *pstVars)
+{
 	pstVars->record.classOcurrence[pstVars->selectedDoW].active = !pstVars->record.classOcurrence[pstVars->selectedDoW].active;
 	SetTimeSelectorVisibility(pstVars);
 }
 
-void SetTimeSelectorVisibility(ManageClassVariables* pstVars) {
+void SetTimeSelectorVisibility(ManageClassVariables *pstVars)
+{
 	Boolean status = pstVars->record.classOcurrence[pstVars->selectedDoW].active;
 	FormType *formP = FrmGetActiveForm();
 	UInt16 startLabelIndex = FrmGetObjectIndex(formP, ManageClassStartLabel);
@@ -223,16 +241,19 @@ void SetTimeSelectorVisibility(ManageClassVariables* pstVars) {
 	UInt16 finishLabelIndex = FrmGetObjectIndex(formP, ManageClassFinishLabel);
 	UInt16 finishSelectorIndex = FrmGetObjectIndex(formP, ManageClassFinishSelectorTrigger);
 	ControlType *chkBoxCtl = GetObjectPtr(ManageClassHasClassCheckbox);
-	
-	if (status) {
+
+	if (status)
+	{
 		CtlSetValue(chkBoxCtl, 1);
 		FrmShowObject(formP, startLabelIndex);
 		FrmShowObject(formP, startSelectorIndex);
 		FrmShowObject(formP, finishSelectorIndex);
 		FrmShowObject(formP, finishLabelIndex);
 		SetTimeSelectorLabels(ManageClassStartSelectorTrigger, pstVars);
-		SetTimeSelectorLabels(ManageClassFinishSelectorTrigger,pstVars);	
-	} else {
+		SetTimeSelectorLabels(ManageClassFinishSelectorTrigger, pstVars);
+	}
+	else
+	{
 		CtlSetValue(chkBoxCtl, 0);
 		FrmHideObject(formP, startLabelIndex);
 		FrmHideObject(formP, startSelectorIndex);
@@ -256,50 +277,58 @@ void SetTimeSelectorVisibility(ManageClassVariables* pstVars) {
  * field
  *     selector item id
  */
-void AskTimeToUser(UInt16 field, ManageClassVariables* pstVars) {
+void AskTimeToUser(UInt16 field, ManageClassVariables *pstVars)
+{
 	Boolean ok = false;
 	DateTimeType now;
 	Int16 hour, minute;
-	
+
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	hour = now.hour;
 	minute = now.minute;
-			
+
 	ok = SelectOneTime(&hour, &minute, "Select time");
-	if (ok) {
-		if (field == ManageClassStartSelectorTrigger) {
+	if (ok)
+	{
+		if (field == ManageClassStartSelectorTrigger)
+		{
 			pstVars->record.classOcurrence[pstVars->selectedDoW].sHour = hour;
 			pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute = minute;
-			
-		} else {
+		}
+		else
+		{
 			pstVars->record.classOcurrence[pstVars->selectedDoW].fHour = hour;
 			pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute = minute;
 		}
-		
+
 		pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet = true; // TODO: Update this to have set status by start and finish fields
 	}
-	
+
 	SetTimeSelectorLabels(field, pstVars);
 }
 
-void SetTimeSelectorLabels(UInt16 field, ManageClassVariables* pstVars) {
+void SetTimeSelectorLabels(UInt16 field, ManageClassVariables *pstVars)
+{
 	ControlType *fldP;
 	char timeStr[timeStringLength];
 
 	fldP = GetObjectPtr(field);
-	
-	if (!pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet) {
+
+	if (!pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet)
+	{
 		CtlSetLabel(fldP, "Select time...");
 		return;
 	}
-	
-	
-	if (field == ManageClassStartSelectorTrigger) {
+
+	if (field == ManageClassStartSelectorTrigger)
+	{
 		TimeToAscii(pstVars->record.classOcurrence[pstVars->selectedDoW].sHour, pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute, tfColon24h, timeStr);
-	} else {
+	}
+	else
+	{
 		TimeToAscii(pstVars->record.classOcurrence[pstVars->selectedDoW].fHour, pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute, tfColon24h, timeStr);
 	}
-	
+
 	CtlSetLabel(fldP, timeStr);
 }
 
@@ -313,30 +342,32 @@ void SetTimeSelectorLabels(UInt16 field, ManageClassVariables* pstVars) {
  * frm
  *     pointer to the ManageClass form.
  */
-void ManageClassFormInit(FormType *frmP, ManageClassVariables* pstVars) {
+void ManageClassFormInit(FormType *frmP, ManageClassVariables *pstVars)
+{
 	CheckForAlreadySelected(pstVars);
 	autoSelectCurrentDay(pstVars);
 	LoadDoW(pstVars);
 }
 
-
-void CheckForAlreadySelected(ManageClassVariables* pstVars) {
+void CheckForAlreadySelected(ManageClassVariables *pstVars)
+{
 	UInt32 pstSharedInt, pstDbInt;
-	SharedClassesVariables* pSharedPrefs;
+	SharedClassesVariables *pSharedPrefs;
 	DmOpenRef gDB;
 	ClassDB *rec;
 	MemHandle recH, oldTextH, newTextH;
 	FieldType *fldP;
 	char *str;
-	
-	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0) {
+
+	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
+	{
 		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
-		
+
 		FtrGet(appFileCreator, ftrClassesDBNum, &pstDbInt);
-		gDB = (DmOpenRef) pstDbInt;
+		gDB = (DmOpenRef)pstDbInt;
 		recH = DmQueryRecord(gDB, pSharedPrefs->selectedClassDbIndex);
 		rec = MemHandleLock(recH);
-		
+
 		pstVars->record = *rec;
 
 		MemHandleUnlock(recH);
@@ -351,10 +382,11 @@ void CheckForAlreadySelected(ManageClassVariables* pstVars) {
 		MemHandleUnlock(newTextH);
 		FldSetTextHandle(fldP, newTextH);
 		FldDrawField(fldP);
-		if (oldTextH != NULL) {
+		if (oldTextH != NULL)
+		{
 			MemHandleFree(oldTextH);
-		}		
-		
+		}
+
 		// Update Class Room field
 		fldP = GetObjectPtr(ManageClassRoomField);
 		oldTextH = FldGetTextHandle(fldP);
@@ -364,7 +396,8 @@ void CheckForAlreadySelected(ManageClassVariables* pstVars) {
 		MemHandleUnlock(newTextH);
 		FldSetTextHandle(fldP, newTextH);
 		FldDrawField(fldP);
-		if (oldTextH != NULL) {
+		if (oldTextH != NULL)
+		{
 			MemHandleFree(oldTextH);
 		}
 	}
@@ -378,29 +411,29 @@ void CheckForAlreadySelected(ManageClassVariables* pstVars) {
  * PARAMETERS: No parameters
  *
  */
-void autoSelectCurrentDay(ManageClassVariables* pstVars) {
+void autoSelectCurrentDay(ManageClassVariables *pstVars)
+{
 	DateTimeType now;
 	Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
-
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
 	activateSelector(dowPushButtons[pstVars->selectedDoW]);
 }
 
-
 /*
  * FUNCTION: ActivateSelector
  *
  * DESCRIPTION: This routine make the referenced PushButton active.
  *
- * PARAMETERS: 
- * 
+ * PARAMETERS:
+ *
  * field
  *     The ID of the selected day of week
  *
  */
-void activateSelector(UInt16 field) {
+void activateSelector(UInt16 field)
+{
 	ControlType *ctl = GetObjectPtr(field);
 	CtlSetValue(ctl, 1);
 }
@@ -410,7 +443,7 @@ void activateSelector(UInt16 field) {
  *
  * DESCRIPTION:
  *
- * This routine is the event handler for the "ManageClassForm" of this 
+ * This routine is the event handler for the "ManageClassForm" of this
  * application.
  *
  * PARAMETERS:
@@ -422,54 +455,58 @@ void activateSelector(UInt16 field) {
  *     true if the event was handled and should not be passed to
  *     FrmHandleEvent
  */
-Boolean ManageClassFormHandleEvent(EventPtr eventP) {
+Boolean ManageClassFormHandleEvent(EventPtr eventP)
+{
 	Boolean handled = false;
 	FormPtr frmP;
-	ManageClassVariables* pstVars;
+	ManageClassVariables *pstVars;
 
-	switch (eventP->eType) {
-		case frmOpenEvent: 
-		{
-			frmP = FrmGetActiveForm();
-			FrmDrawForm(frmP);
-			
-			pstVars = (ManageClassVariables*)MemPtrNew(sizeof(ManageClassVariables));
-			if ((UInt32)pstVars == 0) return -1;
-			MemSet(pstVars, sizeof(ManageClassVariables), 0);
-			FtrSet(appFileCreator, ftrManageClassNum, (UInt32)pstVars);
-			ManageClassFormInit(frmP, pstVars);
-			handled = true;
-			break;
-        }
-        
-        case frmCloseEvent:
-        {
-			// Free shared variables, if exists
-        	void *temp;
-        	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == 0) {
-	        	FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
-	        }
-			
-			// Free ManageClass variables
-			FtrPtrFree(appFileCreator, ftrManageClassNum);
-        	break;
-        }    
-			
-		case ctlSelectEvent:
-		{
-			UInt32 pstInt;
-			ManageClassVariables* pstVars;
-			FtrGet(appFileCreator, ftrManageClassNum, &pstInt);
-			pstVars = (ManageClassVariables *)pstInt;
-			return ManageClassFormDoCommand(eventP->data.ctlSelect.controlID, pstVars);
-			break;
-		}
-		
-		default:
-		{
-			break;
-		}
+	switch (eventP->eType)
+	{
+	case frmOpenEvent:
+	{
+		frmP = FrmGetActiveForm();
+		FrmDrawForm(frmP);
+
+		pstVars = (ManageClassVariables *)MemPtrNew(sizeof(ManageClassVariables));
+		if ((UInt32)pstVars == 0)
+			return -1;
+		MemSet(pstVars, sizeof(ManageClassVariables), 0);
+		FtrSet(appFileCreator, ftrManageClassNum, (UInt32)pstVars);
+		ManageClassFormInit(frmP, pstVars);
+		handled = true;
+		break;
 	}
-    
+
+	case frmCloseEvent:
+	{
+		// Free shared variables, if exists
+		void *temp;
+		if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == 0)
+		{
+			FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
+		}
+
+		// Free ManageClass variables
+		FtrPtrFree(appFileCreator, ftrManageClassNum);
+		break;
+	}
+
+	case ctlSelectEvent:
+	{
+		UInt32 pstInt;
+		ManageClassVariables *pstVars;
+		FtrGet(appFileCreator, ftrManageClassNum, &pstInt);
+		pstVars = (ManageClassVariables *)pstInt;
+		return ManageClassFormDoCommand(eventP->data.ctlSelect.controlID, pstVars);
+		break;
+	}
+
+	default:
+	{
+		break;
+	}
+	}
+
 	return handled;
 }
