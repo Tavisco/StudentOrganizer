@@ -129,7 +129,23 @@ Err SaveChanges(ManageClassVariables* pstVars) {
 }
 
 Boolean IsScheduleInvalid(ManageClassVariables* pstVars) {
-	return false;
+	Boolean invalid = false;
+	Boolean oneActive = false;
+
+	for (Int16 i = 0; (i < 7) && !invalid; i++)
+	{
+		if (pstVars->record.classOcurrence[i].active) {
+			oneActive = true;
+
+			invalid = !pstVars->record.classOcurrence[i].timeHasBeenSet; // TODO: Update this to have set status by start and finish fields
+		}
+	}
+	
+	if (!oneActive) {
+		invalid = true;
+	}
+
+	return invalid;
 }
 
 Err SaveChangesToDatabase(ManageClassVariables* pstVars) {
@@ -260,7 +276,7 @@ void AskTimeToUser(UInt16 field, ManageClassVariables* pstVars) {
 			pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute = minute;
 		}
 		
-		pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet = true;
+		pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet = true; // TODO: Update this to have set status by start and finish fields
 	}
 	
 	SetTimeSelectorLabels(field, pstVars);
