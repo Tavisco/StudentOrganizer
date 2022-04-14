@@ -62,9 +62,18 @@ Boolean MainFormDoCommand(UInt16 command)
  */
 void MainFormInit(FormType *frmP)
 {
+	Char *CurrClass;
+	
+	CurrClass = (Char *)MemPtrNew(sizeof(Char[19]));
+	if ((UInt32)CurrClass == 0)
+		return;
+	MemSet(CurrClass, sizeof(Char[19]), 0);
+	
 	ShowCurrentTime(frmP);
 	ShowCurrentWeekday(frmP);
-	SetCurrentClass(frmP);
+	SetCurrentClass(frmP, CurrClass);
+	SetNextClass(frmP, CurrClass);
+	MemPtrFree(CurrClass);
 }
 
 /**
@@ -72,7 +81,7 @@ void MainFormInit(FormType *frmP)
  *
  * @param frmP
  */
-void SetCurrentClass(FormType *frmP)
+void SetCurrentClass(FormType *frmP, Char *className)
 {
 	DateTimeType now, start, finish;
 	UInt32 pstInt, nowSec, startSec, finishSec;
@@ -108,8 +117,66 @@ void SetCurrentClass(FormType *frmP)
 
 			if (nowSec >= startSec && nowSec <= finishSec)
 			{
-				// Truncate characters to no exceed the limit on the resource
-				FrmCopyLabel(frmP, MainCurrentClassLabel, rec->className);	
+				FrmCopyLabel(frmP, MainCurrentClassLabel, rec->className);
+				StrCopy(className, rec->className);
+			}
+		}
+	}
+}
+
+/**
+ * @brief Set the Next Class label.
+ *
+ * @param frmP
+ */
+void SetNextClass(FormType *frmP, Char *currentClass)
+{
+	DateTimeType now, start, finish;
+	UInt32 pstInt, nowSec, startSec, finishSec;
+	DmOpenRef gDB;
+	UInt16 numRecs, i, j;
+	ClassDB *rec;
+	MemHandle recH;
+	
+	nowSec = TimGetSeconds();
+	TimSecondsToDateTime(nowSec, &now);
+	start = now;
+	finish = now;
+
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
+
+	for (i = 0; i < numRecs; i++)
+	{
+		nowSec = TimGetSeconds();
+		TimSecondsToDateTime(nowSec, &now);
+		
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (rec->classOcurrence[now.weekDay].active)
+		{
+			start.hour = rec->classOcurrence[now.weekDay].sHour;
+			start.minute = rec->classOcurrence[now.weekDay].sMinute;
+			startSec = TimDateTimeToSeconds(&start);
+
+			finish.hour = rec->classOcurrence[now.weekDay].fHour;
+			finish.minute = rec->classOcurrence[now.weekDay].fMinute;
+			finishSec = TimDateTimeToSeconds(&finish);
+			
+			for (j = now.hour; j <= 24; j++) {
+				if (nowSec >= startSec && nowSec <= finishSec)
+				{
+					if (StrCompare(rec->className, currentClass) != 0)
+					{
+						FrmCopyLabel(frmP, MainNextClassLabel, rec->className);
+						return;
+					}
+				}
+				nowSec += 3600; // Advance 1 hour
+				TimSecondsToDateTime(nowSec, &now);
 			}
 		}
 	}
