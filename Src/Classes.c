@@ -49,6 +49,7 @@ static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
  */
 Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables* pstVars) {
 	Boolean handled = false;
+	Err error = errNone;
 	
 	switch(command) {
 		case ClassesDoneButton:
@@ -60,8 +61,12 @@ Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables* pstVars) {
 			handled = true;
 			break;
 		case ClassesEditButton:
-			LoadSelectedClassIntoMemory(pstVars);
-			FrmGotoForm (ManageClassForm);
+			error = LoadSelectedClassIntoMemory(pstVars);
+			if (error == errNone) {
+				FrmGotoForm (ManageClassForm);
+			}
+			// TODO: Add else condition
+			
 			handled = true;
 			break;
 		case ClassesSunPushButton:
@@ -164,11 +169,11 @@ void LoadClasses(ClassesVariables* pstVars) {
 	LstDrawList(list);
 }
 
-void LoadSelectedClassIntoMemory(ClassesVariables* pstVars) {
+Err LoadSelectedClassIntoMemory(ClassesVariables* pstVars) {
 	SharedClassesVariables* vars;
 	Int16 selectedItem, numRecs, i, itemNum;
 	ListType *list;
-	Err error;
+	// Err error;
 	UInt32 pstInt;
 	DmOpenRef gDB;
 	ClassDB *rec;
@@ -176,7 +181,10 @@ void LoadSelectedClassIntoMemory(ClassesVariables* pstVars) {
 	
 	// Load shared Vars
 	vars = (SharedClassesVariables*)MemPtrNew(sizeof(SharedClassesVariables));
-	if ((UInt32)vars == 0) return;
+	if ((UInt32)vars == 0){
+		MemPtrFree(vars);
+		return 1;
+	}
 	MemSet(vars, sizeof(SharedClassesVariables), 0);
 	
 	// Get selected item Index
@@ -185,7 +193,8 @@ void LoadSelectedClassIntoMemory(ClassesVariables* pstVars) {
 	
 	if (selectedItem == noListSelection) {
 		// TODO: properly handle error
-		return;
+		MemPtrFree(vars);
+		return 1;
 	}
 	
 	// Load classes DB and get total amount of recs
@@ -213,12 +222,7 @@ void LoadSelectedClassIntoMemory(ClassesVariables* pstVars) {
 		}
 	}
 	
-	error = FtrSet(appFileCreator, ftrShrdClassesVarsNum, (UInt32)vars);
-	
-	if (error != 0) {
-		// TODO: properly handle error
-		return;
-	}
+	return FtrSet(appFileCreator, ftrShrdClassesVarsNum, (UInt32)vars);
 }
 
 /*
@@ -231,11 +235,11 @@ void LoadSelectedClassIntoMemory(ClassesVariables* pstVars) {
  */
 void ClassesAutoSelectCurrentDay(ClassesVariables* pstVars) {
 	DateTimeType now;
+	Int16 dowPushButtons[7] = {ClassesSunPushButton, ClassesMonPushButton, ClassesTuesPushButton, ClassesWedPushButton, ClassesThursPushButton, ClassesFriPushButton, ClassesSatPushButton};
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
 	
-	Int16 dowPushButtons[7] = {ClassesSunPushButton, ClassesMonPushButton, ClassesTuesPushButton, ClassesWedPushButton, ClassesThursPushButton, ClassesFriPushButton, ClassesSatPushButton};
 	activateSelector(dowPushButtons[pstVars->selectedDoW]);
 }
 

@@ -138,8 +138,9 @@ Boolean IsScheduleInvalid(ManageClassVariables *pstVars)
 {
 	Boolean invalid = false;
 	Boolean oneActive = false;
+	Int16 i;
 
-	for (Int16 i = 0; (i < 7) && !invalid; i++)
+	for (i = 0; (i < 7) && !invalid; i++)
 	{
 		if (pstVars->record.classOcurrence[i].active)
 		{
