@@ -134,7 +134,7 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 	DateTimeType now, start, finish;
 	UInt32 pstInt, nowSec, startSec, finishSec;
 	DmOpenRef gDB;
-	UInt16 numRecs, i, j;
+	UInt16 numRecs, i, x;
 	ClassDB *rec;
 	MemHandle recH;
 	
@@ -166,7 +166,13 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 			finish.minute = rec->classOcurrence[now.weekDay].fMinute;
 			finishSec = TimDateTimeToSeconds(&finish);
 			
-			for (j = now.hour; j <= 24; j++) {
+			now.minute = 0;
+			nowSec = TimDateTimeToSeconds(&now);
+			
+			x = now.hour;
+			
+			// while (now.hour <= 23) may work too
+			for (x; x <= 23; x++) {
 				if (nowSec >= startSec && nowSec <= finishSec)
 				{
 					if (StrCompare(rec->className, currentClass) != 0)
