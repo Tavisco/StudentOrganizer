@@ -110,10 +110,20 @@ BEGIN
 	BUTTON "Edit class" ID ClassesEditButton  AT (95 147 46 12)
 END
 
-FORM ID ManageClassForm   AT ( 0 0 160 160 )
-NOFRAME
+MENU ID ManageClassMenuBar
 BEGIN
-        TITLE "Manage Class"
+	PULLDOWN "Record"
+	BEGIN
+		MENUITEM "Delete class" ID OptionsDeleteClassManageClassBar 
+	END
+
+END	
+
+FORM ID ManageClassForm   AT ( 0 0 160 160 )
+	NOFRAME
+	MENUID ManageClassMenuBar
+BEGIN
+    TITLE "Manage Class"
 	LABEL "Name:" ID ManageClassNameLabel  AT (6 22) FONT 1
 	FIELD ID ManageClassNameField  AT (42 22 111 11) MAXCHARS 18 EDITABLE FONT 0 UNDERLINED AUTOSHIFT 
 	LABEL "Room:" ID ManageClassRoomLabel   AT (6 41) FONT 1
