@@ -169,10 +169,7 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 			now.minute = 0;
 			nowSec = TimDateTimeToSeconds(&now);
 			
-			x = now.hour;
-			
-			// while (now.hour <= 23) may work too
-			for (x; x <= 23; x++) {
+			for (x = now.hour; x <= 23; x++) {
 				if (nowSec >= startSec && nowSec <= finishSec)
 				{
 					if (StrCompare(rec->className, currentClass) != 0)
