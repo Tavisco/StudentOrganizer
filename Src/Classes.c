@@ -64,6 +64,8 @@ Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables* pstVars) {
 			error = LoadSelectedClassIntoMemory(pstVars);
 			if (error == errNone) {
 				FrmGotoForm (ManageClassForm);
+			} else {
+				FrmCustomAlert(SelectClassBeforEditAlert, NULL, NULL, NULL);
 			}
 			// TODO: Add else condition
 			

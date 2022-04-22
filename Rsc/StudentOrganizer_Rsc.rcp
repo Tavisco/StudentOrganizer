@@ -155,6 +155,14 @@ BEGIN
      BUTTONS "OK" 
 END
 
+ALERT ID SelectClassBeforEditAlert  
+ERROR
+BEGIN
+     TITLE "Select a class!"
+     MESSAGE "You need to select one class before editing it."
+     BUTTONS "OK" 
+END
+
 VERSION ID 1 "1.0"
 
 APPLICATIONICONNAME ID 1001 "Student Organizer"
