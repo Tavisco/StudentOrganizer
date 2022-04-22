@@ -92,11 +92,38 @@ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 		handled = true;
 		break;
 
+	case OptionsDeleteClassManageClassBar:
+		DeleteClass(pstVars);
+		handled = true;
+		break;
+
 	default:
 		break;
 	}
 
 	return handled;
+}
+
+
+void DeleteClass(ManageClassVariables* pstVars) {
+	UInt32 pstSharedInt;
+	SharedClassesVariables *pSharedPrefs;
+	UInt16 index = -1;
+
+	// Check if we are editing, and get the index.
+	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
+	{
+		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
+		index = pSharedPrefs->selectedClassDbIndex;
+	}
+
+	if (index == (UInt16)-1)
+	{
+		FrmCustomAlert(SelectClassBeforDeleteAlert, "Class name", NULL, NULL);
+		return;
+	}
+
+	return;
 }
 
 Err SaveChanges(ManageClassVariables *pstVars)
@@ -500,6 +527,16 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 		FtrGet(appFileCreator, ftrManageClassNum, &pstInt);
 		pstVars = (ManageClassVariables *)pstInt;
 		return ManageClassFormDoCommand(eventP->data.ctlSelect.controlID, pstVars);
+		break;
+	}
+
+	case menuEvent:
+	{
+		UInt32 pstInt;
+		ManageClassVariables *pstVars;
+		FtrGet(appFileCreator, ftrManageClassNum, &pstInt);
+		pstVars = (ManageClassVariables *)pstInt;
+		return ManageClassFormDoCommand(eventP->data.menu.itemID, pstVars);
 		break;
 	}
 

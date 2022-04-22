@@ -67,7 +67,6 @@ Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables* pstVars) {
 			} else {
 				FrmCustomAlert(SelectClassBeforEditAlert, NULL, NULL, NULL);
 			}
-			// TODO: Add else condition
 			
 			handled = true;
 			break;

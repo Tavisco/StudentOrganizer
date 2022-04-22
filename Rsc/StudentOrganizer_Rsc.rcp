@@ -173,6 +173,14 @@ BEGIN
      BUTTONS "OK" 
 END
 
+ALERT ID SelectClassBeforDeleteAlert  
+ERROR
+BEGIN
+     TITLE "Invalid action"
+     MESSAGE "You cannot delete a new class."
+     BUTTONS "OK" 
+END
+
 VERSION ID 1 "1.0"
 
 APPLICATIONICONNAME ID 1001 "Student Organizer"

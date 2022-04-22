@@ -1,4 +1,5 @@
 /* pilrc generated file.  Do not edit!*/
+#define SelectClassBeforDeleteAlert 1063
 #define SelectClassBeforEditAlert 1062
 #define ManageClassOneWeekdayNeededAlert 1061
 #define ManageClassMissingFieldAlert 1060
