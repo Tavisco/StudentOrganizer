@@ -71,6 +71,7 @@ typedef struct SharedClassesVariables {
  Err RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags);
  UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlahs);
  Err AppStart(void);
+ UInt32 __attribute__((section(".vectors"))) __Startup__(void);
  
  /* Functions in Main.c */
  Boolean MainFormDoCommand(UInt16 command);
