@@ -219,3 +219,11 @@ BEGIN
 	
 	SCROLLBAR AUTOID AT (152 30 7 111) USABLE VALUE 50 MIN 0 MAX 100 PAGESIZE 10
 END
+
+ALERT ID ConfirmDeleteClassAlert 
+CONFIRMATION
+BEGIN
+     TITLE "Confirm deletion"
+     MESSAGE "Do you really wanna delete this class? All homework assigned to this class will also be deleted."
+     BUTTONS "Delete" "Cancel"
+END

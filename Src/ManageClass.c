@@ -117,11 +117,15 @@ void DeleteClass(ManageClassVariables* pstVars) {
 		index = pSharedPrefs->selectedClassDbIndex;
 	}
 
+	// If we are not editing, throw an error
 	if (index == (UInt16)-1)
 	{
-		FrmCustomAlert(SelectClassBeforDeleteAlert, "Class name", NULL, NULL);
+		FrmCustomAlert(SelectClassBeforDeleteAlert, NULL, NULL, NULL);
 		return;
 	}
+	
+	// Ask for confirmation before deletion
+	
 
 	return;
 }

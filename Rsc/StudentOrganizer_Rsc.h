@@ -1,4 +1,20 @@
 /* pilrc generated file.  Do not edit!*/
+#define ConfirmDeleteClassAlert 1080
+#define TableHomeworksLabel 1078
+#define HomeworksTable 1077
+#define HomeworksForm 1076
+#define CommentsMngHmwrkField 1075
+#define DoneMngHmwrkButton 1074
+#define CancelMngHmwrkButton 1073
+#define CommentsMngHmwrkLabel 1072
+#define DueMngHmwrkSelector 1071
+#define DueMngHmwrkLabel 1070
+#define ClassesMngHmwrkList 1069
+#define ClassMngHmwrkTrigger 1068
+#define ClassMngHmwrkLabel 1067
+#define NameMngHomeworkField 1066
+#define NameMngHwrkLabel 1065
+#define ManageHomeworkForm 1064
 #define SelectClassBeforDeleteAlert 1063
 #define SelectClassBeforEditAlert 1062
 #define ManageClassOneWeekdayNeededAlert 1061
