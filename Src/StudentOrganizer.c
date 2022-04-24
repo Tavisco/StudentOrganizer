@@ -109,6 +109,8 @@ Boolean AppHandleEvent(EventPtr eventP)
 		case ManageHomeworkForm:
 			FrmSetEventHandler(frmP, MngHmwrkFormHandleEvent);
 			break;
+		case HomeworksForm:
+			FrmSetEventHandler(frmP, HomeworksFormHandleEvent);
 		}
 		return true;
 	}

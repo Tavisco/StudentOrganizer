@@ -210,9 +210,9 @@ FORM ID HomeworksForm   AT ( 0 0 160 160 )
 NOFRAME
 BEGIN
         TITLE "Homeworks"
-	BUTTON "Done" ID ClassesDoneButton  AT (5 146 36 12)
-	BUTTON "New" ID ClassesNewButton  AT (47 146 36 12)
-	BUTTON "Edit" ID ClassesEditButton  AT (90 146 36 12)
+	BUTTON "Done" ID HomeworksDoneButton  AT (5 146 36 12)
+	BUTTON "New" ID HomeworksNewButton  AT (47 146 36 12)
+	BUTTON "Edit" ID HomeworksEditButton  AT (90 146 36 12)
 	TABLE ID HomeworksTable  AT (5 31 144 111) ROWS 10 COLUMNS 2 COLUMNWIDTHS 100 40
 	LABEL "Homeworks:" ID TableHomeworksLabel  AT (9 18) FONT 1
 	
