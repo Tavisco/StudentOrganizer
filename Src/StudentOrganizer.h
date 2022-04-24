@@ -111,3 +111,8 @@ Err SaveChangesToDatabase(ManageClassVariables *pstVars);
 void CheckForAlreadySelected(ManageClassVariables *pstVars);
 Boolean IsScheduleInvalid(ManageClassVariables *pstVars);
 Err DeleteClass(ManageClassVariables *pstVars);
+
+/* Functions in ManageHomework.c */
+Boolean MngHmwrkFormDoCommand(UInt16 command);
+void MngHmwrkFormInit(FormType *frmP);
+Boolean MngHmwrkFormHandleEvent(EventPtr eventP);

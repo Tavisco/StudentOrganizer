@@ -45,6 +45,13 @@ Boolean MainFormDoCommand(UInt16 command)
 		handled = true;
 		break;
 	}
+
+	case MainAddHomeworkButton:
+	{
+		FrmGotoForm(ManageHomeworkForm);
+		handled = true;
+		break;
+	}
 	}
 
 	return handled;
