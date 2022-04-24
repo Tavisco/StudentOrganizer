@@ -107,14 +107,13 @@ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 	return handled;
 }
 
-
-Err DeleteClass(ManageClassVariables* pstVars) {
+Err DeleteClass(ManageClassVariables *pstVars)
+{
 	Err error = errNone;
 	UInt32 pstSharedInt, pstInt;
 	SharedClassesVariables *pSharedPrefs;
 	UInt16 index = -1, deleteConf = -1;
 	DmOpenRef gDB;
-	
 
 	// Check if we are editing, and get the index.
 	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
@@ -129,10 +128,11 @@ Err DeleteClass(ManageClassVariables* pstVars) {
 		FrmCustomAlert(SelectClassBeforDeleteAlert, NULL, NULL, NULL);
 		return error;
 	}
-	
+
 	// Ask for confirmation before deletion
 	deleteConf = FrmCustomAlert(ConfirmDeleteClassAlert, NULL, NULL, NULL);
-	if (deleteConf != 0) {
+	if (deleteConf != 0)
+	{
 		error = 1;
 		return error;
 	}

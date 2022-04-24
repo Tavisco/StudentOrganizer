@@ -9,7 +9,7 @@
  * Copyright (c) 1999-2000 Palm, Inc. or its subsidiaries.
  * All rights reserved.
  */
- 
+
 #include <PalmOS.h>
 #include <PalmOSGlue.h>
 
@@ -29,8 +29,8 @@
  *********************************************************************/
 
 /* Define the minimum OS version we support */
-#define ourMinVersion    sysMakeROMVersion(3,0,0,sysROMStageDevelopment,0)
-#define kPalmOS20Version sysMakeROMVersion(2,0,0,sysROMStageDevelopment,0)
+#define ourMinVersion sysMakeROMVersion(3, 0, 0, sysROMStageDevelopment, 0)
+#define kPalmOS20Version sysMakeROMVersion(2, 0, 0, sysROMStageDevelopment, 0)
 
 /*********************************************************************
  * Internal Functions
@@ -52,18 +52,18 @@
  *     address of object as a void pointer
  */
 
-void * GetObjectPtr(UInt16 objectID) {
-	FormType * frmP;
+void *GetObjectPtr(UInt16 objectID)
+{
+	FormType *frmP;
 
 	frmP = FrmGetActiveForm();
 	return FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, objectID));
 }
 
-
 /*
  * FUNCTION: AppHandleEvent
  *
- * DESCRIPTION: 
+ * DESCRIPTION:
  *
  * This routine loads form resources and set the event handler for
  * the form loaded.
@@ -78,7 +78,8 @@ void * GetObjectPtr(UInt16 objectID) {
  *     to a higher level handler.
  */
 
-Boolean AppHandleEvent(EventPtr eventP) {
+Boolean AppHandleEvent(EventPtr eventP)
+{
 	UInt16 formId;
 	FormPtr frmP;
 
@@ -89,23 +90,22 @@ Boolean AppHandleEvent(EventPtr eventP) {
 		frmP = FrmInitForm(formId);
 		FrmSetActiveForm(frmP);
 
-		/* 
+		/*
 		 * Set the event handler for the form.  The handler of the
 		 * currently active form is called by FrmHandleEvent each
-		 * time is receives an event. 
+		 * time is receives an event.
 		 */
 		switch (formId)
 		{
-			case MainForm:
-				FrmSetEventHandler(frmP, MainFormHandleEvent);
-				break;
-			case ClassesForm:
-				FrmSetEventHandler(frmP, ClassesFormHandleEvent);
-				break;
-			case ManageClassForm:
-				FrmSetEventHandler(frmP, ManageClassFormHandleEvent);
-				break;
-
+		case MainForm:
+			FrmSetEventHandler(frmP, MainFormHandleEvent);
+			break;
+		case ClassesForm:
+			FrmSetEventHandler(frmP, ClassesFormHandleEvent);
+			break;
+		case ManageClassForm:
+			FrmSetEventHandler(frmP, ManageClassFormHandleEvent);
+			break;
 		}
 		return true;
 	}
@@ -124,16 +124,16 @@ void AppEventLoop(void)
 	UInt16 error;
 	EventType event;
 
-	do 
+	do
 	{
 		/* change timeout if you need periodic nilEvents */
 		EvtGetEvent(&event, evtWaitForever);
 
-		if (! SysHandleEvent(&event))
+		if (!SysHandleEvent(&event))
 		{
-			if (! MenuHandleEvent(0, &event, &error))
+			if (!MenuHandleEvent(0, &event, &error))
 			{
-				if (! AppHandleEvent(&event))
+				if (!AppHandleEvent(&event))
 				{
 					FrmDispatchEvent(&event);
 				}
@@ -141,7 +141,6 @@ void AppEventLoop(void)
 		}
 	} while (event.eType != appStopEvent);
 }
-
 
 /*
  * FUNCTION: AppStop
@@ -153,26 +152,28 @@ void AppStop(void)
 {
 	UInt32 classesPstInt;
 	DmOpenRef classesGDB;
-	
+
 	/* Close all the open forms.*/
 	FrmCloseAllForms();
-	
+
 	/* Close all the databases.*/
 	FtrGet(appFileCreator, ftrClassesDBNum, &classesPstInt);
-	classesGDB = (DmOpenRef) classesPstInt;
+	classesGDB = (DmOpenRef)classesPstInt;
 	DmCloseDatabase(classesGDB);
 }
 
-Err AppStart(void) {
+Err AppStart(void)
+{
 	Err error = errNone;
 	DmOpenRef gDB = 0;
 
 	gDB = DmOpenDatabaseByTypeCreator(kClassDBType, kCreator, dmModeReadWrite);
-	if (!gDB) {
+	if (!gDB)
+	{
 		error = DmCreateDatabase(0, kClassesDBName, kCreator, kClassDBType, false);
 		if (error)
 			return error;
-		
+
 		gDB = DmOpenDatabaseByTypeCreator(kClassDBType, kCreator, dmModeReadWrite);
 		if (!gDB)
 			return DmGetLastErr();
@@ -185,9 +186,9 @@ Err AppStart(void) {
 /*
  * FUNCTION: RomVersionCompatible
  *
- * DESCRIPTION: 
+ * DESCRIPTION:
  *
- * This routine checks that a ROM version is meet your minimum 
+ * This routine checks that a ROM version is meet your minimum
  * requirement.
  *
  * PARAMETERS:
@@ -212,18 +213,18 @@ Err RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags)
 	FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
 	if (romVersion < requiredVersion)
 	{
-		if ((launchFlags & 
-			(sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp)) ==
+		if ((launchFlags &
+			 (sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp)) ==
 			(sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp))
 		{
-			FrmAlert (RomIncompatibleAlert);
+			FrmAlert(RomIncompatibleAlert);
 
 			/* Palm OS versions before 2.0 will continuously relaunch this
 			 * app unless we switch to another safe one. */
 			if (romVersion < kPalmOS20Version)
 			{
 				AppLaunchWithCommand(
-					sysFileCDefaultApp, 
+					sysFileCDefaultApp,
 					sysAppLaunchCmdNormalLaunch, NULL);
 			}
 		}
@@ -238,11 +239,11 @@ Err RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags)
  * FUNCTION: PilotMain
  *
  * DESCRIPTION: This is the main entry point for the application.
- * 
+ *
  * PARAMETERS:
  *
  * cmd
- *     word value specifying the launch code. 
+ *     word value specifying the launch code.
  *
  * cmdPB
  *     pointer to a structure that is associated with the launch code
@@ -258,24 +259,25 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 {
 	Err error;
 
-	error = RomVersionCompatible (ourMinVersion, launchFlags);
-	if (error) return (error);
+	error = RomVersionCompatible(ourMinVersion, launchFlags);
+	if (error)
+		return (error);
 
 	switch (cmd)
 	{
-		case sysAppLaunchCmdNormalLaunch:
-			/* 
-			 * start application by opening the main form
-			 * and then entering the main event loop 
-			 */
-			error = AppStart();
-			if (error)
-				return error;
-			FrmGotoForm(MainForm);
-			AppEventLoop();
+	case sysAppLaunchCmdNormalLaunch:
+		/*
+		 * start application by opening the main form
+		 * and then entering the main event loop
+		 */
+		error = AppStart();
+		if (error)
+			return error;
+		FrmGotoForm(MainForm);
+		AppEventLoop();
 
-			AppStop();
-			break;
+		AppStop();
+		break;
 	}
 
 	return errNone;
@@ -287,10 +289,10 @@ UInt32 __attribute__((section(".vectors"))) __Startup__(void)
 	void *prevGlobalsP;
 	void *globalsP;
 	UInt32 ret;
-	
+
 	SysAppStartup(&appInfoP, &prevGlobalsP, &globalsP);
 	ret = PilotMain(appInfoP->cmd, appInfoP->cmdPBP, appInfoP->launchFlags);
 	SysAppExit(appInfoP, prevGlobalsP, globalsP);
-	
+
 	return ret;
 }

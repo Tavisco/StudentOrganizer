@@ -63,12 +63,12 @@ Boolean MainFormDoCommand(UInt16 command)
 void MainFormInit(FormType *frmP)
 {
 	Char *CurrClass;
-	
+
 	CurrClass = (Char *)MemPtrNew(sizeof(Char[19]));
 	if ((UInt32)CurrClass == 0)
 		return;
 	MemSet(CurrClass, sizeof(Char[19]), 0);
-	
+
 	ShowCurrentTime(frmP);
 	ShowCurrentWeekday(frmP);
 	SetCurrentClass(frmP, CurrClass);
@@ -137,7 +137,7 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 	UInt16 numRecs, i, x;
 	ClassDB *rec;
 	MemHandle recH;
-	
+
 	nowSec = TimGetSeconds();
 	TimSecondsToDateTime(nowSec, &now);
 	start = now;
@@ -151,7 +151,7 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 	{
 		nowSec = TimGetSeconds();
 		TimSecondsToDateTime(nowSec, &now);
-		
+
 		recH = DmQueryRecord(gDB, i);
 		rec = MemHandleLock(recH);
 		MemHandleUnlock(recH);
@@ -165,11 +165,12 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 			finish.hour = rec->classOcurrence[now.weekDay].fHour;
 			finish.minute = rec->classOcurrence[now.weekDay].fMinute;
 			finishSec = TimDateTimeToSeconds(&finish);
-			
+
 			now.minute = 0;
 			nowSec = TimDateTimeToSeconds(&now);
-			
-			for (x = now.hour; x <= 23; x++) {
+
+			for (x = now.hour; x <= 23; x++)
+			{
 				if (nowSec >= startSec && nowSec <= finishSec)
 				{
 					if (StrCompare(rec->className, currentClass) != 0)
