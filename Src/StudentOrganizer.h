@@ -106,4 +106,4 @@ typedef struct SharedClassesVariables {
  Err SaveChangesToDatabase(ManageClassVariables* pstVars);
  void CheckForAlreadySelected(ManageClassVariables* pstVars);
  Boolean IsScheduleInvalid(ManageClassVariables* pstVars);
- void DeleteClass(ManageClassVariables* pstVars);
+ Err DeleteClass(ManageClassVariables* pstVars);

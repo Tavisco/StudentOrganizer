@@ -93,7 +93,10 @@ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 		break;
 
 	case OptionsDeleteClassManageClassBar:
-		DeleteClass(pstVars);
+		if (DeleteClass(pstVars) == errNone)
+		{
+			FrmGotoForm(ClassesForm);
+		}
 		handled = true;
 		break;
 
@@ -105,10 +108,13 @@ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 }
 
 
-void DeleteClass(ManageClassVariables* pstVars) {
-	UInt32 pstSharedInt;
+Err DeleteClass(ManageClassVariables* pstVars) {
+	Err error = errNone;
+	UInt32 pstSharedInt, pstInt;
 	SharedClassesVariables *pSharedPrefs;
-	UInt16 index = -1;
+	UInt16 index = -1, deleteConf = -1;
+	DmOpenRef gDB;
+	
 
 	// Check if we are editing, and get the index.
 	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
@@ -121,13 +127,20 @@ void DeleteClass(ManageClassVariables* pstVars) {
 	if (index == (UInt16)-1)
 	{
 		FrmCustomAlert(SelectClassBeforDeleteAlert, NULL, NULL, NULL);
-		return;
+		return error;
 	}
 	
 	// Ask for confirmation before deletion
-	
+	deleteConf = FrmCustomAlert(ConfirmDeleteClassAlert, NULL, NULL, NULL);
+	if (deleteConf != 0) {
+		error = 1;
+		return error;
+	}
 
-	return;
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+
+	return DmRemoveRecord(gDB, index);
 }
 
 Err SaveChanges(ManageClassVariables *pstVars)
