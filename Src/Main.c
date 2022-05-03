@@ -103,6 +103,7 @@ void SetCurrentClass(FormType *frmP, Char *className)
 	UInt16 numRecs, i;
 	ClassDB *rec;
 	MemHandle recH;
+	Boolean set = false;
 
 	nowSec = TimGetSeconds();
 	TimSecondsToDateTime(nowSec, &now);
@@ -132,9 +133,15 @@ void SetCurrentClass(FormType *frmP, Char *className)
 			if (nowSec >= startSec && nowSec <= finishSec)
 			{
 				FrmCopyLabel(frmP, MainCurrentClassLabel, rec->className);
-				StrCopy(className, rec->className);
+				StrCopy(className, rec->className); // Set className variable to be used on the next method
+				set = true;
 			}
 		}
+	}
+
+	if (!set)
+	{
+		FrmCopyLabel(frmP, MainCurrentClassLabel, "None. Enjoy!");
 	}
 }
 
@@ -151,6 +158,7 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 	UInt16 numRecs, i, x;
 	ClassDB *rec;
 	MemHandle recH;
+	Boolean set = false;
 
 	nowSec = TimGetSeconds();
 	TimSecondsToDateTime(nowSec, &now);
@@ -190,13 +198,23 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 					if (StrCompare(rec->className, currentClass) != 0)
 					{
 						FrmCopyLabel(frmP, MainNextClassLabel, rec->className);
-						return;
+						set = true;
+						break;
 					}
 				}
-				nowSec += 3600; // Advance 1 hour
+				nowSec += 3600; // Advance 1 hour. May tweak this to 15 minutes.
 				TimSecondsToDateTime(nowSec, &now);
 			}
 		}
+
+		if (set) {
+			break;
+		}
+	}
+
+	if (!set)
+	{
+		FrmCopyLabel(frmP, MainNextClassLabel, "None. Enjoy!");
 	}
 }
 

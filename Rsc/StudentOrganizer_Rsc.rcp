@@ -46,13 +46,13 @@ BEGIN
 	LABEL "Menu:" ID MainMenuLabel  AT (24 20)
 	LABEL "|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|\r|" ID MainSeparatorLabel  AT (73 16)
 	LABEL "Time is:" ID MainTimeDscLabel  AT (77 20)
-	LABEL "00:00" ID MainTimeLabel  AT (110 20)
+	LABEL "     " ID MainTimeLabel  AT (110 20)
 	LABEL "Current class:" ID MainCurrentClassDscrLabel  AT (77 34) FONT 1
-	LABEL "None. Enjoy!" ID MainCurrentClassLabel  AT (80 44)
+	LABEL "                  " ID MainCurrentClassLabel  AT (80 44)
 	LABEL "Next class:" ID MainNextClassDscrLabel  AT (77 57) FONT 1
-	LABEL "None. Enjoy!" ID MainNextClassLabel  AT (80 67)
+	LABEL "                  " ID MainNextClassLabel  AT (80 67)
 	LABEL "Today is:" ID MainWeekdayDscrLabel  AT (77 82) FONT 1
-	LABEL "Calculating..." ID MainWeekdayLabel  AT (80 93)
+	LABEL "                  " ID MainWeekdayLabel  AT (80 93)
 	LABEL "Homework\rstatus:" ID MainHomeworkStatusLabel  AT (77 106) FONT 1
 	END
 
@@ -65,7 +65,7 @@ BEGIN
 	     AT (CENTER 23)
 	    FONT 2
 	LABEL 
-		"WIP Student Organizer!\rMore details at:\rhttps://palm.otavio.dev.br" ID AboutDescriptionLabel AT (23 54)
+		"WIP Student Organizer!\rMore details at:\rhttps://palm.tavisco.dev" ID AboutDescriptionLabel AT (23 54)
 	FIELD ID AboutVersionField AT (47 39 60 12)
 	    NONEDITABLE
 	    MAXCHARS 80 
@@ -145,8 +145,8 @@ BEGIN
 	LABEL "Start:" ID ManageClassStartLabel  AT (39 110) FONT 1 NONUSABLE
 	LABEL "Finish:" ID ManageClassFinishLabel  AT (40 129) FONT 1 NONUSABLE
 	SELECTORTRIGGER  "Select time..." ID ManageClassFinishSelectorTrigger  AT (78 127 AUTO AUTO) NONUSABLE 
-	CHECKBOX "" ID ManageClassHasClassCheckbox  AT (76 94 AUTO AUTO)
-	LABEL "Class this day:" AUTOID AT (2 94) FONT 1
+	CHECKBOX "" ID ManageClassHasClassCheckbox  AT (80 94 AUTO AUTO)
+	LABEL "Class this day:" AUTOID AT (6 94) FONT 1
 	
 END
 
@@ -191,31 +191,31 @@ LAUNCHERCATEGORY ID 1000  "Main"
 FORM ID ManageHomeworkForm   AT ( 0 0 160 160 )
 NOFRAME  
 BEGIN
-        TITLE "Manage homework"
-	LABEL "Name:" ID NameMngHwrkLabel  AT (5 20) FONT 1
-	FIELD ID NameMngHomeworkField  AT (43 20 108 13) MAXCHARS 255 EDITABLE
-	LABEL "Class:" ID ClassMngHmwrkLabel  AT (5 41) FONT 1
+    TITLE "Manage homework"
+	LABEL "Name:" ID NameMngHwrkLabel  AT (6 20) FONT 1
+	FIELD ID NameMngHomeworkField  AT (43 20 108 13) MAXCHARS 255 EDITABLE UNDERLINED AUTOSHIFT
+	GRAFFITISTATEINDICATOR AT (135 150)
+	LABEL "Class:" ID ClassMngHmwrkLabel  AT (6 41) FONT 1
 	POPUPTRIGGER "Select Class" ClassMngHmwrkTrigger AT (43 40 AUTO AUTO)
-LIST  "One" "Two" "Three" ClassesMngHmwrkList AT (PREVLEFT PREVBOTTOM+1 PREVWIDTH 35) VISIBLEITEMS 3 NONUSABLE 
-POPUPLIST ClassMngHmwrkTrigger ClassesMngHmwrkList
-	LABEL "Due:" ID DueMngHmwrkLabel  AT (9 60) FONT 1
+	LIST  "One" "Two" "Three" ClassesMngHmwrkList AT (PREVLEFT PREVBOTTOM+1 PREVWIDTH 35) VISIBLEITEMS 3 NONUSABLE 
+	POPUPLIST ClassMngHmwrkTrigger ClassesMngHmwrkList
+	LABEL "Due:" ID DueMngHmwrkLabel  AT (6 60) FONT 1
 	SELECTORTRIGGER  "Select date..." ID DueMngHmwrkSelector  AT (43 59 AUTO AUTO)
 	LABEL "Comments:" ID CommentsMngHmwrkLabel  AT (6 79) FONT 1
-	BUTTON "Cancel" ID CancelMngHmwrkButton  AT (52 142 42 AUTO)
-	BUTTON "Done" ID DoneMngHmwrkButton  AT (5 142 42 AUTO)
-	FIELD ID CommentsMngHmwrkField  AT (7 94 145 41) MAXCHARS 512 EDITABLE  MULTIPLELINES UNDERLINED
+	BUTTON "Cancel" ID CancelMngHmwrkButton  AT (52 147 42 AUTO)
+	BUTTON "Done" ID DoneMngHmwrkButton  AT (5 147 42 AUTO)
+	FIELD ID CommentsMngHmwrkField  AT (7 94 145 41) MAXCHARS 512 EDITABLE  MULTIPLELINES UNDERLINED AUTOSHIFT
 END
 
 FORM ID HomeworksForm   AT ( 0 0 160 160 )
 NOFRAME
 BEGIN
-        TITLE "Homeworks"
+    TITLE "Homeworks"
 	BUTTON "Done" ID HomeworksDoneButton  AT (5 146 36 12)
 	BUTTON "New" ID HomeworksNewButton  AT (47 146 36 12)
 	BUTTON "Edit" ID HomeworksEditButton  AT (90 146 36 12)
 	TABLE ID HomeworksTable  AT (5 31 144 111) ROWS 10 COLUMNS 2 COLUMNWIDTHS 100 40
 	LABEL "Homeworks:" ID TableHomeworksLabel  AT (9 18) FONT 1
-	
 	
 	SCROLLBAR AUTOID AT (152 30 7 111) USABLE VALUE 50 MIN 0 MAX 100 PAGESIZE 10
 END
