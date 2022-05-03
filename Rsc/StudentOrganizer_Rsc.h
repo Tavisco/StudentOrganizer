@@ -1,15 +1,16 @@
 /* pilrc generated file.  Do not edit!*/
-#define ConfirmDeleteClassAlert 1083
-#define TableHomeworksLabel 1081
-#define HomeworksTable 1080
-#define HomeworksEditButton 1079
-#define HomeworksNewButton 1078
-#define HomeworksDoneButton 1077
-#define HomeworksForm 1076
-#define CommentsMngHmwrkField 1075
-#define DoneMngHmwrkButton 1074
-#define CancelMngHmwrkButton 1073
-#define CommentsMngHmwrkLabel 1072
+#define ConfirmDeleteClassAlert 1084
+#define TableHomeworksLabel 1082
+#define HomeworksTable 1081
+#define HomeworksEditButton 1080
+#define HomeworksNewButton 1079
+#define HomeworksDoneButton 1078
+#define HomeworksForm 1077
+#define CancelMngHmwrkButton 1076
+#define DoneMngHmwrkButton 1075
+#define CommentsMngHmwrkField 1074
+#define CommentsMngHmwrkLabel 1073
+#define LineMngHmwrkLabel 1072
 #define DueMngHmwrkSelector 1071
 #define DueMngHmwrkLabel 1070
 #define ClassesMngHmwrkList 1069

@@ -192,19 +192,25 @@ FORM ID ManageHomeworkForm   AT ( 0 0 160 160 )
 NOFRAME  
 BEGIN
     TITLE "Manage homework"
-	LABEL "Name:" ID NameMngHwrkLabel  AT (6 20) FONT 1
+	LABEL "Name:" ID NameMngHwrkLabel  AT (8 20) FONT 1
 	FIELD ID NameMngHomeworkField  AT (43 20 108 13) MAXCHARS 255 EDITABLE UNDERLINED AUTOSHIFT
-	GRAFFITISTATEINDICATOR AT (135 150)
-	LABEL "Class:" ID ClassMngHmwrkLabel  AT (6 41) FONT 1
-	POPUPTRIGGER "Select Class" ClassMngHmwrkTrigger AT (43 40 AUTO AUTO)
-	LIST  "One" "Two" "Three" ClassesMngHmwrkList AT (PREVLEFT PREVBOTTOM+1 PREVWIDTH 35) VISIBLEITEMS 3 NONUSABLE 
+	
+	LABEL "Class:" ID ClassMngHmwrkLabel  AT (11 38) FONT 1
+	POPUPTRIGGER "Select Class" ClassMngHmwrkTrigger AT (42 38 AUTO AUTO)
+	LIST  "One" "Two" "Three" ClassesMngHmwrkList AT (PREVLEFT PREVBOTTOM+1 PREVWIDTH 35) VISIBLEITEMS 3 NONUSABLE
 	POPUPLIST ClassMngHmwrkTrigger ClassesMngHmwrkList
-	LABEL "Due:" ID DueMngHmwrkLabel  AT (6 60) FONT 1
-	SELECTORTRIGGER  "Select date..." ID DueMngHmwrkSelector  AT (43 59 AUTO AUTO)
-	LABEL "Comments:" ID CommentsMngHmwrkLabel  AT (6 79) FONT 1
-	BUTTON "Cancel" ID CancelMngHmwrkButton  AT (52 147 42 AUTO)
+
+	LABEL "Due:" ID DueMngHmwrkLabel  AT (17 56) FONT 1
+	SELECTORTRIGGER  "Select date..." ID DueMngHmwrkSelector  AT (43 56 AUTO AUTO)
+
+	LABEL "________________________________________" ID LineMngHmwrkLabel  AT (0 70)
+
+	LABEL "Comments:" ID CommentsMngHmwrkLabel  AT (6 88) FONT 1
+	FIELD ID CommentsMngHmwrkField  AT (7 100 145 41) MAXCHARS 512 EDITABLE  MULTIPLELINES UNDERLINED AUTOSHIFT
+
 	BUTTON "Done" ID DoneMngHmwrkButton  AT (5 147 42 AUTO)
-	FIELD ID CommentsMngHmwrkField  AT (7 94 145 41) MAXCHARS 512 EDITABLE  MULTIPLELINES UNDERLINED AUTOSHIFT
+	BUTTON "Cancel" ID CancelMngHmwrkButton  AT (52 147 42 AUTO)
+	GRAFFITISTATEINDICATOR AT (135 150)
 END
 
 FORM ID HomeworksForm   AT ( 0 0 160 160 )
