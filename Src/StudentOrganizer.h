@@ -61,6 +61,7 @@ typedef struct ClassesVariables
 typedef struct SharedClassesVariables
 {
 	UInt16 selectedClassDbIndex; // DB Index of select class on Classes Form
+	Int16 selectedDoW; // To remember the selected DoW
 } SharedClassesVariables;
 
 /*********************************************************************

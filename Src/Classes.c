@@ -186,7 +186,6 @@ Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars)
 	SharedClassesVariables *vars;
 	Int16 selectedItem, numRecs, i, itemNum;
 	ListType *list;
-	// Err error;
 	UInt32 pstInt;
 	DmOpenRef gDB;
 	ClassDB *rec;
@@ -233,6 +232,8 @@ Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars)
 			{
 				// If it does, store the DBIndex to sharedVars
 				vars->selectedClassDbIndex = i;
+				// and memorize the selected DoW for QoL reasons
+				vars->selectedDoW = pstVars->selectedDoW;
 				break;
 			}
 			itemNum += 1;

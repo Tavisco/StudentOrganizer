@@ -391,7 +391,7 @@ void ManageClassFormInit(FormType *frmP, ManageClassVariables *pstVars)
 {
 	CheckForAlreadySelected(pstVars);
 	autoSelectCurrentDay(pstVars);
-	LoadDoW(pstVars);
+	LoadDoW(pstVars);	
 }
 
 void CheckForAlreadySelected(ManageClassVariables *pstVars)
@@ -416,6 +416,8 @@ void CheckForAlreadySelected(ManageClassVariables *pstVars)
 		pstVars->record = *rec;
 
 		MemHandleUnlock(recH);
+		
+		pstVars->selectedDoW = pSharedPrefs->selectedDoW;
 
 		// Update Class Name field
 		// TODO: Extract this to a function
@@ -461,8 +463,12 @@ void autoSelectCurrentDay(ManageClassVariables *pstVars)
 	DateTimeType now;
 	Int16 dowPushButtons[7] = {ManageClassSunPushButton, ManageClassMonPushButton, ManageClassTuesPushButton, ManageClassWedPushButton, ManageClassThursPushButton, ManageClassFriPushButton, ManageClassSatPushButton};
 
-	TimSecondsToDateTime(TimGetSeconds(), &now);
-	pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
+	if (pstVars->selectedDoW == NULL)
+	{
+		TimSecondsToDateTime(TimGetSeconds(), &now);
+		pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
+	}
+	
 	activateSelector(dowPushButtons[pstVars->selectedDoW]);
 }
 
