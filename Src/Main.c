@@ -59,6 +59,29 @@ Boolean MainFormDoCommand(UInt16 command)
 		handled = true;
 		break;
 	}
+
+	case MainMemoButton:
+	{
+		UInt16		recordNum;
+		UInt16 		cardNo;
+		LocalID 		dbID;
+		DmSearchStateType searchInfo;
+		UInt32		*gotoInfoP;
+		Err			err;
+
+		// get the Memo application's card number an dbID
+		DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, sysFileCMemo, true, &cardNo, &dbID);
+
+		// Set the pointers following the documentation
+		gotoInfoP = (UInt32*)MemPtrNew (sizeof(UInt32));
+		ErrFatalDisplayIf ((!gotoInfoP), "Out of memory");
+		MemPtrSetOwner(gotoInfoP, 0);
+
+		// Switches the app
+		SysUIAppSwitch(cardNo, dbID, sysAppLaunchCmdNormalLaunch, gotoInfoP);
+		handled = true;
+		break;
+	}
 	}
 
 	return handled;
