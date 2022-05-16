@@ -62,12 +62,10 @@ Boolean MainFormDoCommand(UInt16 command)
 
 	case MainMemoButton:
 	{
-		UInt16		recordNum;
 		UInt16 		cardNo;
 		LocalID 		dbID;
 		DmSearchStateType searchInfo;
 		UInt32		*gotoInfoP;
-		Err			err;
 
 		// get the Memo application's card number an dbID
 		DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, sysFileCMemo, true, &cardNo, &dbID);
