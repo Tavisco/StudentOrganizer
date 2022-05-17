@@ -118,6 +118,7 @@ Boolean MngHmwrkFormDoCommand(UInt16 command);
 void MngHmwrkFormInit(FormType *frmP);
 Boolean MngHmwrkFormHandleEvent(EventPtr eventP);
 Boolean AtLeastOneClassExists();
+void FillClassesDropdown();
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);

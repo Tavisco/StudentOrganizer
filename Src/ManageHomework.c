@@ -5,6 +5,24 @@
 #include "StudentOrganizer.h"
 
 
+static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
+{
+	UInt32 pstInt;
+	DmOpenRef gDB;
+	ClassDB *rec;
+	MemHandle recH;
+
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+
+	recH = DmQueryRecord(gDB, itemNum);
+	rec = MemHandleLock(recH);
+	
+	WinDrawChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y);
+	
+	MemHandleUnlock(recH);
+}
+
 Boolean MngHmwrkFormDoCommand(UInt16 command)
 {
 	Boolean handled = false;
@@ -30,6 +48,27 @@ void MngHmwrkFormInit(FormType *frmP)
 		FrmCustomAlert(AddClassBeforeHomeworkAlert, NULL, NULL, NULL);
 		FrmGotoForm(MainForm);
 	}
+	
+	FillClassesDropdown();
+}
+
+void FillClassesDropdown() {
+	UInt32 pstInt;
+	DmOpenRef gDB;
+	UInt16 numRecs;
+	
+	FormType *form = FrmGetActiveForm();
+	ListType *list = GetObjectPtr(ClassesMngHmwrkList);
+
+	// Set custom list drawing callback function.
+	LstSetDrawFunction(list, ClassesListDraw);
+
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
+
+	LstSetListChoices(list, NULL, numRecs);
+	LstDrawList(list);
 }
 
 Boolean AtLeastOneClassExists() {

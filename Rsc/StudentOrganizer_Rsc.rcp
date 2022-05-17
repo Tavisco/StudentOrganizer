@@ -204,7 +204,7 @@ BEGIN
 	
 	LABEL "Class:" ID ClassMngHmwrkLabel  AT (5 38) FONT 1
 	POPUPTRIGGER "Select Class" ClassMngHmwrkTrigger AT (35 38 AUTO AUTO)
-	LIST  "One" "Two" "Three" ClassesMngHmwrkList AT (PREVLEFT PREVBOTTOM+1 PREVWIDTH 35) VISIBLEITEMS 3 NONUSABLE
+	LIST  "One" "Two" "Three" "Four" ClassesMngHmwrkList AT (PREVLEFT PREVBOTTOM+1 PREVWIDTH 35) VISIBLEITEMS 4 NONUSABLE
 	POPUPLIST ClassMngHmwrkTrigger ClassesMngHmwrkList
 
 	LABEL "Due:" ID DueMngHmwrkLabel  AT (10 56) FONT 1
