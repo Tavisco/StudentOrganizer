@@ -25,7 +25,23 @@ Boolean MngHmwrkFormDoCommand(UInt16 command)
 
 void MngHmwrkFormInit(FormType *frmP)
 {
+	if (!AtLeastOneClassExists())
+	{
+		FrmCustomAlert(AddClassBeforeHomeworkAlert, NULL, NULL, NULL);
+		FrmGotoForm(MainForm);
+	}
+}
+
+Boolean AtLeastOneClassExists() {
+	UInt32 pstInt;
+	UInt16 numRecs;
+	DmOpenRef gDB;
 	
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
+	
+	return numRecs != 0;
 }
 
 Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
