@@ -7,20 +7,33 @@
 
 static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 {
-	UInt32 pstInt;
-	DmOpenRef gDB;
-	ClassDB *rec;
-	MemHandle recH;
+	if (itemNum == 0) {
+		WinDrawChars("1ello", 5, bounds->topLeft.x, bounds->topLeft.y);
+	} else if (itemNum == 1) {
+		WinDrawChars("2ello", 5, bounds->topLeft.x, bounds->topLeft.y);
+	} else if (itemNum == 2) {
+		WinDrawChars("3ello", 5, bounds->topLeft.x, bounds->topLeft.y);
+	}
+	// UInt32 pstInt;
+	// DmOpenRef gDB;
+	// ClassDB *rec;
+	// MemHandle recH;
+	// Char *	itemTextP;
 
-	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
-	gDB = (DmOpenRef)pstInt;
+	// // Get the database pointer from feature memory
+	// FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	// gDB = (DmOpenRef)pstInt;
 
-	recH = DmQueryRecord(gDB, itemNum);
-	rec = MemHandleLock(recH);
-	
-	WinDrawChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y);
-	
-	MemHandleUnlock(recH);
+	// // Open and lock the correct record on the DB
+	// recH = DmQueryRecord(gDB, itemNum);
+	// rec = MemHandleLock(recH);
+	// itemTextP = rec->className;
+
+	// // Draw the className on the list
+	// WinDrawChars(itemTextP, StrLen(itemTextP), bounds->topLeft.x, bounds->topLeft.y);
+
+	// // Unlock record and database
+	// MemPtrUnlock(rec);
 }
 
 Boolean MngHmwrkFormDoCommand(UInt16 command)
@@ -53,22 +66,20 @@ void MngHmwrkFormInit(FormType *frmP)
 }
 
 void FillClassesDropdown() {
-	UInt32 pstInt;
-	DmOpenRef gDB;
-	UInt16 numRecs;
-	
-	FormType *form = FrmGetActiveForm();
+	//UInt32 pstInt;
+	//DmOpenRef gDB;
+	//UInt16 numRecs;
+
 	ListType *list = GetObjectPtr(ClassesMngHmwrkList);
 
+	// The number of choices is equal to the number os classes
+	//FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	//gDB = (DmOpenRef)pstInt;
+	//numRecs = DmNumRecords(gDB);
+	LstSetHeight(list, 2);
+	LstSetListChoices(list, NULL, 2);
 	// Set custom list drawing callback function.
 	LstSetDrawFunction(list, ClassesListDraw);
-
-	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
-	gDB = (DmOpenRef)pstInt;
-	numRecs = DmNumRecords(gDB);
-
-	LstSetListChoices(list, NULL, numRecs);
-	LstDrawList(list);
 }
 
 Boolean AtLeastOneClassExists() {
@@ -98,8 +109,8 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 
 	case frmOpenEvent:
 		frmP = FrmGetActiveForm();
-		FrmDrawForm(frmP);
 		MngHmwrkFormInit(frmP);
+		FrmDrawForm(frmP);
 		handled = true;
 		break;
 	}
