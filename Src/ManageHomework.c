@@ -91,6 +91,7 @@ Boolean MngHmwkHandlePopSelected(Int16 selIndex, ManageHomeworkVariables* hmwrkV
 	Char* itemTextP = GetClassNameFromDbIndex(selIndex);
 
 	CtlSetLabel(popTrig, itemTextP);
+	StrCopy(hmwrkVars->className, itemTextP);
 
 	return true;
 }
@@ -99,14 +100,21 @@ void AskDateToUser(ManageHomeworkVariables* hmwrkVars)
 {
 	Int16 day, month, year;
 	DateTimeType now;
-	//Boolean selected;
+	Boolean selected;
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	day = now.day;
 	month = now.month;
 	year = now.year;
 
-	SelectDay(selectDayByDay, &month, &day, &year, "Select due date");
+	selected = SelectDay(selectDayByDay, &month, &day, &year, "Select due date");
+
+	if (selected)
+	{
+		hmwrkVars->dueDay = day;
+		hmwrkVars->dueMonth = month;
+		hmwrkVars->dueYear = year;
+	} 
 }
 
 Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars)
