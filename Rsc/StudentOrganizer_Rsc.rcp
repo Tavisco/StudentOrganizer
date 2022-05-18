@@ -213,7 +213,7 @@ BEGIN
 	LABEL "________________________________________" ID LineMngHmwrkLabel  AT (0 70)
 
 	LABEL "Comments:" ID CommentsMngHmwrkLabel  AT (6 88) FONT 1
-	FIELD ID CommentsMngHmwrkField  AT (7 100 145 41) MAXCHARS 512 EDITABLE  MULTIPLELINES UNDERLINED AUTOSHIFT
+	FIELD ID CommentsMngHmwrkField  AT (7 100 145 41) MAXCHARS 86 EDITABLE  MULTIPLELINES UNDERLINED AUTOSHIFT
 
 	BUTTON "Done" ID DoneMngHmwrkButton  AT (5 147 42 AUTO)
 	BUTTON "Cancel" ID CancelMngHmwrkButton  AT (52 147 42 AUTO)

@@ -28,6 +28,7 @@
 #define ftrClassesDBNum (UInt16)1
 #define ftrClassesNum (UInt16)2
 #define ftrShrdClassesVarsNum (UInt16)3
+#define ftrManageHomeworkNum (UInt16)4
 
 /*********************************************************************
  * Internal Structures
@@ -63,6 +64,14 @@ typedef struct SharedClassesVariables
 	UInt16 selectedClassDbIndex; // DB Index of select class on Classes Form
 	Int16 selectedDoW; // To remember the selected DoW
 } SharedClassesVariables;
+
+typedef struct ManageHomeworkVariables
+{
+	Int16 dueDay, dueMonth, dueYear; // Due date
+	Char hmwrkName[19];
+	Char className[19];
+	Char hmwrkComments[87];
+} ManageHomeworkVariables;
 
 /*********************************************************************
  * Function Prototypes
@@ -114,12 +123,13 @@ Boolean IsScheduleInvalid(ManageClassVariables *pstVars);
 Err DeleteClass(ManageClassVariables *pstVars);
 
 /* Functions in ManageHomework.c */
-Boolean MngHmwrkFormDoCommand(UInt16 command);
+Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars);
 void MngHmwrkFormInit(FormType *frmP);
 Boolean MngHmwrkFormHandleEvent(EventPtr eventP);
 Boolean AtLeastOneClassExists();
 void FillClassesDropdown();
-Boolean MngHmwkHandlePopSelected(Int16 selIndex);
+Boolean MngHmwkHandlePopSelected(Int16 selIndex, ManageHomeworkVariables* hmwrkVars);
+void AskDateToUser(ManageHomeworkVariables* hmwrkVars);
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);
