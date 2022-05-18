@@ -119,6 +119,7 @@ void MngHmwrkFormInit(FormType *frmP);
 Boolean MngHmwrkFormHandleEvent(EventPtr eventP);
 Boolean AtLeastOneClassExists();
 void FillClassesDropdown();
+Boolean MngHmwkHandlePopSelected(Int16 selIndex);
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);
