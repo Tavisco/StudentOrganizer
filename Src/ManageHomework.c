@@ -133,12 +133,23 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 	case DueMngHmwrkSelector:
 	{
 		AskDateToUser(hmwrkVars);
+		UpdateDueDateTriggerLabel(hmwrkVars);
 		handled = true;
 		break;
 	}
 	}
 
 	return handled;
+}
+
+void UpdateDueDateTriggerLabel(ManageHomeworkVariables* hmwrkVars) {
+	ControlType *fldP;
+	Char *dateStr;
+	
+	DateToDOWDMFormat(hmwrkVars->dueMonth, hmwrkVars->dueDay, hmwrkVars->dueYear, dfDMYWithSlashes, dateStr);
+	
+	fldP = GetObjectPtr(DueMngHmwrkSelector);
+	CtlSetLabel(fldP, dateStr);
 }
 
 Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
@@ -176,8 +187,8 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 	case frmOpenEvent:
 	{
 		frmP = FrmGetActiveForm();
-		MngHmwrkFormInit(frmP);
 		FrmDrawForm(frmP);
+		MngHmwrkFormInit(frmP);
 
 		hmwrkVarsP = (ManageHomeworkVariables *)MemPtrNew(sizeof(ManageHomeworkVariables));
 		ErrFatalDisplayIf ((!hmwrkVarsP), "Out of memory");

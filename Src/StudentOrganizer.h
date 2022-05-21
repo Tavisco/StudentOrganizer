@@ -130,6 +130,7 @@ Boolean AtLeastOneClassExists();
 void FillClassesDropdown();
 Boolean MngHmwkHandlePopSelected(Int16 selIndex, ManageHomeworkVariables* hmwrkVars);
 void AskDateToUser(ManageHomeworkVariables* hmwrkVars);
+void UpdateDueDateTriggerLabel(ManageHomeworkVariables* hmwrkVars);
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);
