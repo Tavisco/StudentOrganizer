@@ -123,6 +123,15 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 
 	switch (command)
 	{
+	case DoneMngHmwrkButton:
+	{
+		if (SaveHomeworkChanges(hmwrkVars) == errNone)
+		{
+			FrmGotoForm(MainForm);
+		}
+		handled = true;
+		break;
+	}
 	case CancelMngHmwrkButton:
 	{
 		FrmGotoForm(MainForm);
@@ -140,6 +149,72 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 	}
 
 	return handled;
+}
+
+Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
+{
+	// Parse and validate Name field
+	Err error = errNone;
+	error = ParseHmwrkNameField(hmwrkVars);
+	if (error != errNone)
+	{
+		return error;
+	}
+	
+	// Validate class
+	error = ValidateClass(hmwrkVars);
+	if (error != errNone)
+	{
+		return error;
+	}
+	
+	// Validate due date
+	error = ValidateDueDate(hmwrkVars);
+	if (error != errNone)
+	{
+		return error;
+	}
+
+	// Parse comments field
+	ParseComments(hmwrkVars);
+	
+	return errNone;
+	//return SaveClassesChangesToDatabase(pstVars);
+}
+
+void ParseComments(ManageHomeworkVariables* hmwrkVars)
+{
+	Char *fldCommentsTxt;
+	FieldType *fldCommentsP = GetObjectPtr(CommentsMngHmwrkField);
+	
+	fldCommentsTxt = FldGetTextPtr(fldCommentsP);
+	StrCopy(hmwrkVars->hmwrkComments, fldCommentsTxt);
+}
+
+Err ValidateClass(ManageHomeworkVariables* hmwrkVars)
+{
+	return hmwrkVars->className == NULL;
+
+}
+
+Err ValidateDueDate(ManageHomeworkVariables* hmwrkVars)
+{
+	return hmwrkVars->dueDay == NULL;
+}
+
+Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars)
+{
+	Char *fldNameTxt;
+	FieldType *fldNameP = GetObjectPtr(NameMngHomeworkField);
+
+	fldNameTxt = FldGetTextPtr(fldNameP);
+	if (fldNameTxt == NULL)
+	{
+		FrmCustomAlert(ManageClassMissingFieldAlert, "Class name", NULL, NULL);
+		return 1;
+	}
+	StrCopy(hmwrkVars->hmwrkName, fldNameTxt);
+	return errNone;
 }
 
 void UpdateDueDateTriggerLabel(ManageHomeworkVariables* hmwrkVars) {

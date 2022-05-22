@@ -23,12 +23,15 @@
 #define kCreator 'UWSC'
 #define kClassDBType 'CLSS'
 #define kClassesDBName "StudentOrganizerClasses"
+#define kHmwrkDBType 'HMWK'
+#define kHmwrkDBName "StudentOrganizerHomeworks"
 
 #define ftrManageClassNum (UInt16)0
 #define ftrClassesDBNum (UInt16)1
 #define ftrClassesNum (UInt16)2
 #define ftrShrdClassesVarsNum (UInt16)3
 #define ftrManageHomeworkNum (UInt16)4
+#define ftrHmwrkDBNum (UInt16)5
 
 /*********************************************************************
  * Internal Structures
@@ -82,6 +85,10 @@ void *GetObjectPtr(UInt16 objectID);
 Boolean AppHandleEvent(EventPtr eventP);
 void AppEventLoop(void);
 void AppStop(void);
+Err InitializeClassesDB(void);
+Err InitializeHomeworkDB(void);
+void CloseClassesDB();
+void CloseHmwrksDB();
 Err RomVersionCompatible(UInt32 requiredVersion, UInt16 launchFlags);
 UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlahs);
 Err AppStart(void);
@@ -116,8 +123,8 @@ void activateSelector(UInt16 field);
 void LoadDoW();
 void SetTimeSelectorVisibility();
 void SetTimeSelectorLabels(UInt16 field, ManageClassVariables *pstVars);
-Err SaveChanges(ManageClassVariables *pstVars);
-Err SaveChangesToDatabase(ManageClassVariables *pstVars);
+Err SaveClassesChanges(ManageClassVariables *pstVars);
+Err SaveClassesChangesToDatabase(ManageClassVariables *pstVars);
 void CheckForAlreadySelected(ManageClassVariables *pstVars);
 Boolean IsScheduleInvalid(ManageClassVariables *pstVars);
 Err DeleteClass(ManageClassVariables *pstVars);
@@ -131,6 +138,11 @@ void FillClassesDropdown();
 Boolean MngHmwkHandlePopSelected(Int16 selIndex, ManageHomeworkVariables* hmwrkVars);
 void AskDateToUser(ManageHomeworkVariables* hmwrkVars);
 void UpdateDueDateTriggerLabel(ManageHomeworkVariables* hmwrkVars);
+Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars);
+Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars);
+Err ValidateDueDate(ManageHomeworkVariables* hmwrkVars);
+Err ValidateClass(ManageHomeworkVariables* hmwrkVars);
+void ParseComments(ManageHomeworkVariables* hmwrkVars);
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);

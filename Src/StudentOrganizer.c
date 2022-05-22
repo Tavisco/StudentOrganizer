@@ -155,19 +155,44 @@ void AppEventLoop(void)
 
 void AppStop(void)
 {
-	UInt32 classesPstInt;
-	DmOpenRef classesGDB;
-
 	/* Close all the open forms.*/
 	FrmCloseAllForms();
 
 	/* Close all the databases.*/
-	FtrGet(appFileCreator, ftrClassesDBNum, &classesPstInt);
-	classesGDB = (DmOpenRef)classesPstInt;
-	DmCloseDatabase(classesGDB);
+	CloseClassesDB();
+	CloseHmwrksDB();
+}
+
+void CloseHmwrksDB() {
+	UInt32 pstInt;
+	DmOpenRef GDB;
+	
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	GDB = (DmOpenRef)pstInt;
+	DmCloseDatabase(GDB);
+}
+
+void CloseClassesDB() {
+	UInt32 pstInt;
+	DmOpenRef GDB;
+	
+	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
+	GDB = (DmOpenRef)pstInt;
+	DmCloseDatabase(GDB);
 }
 
 Err AppStart(void)
+{
+	Err error = InitializeClassesDB();
+	if (error != errNone)
+	{
+		return error;
+	}
+	
+	return InitializeHomeworkDB();
+}
+
+Err InitializeClassesDB(void)
 {
 	Err error = errNone;
 	DmOpenRef gDB = 0;
@@ -185,6 +210,27 @@ Err AppStart(void)
 	}
 
 	FtrSet(appFileCreator, ftrClassesDBNum, (UInt32)gDB);
+	return error;
+}
+
+Err InitializeHomeworkDB(void)
+{
+	Err error = errNone;
+	DmOpenRef gDB = 0;
+
+	gDB = DmOpenDatabaseByTypeCreator(kHmwrkDBType, kCreator, dmModeReadWrite);
+	if (!gDB)
+	{
+		error = DmCreateDatabase(0, kHmwrkDBName, kCreator, kHmwrkDBType, false);
+		if (error)
+			return error;
+
+		gDB = DmOpenDatabaseByTypeCreator(kHmwrkDBType, kCreator, dmModeReadWrite);
+		if (!gDB)
+			return DmGetLastErr();
+	}
+
+	FtrSet(appFileCreator, ftrHmwrkDBNum, (UInt32)gDB);
 	return error;
 }
 

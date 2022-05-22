@@ -23,7 +23,7 @@ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 	switch (command)
 	{
 	case ManageClassDoneButton:
-		if (SaveChanges(pstVars) == errNone)
+		if (SaveClassesChanges(pstVars) == errNone)
 		{
 			FrmGotoForm(ClassesForm);
 		}
@@ -143,7 +143,7 @@ Err DeleteClass(ManageClassVariables *pstVars)
 	return DmRemoveRecord(gDB, index);
 }
 
-Err SaveChanges(ManageClassVariables *pstVars)
+Err SaveClassesChanges(ManageClassVariables *pstVars)
 {
 	Err error = errNone;
 	Char *fldNameTxt, *fldRoomTxt = "\n";
@@ -175,7 +175,7 @@ Err SaveChanges(ManageClassVariables *pstVars)
 		return error;
 	}
 
-	return SaveChangesToDatabase(pstVars);
+	return SaveClassesChangesToDatabase(pstVars);
 }
 
 Boolean IsScheduleInvalid(ManageClassVariables *pstVars)
@@ -202,7 +202,7 @@ Boolean IsScheduleInvalid(ManageClassVariables *pstVars)
 	return invalid;
 }
 
-Err SaveChangesToDatabase(ManageClassVariables *pstVars)
+Err SaveClassesChangesToDatabase(ManageClassVariables *pstVars)
 {
 	Err error = errNone;
 	UInt16 recIndex = dmMaxRecordIndex;
