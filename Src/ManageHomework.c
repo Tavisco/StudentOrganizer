@@ -188,12 +188,15 @@ void ParseComments(ManageHomeworkVariables* hmwrkVars)
 	FieldType *fldCommentsP = GetObjectPtr(CommentsMngHmwrkField);
 	
 	fldCommentsTxt = FldGetTextPtr(fldCommentsP);
-	StrCopy(hmwrkVars->hmwrkComments, fldCommentsTxt);
+	if (fldCommentsTxt != NULL)
+	{
+		StrCopy(hmwrkVars->hmwrkComments, fldCommentsTxt);	
+	}
 }
 
 Err ValidateClass(ManageHomeworkVariables* hmwrkVars)
 {
-	return hmwrkVars->className == NULL;
+	return StrLen(hmwrkVars->className) == 0;
 
 }
 
