@@ -240,3 +240,27 @@ BEGIN
      MESSAGE "Do you really wanna delete this class? All homework assigned to this class will also be deleted."
      BUTTONS "Delete" "Cancel"
 END
+
+ALERT ID HmwrkNameNeededAlert  
+ERROR
+BEGIN
+     TITLE "Validation error"
+     MESSAGE "You need to input a name to this homework."
+     BUTTONS "OK" 
+END
+
+ALERT ID HmwrkClassNeededAlert  
+ERROR
+BEGIN
+     TITLE "Validation error"
+     MESSAGE "You need to select a class to assign to this homework."
+     BUTTONS "OK" 
+END
+
+ALERT ID HmwrkDueDateNeededAlert  
+ERROR
+BEGIN
+     TITLE "Validation error"
+     MESSAGE "You need to select a due date to this homework."
+     BUTTONS "OK" 
+END

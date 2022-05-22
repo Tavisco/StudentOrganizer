@@ -114,6 +114,8 @@ void AskDateToUser(ManageHomeworkVariables* hmwrkVars)
 		hmwrkVars->dueDay = day;
 		hmwrkVars->dueMonth = month;
 		hmwrkVars->dueYear = year;
+		
+		UpdateDueDateTriggerLabel(hmwrkVars);
 	} 
 }
 
@@ -142,7 +144,6 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 	case DueMngHmwrkSelector:
 	{
 		AskDateToUser(hmwrkVars);
-		UpdateDueDateTriggerLabel(hmwrkVars);
 		handled = true;
 		break;
 	}
@@ -158,6 +159,7 @@ Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
 	error = ParseHmwrkNameField(hmwrkVars);
 	if (error != errNone)
 	{
+		FrmCustomAlert(HmwrkNameNeededAlert, NULL, NULL, NULL);
 		return error;
 	}
 	
@@ -165,6 +167,7 @@ Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
 	error = ValidateClass(hmwrkVars);
 	if (error != errNone)
 	{
+		FrmCustomAlert(HmwrkClassNeededAlert, NULL, NULL, NULL);
 		return error;
 	}
 	
@@ -172,6 +175,7 @@ Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
 	error = ValidateDueDate(hmwrkVars);
 	if (error != errNone)
 	{
+		FrmCustomAlert(HmwrkDueDateNeededAlert, NULL, NULL, NULL);
 		return error;
 	}
 
@@ -213,7 +217,6 @@ Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars)
 	fldNameTxt = FldGetTextPtr(fldNameP);
 	if (fldNameTxt == NULL)
 	{
-		FrmCustomAlert(ManageClassMissingFieldAlert, "Class name", NULL, NULL);
 		return 1;
 	}
 	StrCopy(hmwrkVars->hmwrkName, fldNameTxt);

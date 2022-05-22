@@ -1,4 +1,7 @@
 /* pilrc generated file.  Do not edit!*/
+#define HmwrkDueDateNeededAlert 1087
+#define HmwrkClassNeededAlert 1086
+#define HmwrkNameNeededAlert 1085
 #define ConfirmDeleteClassAlert 1084
 #define TableHomeworksLabel 1082
 #define HomeworksTable 1081
