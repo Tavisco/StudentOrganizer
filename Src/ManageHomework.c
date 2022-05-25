@@ -49,23 +49,23 @@ void MngHmwrkFormInit(FormType *frmP)
 void FillClassesDropdown() {
 	UInt32 pstInt;
 	DmOpenRef gDB;
-	UInt16 numRecs;
+	UInt16 numRecs, size;
 	ListType *list = GetObjectPtr(ClassesMngHmwrkList);
 
 	// The number of choices is equal to the number os classes
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
 	numRecs = DmNumRecords(gDB);
+	size = numRecs;
 
-	// Limit list size
-	if (numRecs > 3)
-		numRecs = 4; 
-	
-	LstSetHeight(list, numRecs);
+	// Limit list sizenumRecs
+	if (size > 4)
+		size = 4; 
+	LstSetHeight(list, size);
 	
 	// Set custom list drawing callback function.
 	LstSetDrawFunction(list, ClassesListDraw);
-	// Set list size
+	// Set list item number
 	LstSetListChoices(list, NULL, numRecs);
 }
 
