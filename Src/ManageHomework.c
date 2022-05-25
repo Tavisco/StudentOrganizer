@@ -3,6 +3,7 @@
 #include <PalmOS.h>
 #include "Rsc/StudentOrganizer_Rsc.h"
 #include "StudentOrganizer.h"
+#define descWidthMax	20
 
 static Char* GetClassNameFromDbIndex(Int16 i)
 {
@@ -224,13 +225,14 @@ Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars)
 }
 
 void UpdateDueDateTriggerLabel(ManageHomeworkVariables* hmwrkVars) {
-	ControlType *fldP;
-	Char *dateStr;
+	ControlPtr ctl;
+	Char *label;
+
+	ctl = GetObjectPtr(DueMngHmwrkSelector);
+	label = (Char *)CtlGetLabel (ctl);
 	
-	DateToDOWDMFormat(hmwrkVars->dueMonth, hmwrkVars->dueDay, hmwrkVars->dueYear, dfDMYWithSlashes, dateStr);
-	
-	fldP = GetObjectPtr(DueMngHmwrkSelector);
-	CtlSetLabel(fldP, dateStr);
+	DateToDOWDMFormat(hmwrkVars->dueMonth, hmwrkVars->dueDay, hmwrkVars->dueYear, dfDMYWithSlashes, label);
+	CtlSetLabel(ctl, label);
 }
 
 Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
