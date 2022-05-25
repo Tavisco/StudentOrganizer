@@ -3,7 +3,6 @@
 #include <PalmOS.h>
 #include "Rsc/StudentOrganizer_Rsc.h"
 #include "StudentOrganizer.h"
-#define descWidthMax	20
 
 static Char* GetClassNameFromDbIndex(Int16 i)
 {
@@ -58,12 +57,11 @@ void FillClassesDropdown() {
 	gDB = (DmOpenRef)pstInt;
 	numRecs = DmNumRecords(gDB);
 
-	// Resize the list vertically to fit all items
-	if (numRecs <= 3) {
-		LstSetHeight(list, numRecs);
-	} else {
-		LstSetHeight(list, 4);
-	}
+	// Limit list size
+	if (numRecs > 3)
+		numRecs = 4; 
+	
+	LstSetHeight(list, numRecs);
 	
 	// Set custom list drawing callback function.
 	LstSetDrawFunction(list, ClassesListDraw);
