@@ -90,7 +90,7 @@ Boolean MngHmwkHandlePopSelected(Int16 selIndex, ManageHomeworkVariables* hmwrkV
 	Char* itemTextP = GetClassNameFromDbIndex(selIndex);
 
 	CtlSetLabel(popTrig, itemTextP);
-	StrCopy(hmwrkVars->className, itemTextP);
+	StrCopy(hmwrkVars->record.className, itemTextP);
 
 	return true;
 }
@@ -107,12 +107,11 @@ void AskDateToUser(ManageHomeworkVariables* hmwrkVars)
 	year = now.year;
 
 	selected = SelectDay(selectDayByDay, &month, &day, &year, "Select due date");
-
 	if (selected)
 	{
-		hmwrkVars->dueDay = day;
-		hmwrkVars->dueMonth = month;
-		hmwrkVars->dueYear = year;
+		hmwrkVars->record.dueDay = day;
+		hmwrkVars->record.dueMonth = month;
+		hmwrkVars->record.dueYear = year;
 		
 		UpdateDueDateTriggerLabel(hmwrkVars);
 	} 
@@ -181,8 +180,59 @@ Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
 	// Parse comments field
 	ParseComments(hmwrkVars);
 	
-	return errNone;
-	//return SaveClassesChangesToDatabase(pstVars);
+	//return errNone;
+	return SaveHomeworkChangesToDatabase(hmwrkVars);
+}
+
+Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
+{
+	Err error = errNone;
+	UInt16 recIndex = dmMaxRecordIndex;
+	MemHandle recH;
+	MemPtr recP;
+	UInt32 pstInt, pstSharedInt;
+	DmOpenRef gDB;
+	// SharedClassesVariables *pSharedPrefs;
+	UInt16 index = -1;
+	UInt16 newSize;
+
+	// Check if we are editing, and get the index.
+	// if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
+	// {
+	// 	pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
+	// 	index = pSharedPrefs->selectedClassDbIndex;
+	// }
+
+	recP = MemPtrNew(sizeof(HomeworkDB));
+	MemPtrFree(recP);
+
+	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+
+	// if (index == (UInt16)-1)
+	// {pstVars
+		// New record
+		//recIndex = DmNumRecords(gDB);
+		recH = DmNewRecord(gDB, &recIndex, sizeof(hmwrkVars->record));
+		if (recH)
+		{
+			recP = MemHandleLock(recH);
+			DmWrite(recP, 0, &(hmwrkVars->record), sizeof(hmwrkVars->record));
+			error = DmReleaseRecord(gDB, recIndex, true);
+			MemHandleUnlock(recH);
+		}
+	// }
+	// else
+	// {
+	// 	// Edit record
+	// 	newSize = sizeof(pstVars->record);
+	// 	recH = DmResizeRecord(gDB, index, newSize);
+	// 	recP = MemHandleLock(recH);
+	// 	DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
+	// 	error = DmReleaseRecord(gDB, index, true);
+	// 	MemHandleUnlock(recH);
+	// }
+	return error;
 }
 
 void ParseComments(ManageHomeworkVariables* hmwrkVars)
@@ -193,19 +243,19 @@ void ParseComments(ManageHomeworkVariables* hmwrkVars)
 	fldCommentsTxt = FldGetTextPtr(fldCommentsP);
 	if (fldCommentsTxt != NULL)
 	{
-		StrCopy(hmwrkVars->hmwrkComments, fldCommentsTxt);	
+		StrCopy(hmwrkVars->record.hmwrkComments, fldCommentsTxt);	
 	}
 }
 
 Err ValidateClass(ManageHomeworkVariables* hmwrkVars)
 {
-	return StrLen(hmwrkVars->className) == 0;
+	return StrLen(hmwrkVars->record.className) == 0;
 
 }
 
 Err ValidateDueDate(ManageHomeworkVariables* hmwrkVars)
 {
-	return hmwrkVars->dueDay == NULL;
+	return hmwrkVars->record.dueDay == NULL;
 }
 
 Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars)
@@ -218,7 +268,7 @@ Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars)
 	{
 		return 1;
 	}
-	StrCopy(hmwrkVars->hmwrkName, fldNameTxt);
+	StrCopy(hmwrkVars->record.hmwrkName, fldNameTxt);
 	return errNone;
 }
 
@@ -229,7 +279,7 @@ void UpdateDueDateTriggerLabel(ManageHomeworkVariables* hmwrkVars) {
 	ctl = GetObjectPtr(DueMngHmwrkSelector);
 	label = (Char *)CtlGetLabel (ctl);
 	
-	DateToDOWDMFormat(hmwrkVars->dueMonth, hmwrkVars->dueDay, hmwrkVars->dueYear, dfDMYWithSlashes, label);
+	DateToDOWDMFormat(hmwrkVars->record.dueMonth, hmwrkVars->record.dueDay, hmwrkVars->record.dueYear, dfDMYWithSlashes, label);
 	CtlSetLabel(ctl, label);
 }
 

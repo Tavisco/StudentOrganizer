@@ -68,12 +68,17 @@ typedef struct SharedClassesVariables
 	Int16 selectedDoW; // To remember the selected DoW
 } SharedClassesVariables;
 
-typedef struct ManageHomeworkVariables
+typedef struct HomeworkDB
 {
 	Int16 dueDay, dueMonth, dueYear; // Due date
 	Char hmwrkName[19];
 	Char className[19];
 	Char hmwrkComments[87];
+} HomeworkDB;
+
+typedef struct ManageHomeworkVariables
+{
+	HomeworkDB record;
 } ManageHomeworkVariables;
 
 /*********************************************************************
@@ -143,6 +148,7 @@ Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars);
 Err ValidateDueDate(ManageHomeworkVariables* hmwrkVars);
 Err ValidateClass(ManageHomeworkVariables* hmwrkVars);
 void ParseComments(ManageHomeworkVariables* hmwrkVars);
+Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars);
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);
