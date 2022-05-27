@@ -4,7 +4,7 @@
 #define HmwrkNameNeededAlert 1085
 #define ConfirmDeleteClassAlert 1084
 #define TableHomeworksLabel 1082
-#define HomeworksTable 1081
+#define HomeworksViewList 1081
 #define HomeworksEditButton 1080
 #define HomeworksNewButton 1079
 #define HomeworksDoneButton 1078

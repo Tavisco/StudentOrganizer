@@ -227,7 +227,7 @@ BEGIN
 	BUTTON "Done" ID HomeworksDoneButton  AT (5 146 36 12)
 	BUTTON "New" ID HomeworksNewButton  AT (47 146 36 12)
 	BUTTON "Edit" ID HomeworksEditButton  AT (90 146 36 12)
-	TABLE ID HomeworksTable  AT (5 31 144 111) ROWS 10 COLUMNS 2 COLUMNWIDTHS 100 40
+	LIST ""         ID HomeworksViewList     AT (5 33 140 146) VISIBLEITEMS 9
 	LABEL "Homeworks:" ID TableHomeworksLabel  AT (9 18) FONT 1
 	
 	SCROLLBAR AUTOID AT (152 30 7 111) USABLE VALUE 50 MIN 0 MAX 100 PAGESIZE 10
