@@ -70,11 +70,53 @@ Boolean HomeworksFormDoCommand(UInt16 command)
 		handled = true;
 		break;
 	}
+	case HomeworksEditButton:
+	{
+		Err error = errNone;
+		error = LoadSelectedHomeworkIntoMemory();
+		if (error == errNone)
+		{
+			FrmGotoForm(ManageHomeworkForm);
+		}
+		else
+		{
+			FrmCustomAlert(SelectClassBeforEditAlert, NULL, NULL, NULL);
+		}
+
+		handled = true;
+		break;
+	}
 	}
 
 	return handled;
 }
 
+Err LoadSelectedHomeworkIntoMemory()
+{
+	SharedHomeworksVariables *sharedVars;
+	Int16 selectedItem;
+	ListType *list;
+	MemHandle recH;
+
+	// Load shared Vars
+	sharedVars = (SharedHomeworksVariables *)MemPtrNew(sizeof(SharedHomeworksVariables));
+	ErrFatalDisplayIf ((!sharedVars), "Out of memory");
+	MemSet(sharedVars, sizeof(SharedHomeworksVariables), 0);
+
+	// Get selected item Index
+	list = GetObjectPtr(HomeworksViewList);
+	selectedItem = LstGetSelection(list);
+
+	if (selectedItem == noListSelection)
+	{
+		// TODO: properly handle error
+		MemPtrFree(sharedVars);
+		return 1;
+	}
+
+	sharedVars->selectedHomeworkDbIndex = selectedItem;
+	return FtrSet(appFileCreator, ftrShrdHomeworksVarsNum, (UInt32)sharedVars);
+}
 
 void HomeworksFormInit(FormType *frmP)
 {

@@ -32,6 +32,7 @@
 #define ftrShrdClassesVarsNum (UInt16)3
 #define ftrManageHomeworkNum (UInt16)4
 #define ftrHmwrkDBNum (UInt16)5
+#define ftrShrdHomeworksVarsNum (UInt16)6
 
 /*********************************************************************
  * Internal Structures
@@ -80,6 +81,11 @@ typedef struct ManageHomeworkVariables
 {
 	HomeworkDB record;
 } ManageHomeworkVariables;
+
+typedef struct SharedHomeworksVariables
+{
+	UInt16 selectedHomeworkDbIndex; // DB Index of selected homework on the list
+} SharedHomeworksVariables;
 
 /*********************************************************************
  * Function Prototypes
@@ -154,3 +160,4 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars);
 Boolean HomeworksFormDoCommand(UInt16 command);
 void HomeworksFormInit(FormType *frmP);
 Boolean HomeworksFormHandleEvent(EventPtr eventP);
+Err LoadSelectedHomeworkIntoMemory();
