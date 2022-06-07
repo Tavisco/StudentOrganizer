@@ -34,7 +34,7 @@ static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 	WinDrawChars(itemTextP, StrLen(itemTextP), bounds->topLeft.x, bounds->topLeft.y);
 }
 
-void MngHmwrkFormInit(FormType *frmP)
+void MngHmwrkFormInit(FormType *frmP, ManageHomeworkVariables* hmwrkVars)
 {
 	// Do not open the form if there are no classes in DB
 	if (!AtLeastOneClassExists())
@@ -44,6 +44,62 @@ void MngHmwrkFormInit(FormType *frmP)
 	}
 	
 	FillClassesDropdown();
+
+	CheckForSelectedHomework(hmwrkVars);
+}
+
+void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
+{
+	UInt32 pstSharedInt, pstDbInt;
+	SharedHomeworksVariables *sharedVars;
+	DmOpenRef gDB;
+	HomeworkDB *rec;
+	MemHandle recH, oldTextH, newTextH;
+	FieldType *fldP;
+	char *str;
+
+	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == 0)
+	{
+		sharedVars = (SharedHomeworksVariables *)pstSharedInt;
+
+		FtrGet(appFileCreator, ftrHmwrkDBNum, &pstDbInt);
+		gDB = (DmOpenRef)pstDbInt;
+		recH = DmQueryRecord(gDB, sharedVars->selectedHomeworkDbIndex);
+		rec = MemHandleLock(recH);
+
+		hmwrkVars->record = *rec;
+
+		MemHandleUnlock(recH);
+		
+		// Update Class Name field
+		// TODO: Extract this to a function
+		fldP = GetObjectPtr(NameMngHomeworkField);
+		oldTextH = FldGetTextHandle(fldP);
+		newTextH = MemHandleNew(sizeof(hmwrkVars->record.hmwrkName));
+		str = MemHandleLock(newTextH);
+		StrCopy(str, hmwrkVars->record.hmwrkName);
+		MemHandleUnlock(newTextH);
+		FldSetTextHandle(fldP, newTextH);
+		FldDrawField(fldP);
+		if (oldTextH != NULL)
+		{
+			MemHandleFree(oldTextH);
+		}
+
+		// Update Comments Room field
+		fldP = GetObjectPtr(CommentsMngHmwrkField);
+		oldTextH = FldGetTextHandle(fldP);
+		newTextH = MemHandleNew(sizeof(hmwrkVars->record.hmwrkComments));
+		str = MemHandleLock(newTextH);
+		StrCopy(str, hmwrkVars->record.hmwrkComments);
+		MemHandleUnlock(newTextH);
+		FldSetTextHandle(fldP, newTextH);
+		FldDrawField(fldP);
+		if (oldTextH != NULL)
+		{
+			MemHandleFree(oldTextH);
+		}
+	}
 }
 
 void FillClassesDropdown() {
@@ -319,11 +375,11 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 	{
 		frmP = FrmGetActiveForm();
 		FrmDrawForm(frmP);
-		MngHmwrkFormInit(frmP);
 
 		hmwrkVarsP = (ManageHomeworkVariables *)MemPtrNew(sizeof(ManageHomeworkVariables));
 		ErrFatalDisplayIf ((!hmwrkVarsP), "Out of memory");
 		MemSet(hmwrkVarsP, sizeof(ManageHomeworkVariables), 0);
+		MngHmwrkFormInit(frmP, hmwrkVarsP);
 		FtrSet(appFileCreator, ftrManageHomeworkNum, (UInt32)hmwrkVarsP);
 
 		handled = true;
@@ -333,6 +389,7 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 	{
 		// Free ManageHomework variables
 		FtrPtrFree(appFileCreator, ftrManageHomeworkNum);
+		FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
 		break;
 	}
 	}

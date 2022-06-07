@@ -142,7 +142,7 @@ Err DeleteClass(ManageClassVariables *pstVars);
 
 /* Functions in ManageHomework.c */
 Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars);
-void MngHmwrkFormInit(FormType *frmP);
+void MngHmwrkFormInit(FormType *frmP, ManageHomeworkVariables* hmwrkVars);
 Boolean MngHmwrkFormHandleEvent(EventPtr eventP);
 Boolean AtLeastOneClassExists();
 void FillClassesDropdown();
@@ -155,6 +155,7 @@ Err ValidateDueDate(ManageHomeworkVariables* hmwrkVars);
 Err ValidateClass(ManageHomeworkVariables* hmwrkVars);
 void ParseComments(ManageHomeworkVariables* hmwrkVars);
 Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars);
+void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars);
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);
