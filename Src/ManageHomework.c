@@ -70,6 +70,7 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	FieldType *fldP;
 	Err error;
 	char *str;
+	ControlType *popTrig;
 
 	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
 	if (error != errNone)
@@ -117,7 +118,12 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	{
 		MemHandleFree(oldTextH);
 	}
-	
+
+	// Update class trigger label
+	popTrig = GetObjectPtr(ClassMngHmwrkTrigger);
+	CtlSetLabel(popTrig, hmwrkVars->record.className);
+
+	UpdateDueDateTriggerLabel(hmwrkVars);
 }
 
 void FillClassesDropdown() {
