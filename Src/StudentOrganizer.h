@@ -156,6 +156,7 @@ Err ValidateClass(ManageHomeworkVariables* hmwrkVars);
 void ParseComments(ManageHomeworkVariables* hmwrkVars);
 Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars);
 void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars);
+void redirectToCorrectForm();
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);

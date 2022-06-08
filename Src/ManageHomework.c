@@ -48,6 +48,18 @@ void MngHmwrkFormInit(FormType *frmP, ManageHomeworkVariables* hmwrkVars)
 	CheckForSelectedHomework(hmwrkVars);
 }
 
+void redirectToCorrectForm() {
+	Err error;
+	UInt32 pstSharedInt = 0;
+	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
+	if (error != errNone)
+	{
+		FrmGotoForm(MainForm);
+	} else {
+		FrmGotoForm(HomeworksForm);
+	}
+}
+
 void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 {
 	UInt32 pstSharedInt, pstDbInt;
@@ -56,50 +68,56 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	HomeworkDB *rec;
 	MemHandle recH, oldTextH, newTextH;
 	FieldType *fldP;
+	Err error;
 	char *str;
 
-	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == 0)
+	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
+	if (error != errNone)
 	{
-		sharedVars = (SharedHomeworksVariables *)pstSharedInt;
-
-		FtrGet(appFileCreator, ftrHmwrkDBNum, &pstDbInt);
-		gDB = (DmOpenRef)pstDbInt;
-		recH = DmQueryRecord(gDB, sharedVars->selectedHomeworkDbIndex);
-		rec = MemHandleLock(recH);
-
-		hmwrkVars->record = *rec;
-
-		MemHandleUnlock(recH);
-		
-		// Update Class Name field
-		// TODO: Extract this to a function
-		fldP = GetObjectPtr(NameMngHomeworkField);
-		oldTextH = FldGetTextHandle(fldP);
-		newTextH = MemHandleNew(sizeof(hmwrkVars->record.hmwrkName));
-		str = MemHandleLock(newTextH);
-		StrCopy(str, hmwrkVars->record.hmwrkName);
-		MemHandleUnlock(newTextH);
-		FldSetTextHandle(fldP, newTextH);
-		FldDrawField(fldP);
-		if (oldTextH != NULL)
-		{
-			MemHandleFree(oldTextH);
-		}
-
-		// Update Comments Room field
-		fldP = GetObjectPtr(CommentsMngHmwrkField);
-		oldTextH = FldGetTextHandle(fldP);
-		newTextH = MemHandleNew(sizeof(hmwrkVars->record.hmwrkComments));
-		str = MemHandleLock(newTextH);
-		StrCopy(str, hmwrkVars->record.hmwrkComments);
-		MemHandleUnlock(newTextH);
-		FldSetTextHandle(fldP, newTextH);
-		FldDrawField(fldP);
-		if (oldTextH != NULL)
-		{
-			MemHandleFree(oldTextH);
-		}
+		// TODO: Properly handle errors
+		return;
 	}
+
+	sharedVars = (SharedHomeworksVariables *)pstSharedInt;
+
+	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstDbInt);
+	gDB = (DmOpenRef)pstDbInt;
+	recH = DmQueryRecord(gDB, sharedVars->selectedHomeworkDbIndex);
+	rec = MemHandleLock(recH);
+
+	hmwrkVars->record = *rec;
+
+	MemHandleUnlock(recH);
+	
+	// Update Class Name field
+	// TODO: Extract this to a function
+	fldP = GetObjectPtr(NameMngHomeworkField);
+	oldTextH = FldGetTextHandle(fldP);
+	newTextH = MemHandleNew(sizeof(hmwrkVars->record.hmwrkName));
+	str = MemHandleLock(newTextH);
+	StrCopy(str, hmwrkVars->record.hmwrkName);
+	MemHandleUnlock(newTextH);
+	FldSetTextHandle(fldP, newTextH);
+	FldDrawField(fldP);
+	if (oldTextH != NULL)
+	{
+		MemHandleFree(oldTextH);
+	}
+
+	// Update Comments Room field
+	fldP = GetObjectPtr(CommentsMngHmwrkField);
+	oldTextH = FldGetTextHandle(fldP);
+	newTextH = MemHandleNew(sizeof(hmwrkVars->record.hmwrkComments));
+	str = MemHandleLock(newTextH);
+	StrCopy(str, hmwrkVars->record.hmwrkComments);
+	MemHandleUnlock(newTextH);
+	FldSetTextHandle(fldP, newTextH);
+	FldDrawField(fldP);
+	if (oldTextH != NULL)
+	{
+		MemHandleFree(oldTextH);
+	}
+	
 }
 
 void FillClassesDropdown() {
@@ -183,14 +201,14 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 	{
 		if (SaveHomeworkChanges(hmwrkVars) == errNone)
 		{
-			FrmGotoForm(MainForm);
+			redirectToCorrectForm();
 		}
 		handled = true;
 		break;
 	}
 	case CancelMngHmwrkButton:
 	{
-		FrmGotoForm(MainForm);
+		redirectToCorrectForm();
 		handled = true;
 		break;
 	}
