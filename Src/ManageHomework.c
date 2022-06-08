@@ -272,16 +272,16 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
 	MemPtr recP;
 	UInt32 pstInt, pstSharedInt;
 	DmOpenRef gDB;
-	// SharedClassesVariables *pSharedPrefs;
+	SharedHomeworksVariables *sharedVars;
 	UInt16 index = -1;
 	UInt16 newSize;
 
 	// Check if we are editing, and get the index.
-	// if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
-	// {
-	// 	pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
-	// 	index = pSharedPrefs->selectedClassDbIndex;
-	// }
+	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == 0)
+	{
+		sharedVars = (SharedHomeworksVariables *)pstSharedInt;
+	 	index = sharedVars->selectedHomeworkDbIndex;
+	}
 
 	recP = MemPtrNew(sizeof(HomeworkDB));
 	MemPtrFree(recP);
@@ -289,8 +289,8 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
 	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
 
-	// if (index == (UInt16)-1)
-	// {pstVars
+	if (index == (UInt16)-1)
+	{
 		// New record
 		//recIndex = DmNumRecords(gDB);
 		recH = DmNewRecord(gDB, &recIndex, sizeof(hmwrkVars->record));
@@ -301,17 +301,17 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
 			error = DmReleaseRecord(gDB, recIndex, true);
 			MemHandleUnlock(recH);
 		}
-	// }
-	// else
-	// {
-	// 	// Edit record
-	// 	newSize = sizeof(pstVars->record);
-	// 	recH = DmResizeRecord(gDB, index, newSize);
-	// 	recP = MemHandleLock(recH);
-	// 	DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
-	// 	error = DmReleaseRecord(gDB, index, true);
-	// 	MemHandleUnlock(recH);
-	// }
+	}
+	else
+	{
+		// Edit record
+		newSize = sizeof(hmwrkVars->record);
+		recH = DmResizeRecord(gDB, index, newSize);
+		recP = MemHandleLock(recH);
+		DmWrite(recP, 0, &(hmwrkVars->record), sizeof(hmwrkVars->record));
+		error = DmReleaseRecord(gDB, index, true);
+		MemHandleUnlock(recH);
+	}
 	return error;
 }
 
