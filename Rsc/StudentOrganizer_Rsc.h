@@ -5,6 +5,7 @@
 #define HmwrkClassNeededAlert 1088
 #define HmwrkNameNeededAlert 1087
 #define ConfirmDeleteClassAlert 1086
+#define HmwrkListScrollBar 1085
 #define TableHomeworksLabel 1084
 #define HomeworksViewList 1083
 #define HomeworksEditButton 1082

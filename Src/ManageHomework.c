@@ -71,6 +71,7 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	Err error;
 	char *str;
 	ControlType *popTrig;
+	FormPtr formP;
 
 	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
 	if (error != errNone)
@@ -124,6 +125,10 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	CtlSetLabel(popTrig, hmwrkVars->record.className);
 
 	UpdateDueDateTriggerLabel(hmwrkVars);
+	
+	// Set complete button usable
+	formP = FrmGetActiveForm();
+	FrmShowObject(formP, FrmGetObjectIndex(formP, CompleteMngHmwrkButton));
 }
 
 void FillClassesDropdown() {
@@ -309,7 +314,6 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
 		recH = DmResizeRecord(gDB, index, newSize);
 		recP = MemHandleLock(recH);
 		DmWrite(recP, 0, &(hmwrkVars->record), sizeof(hmwrkVars->record));
-		// error = DmReleaseRecord(gDB, index, true);
 		MemHandleUnlock(recH);
 	}
 	return error;

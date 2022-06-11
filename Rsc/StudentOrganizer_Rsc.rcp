@@ -226,13 +226,13 @@ FORM ID HomeworksForm   AT ( 0 0 160 160 )
 NOFRAME
 BEGIN
     TITLE "Homeworks"
-	BUTTON "Done" ID HomeworksDoneButton  AT (5 146 36 12)
-	BUTTON "New" ID HomeworksNewButton  AT (47 146 36 12)
-	BUTTON "Edit" ID HomeworksEditButton  AT (90 146 36 12)
-	LIST ""         ID HomeworksViewList     AT (5 33 140 101) VISIBLEITEMS 9
+	BUTTON "Done" ID HomeworksDoneButton  AT (5 147 36 12)
+	BUTTON "New" ID HomeworksNewButton  AT (47 147 36 12)
+	BUTTON "Edit" ID HomeworksEditButton  AT (90 147 36 12)
+	LIST ""         ID HomeworksViewList     AT (5 30 144 112) VISIBLEITEMS 10
 	LABEL "Homeworks:" ID TableHomeworksLabel  AT (9 18) FONT 1
 	
-	SCROLLBAR AUTOID AT (152 30 7 111) USABLE VALUE 50 MIN 0 MAX 100 PAGESIZE 10
+	SCROLLBAR ID HmwrkListScrollBar  AT (152 30 7 112) USABLE VALUE 50 MIN 0 MAX 0 PAGESIZE 1
 END
 
 ALERT ID ConfirmDeleteClassAlert 

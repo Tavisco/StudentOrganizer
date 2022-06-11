@@ -249,7 +249,6 @@ Err SaveClassesChangesToDatabase(ManageClassVariables *pstVars)
 		recH = DmResizeRecord(gDB, index, newSize);
 		recP = MemHandleLock(recH);
 		DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
-		error = DmReleaseRecord(gDB, index, true);
 		MemHandleUnlock(recH);
 	}
 	return error;
