@@ -127,8 +127,11 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	UpdateDueDateTriggerLabel(hmwrkVars);
 	
 	// Set complete button usable
-	formP = FrmGetActiveForm();
-	FrmShowObject(formP, FrmGetObjectIndex(formP, CompleteMngHmwrkButton));
+	if (hmwrkVars->record.completedDate.year == 0)
+	{
+		formP = FrmGetActiveForm();
+		FrmShowObject(formP, FrmGetObjectIndex(formP, CompleteMngHmwrkButton));	
+	}
 }
 
 void FillClassesDropdown() {
@@ -255,8 +258,21 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 
 Err CompleteHomework(ManageHomeworkVariables* hmwrkVars)
 {
-	Err error = errNone;
-	return error;
+	Int8 deleteConf = -1;
+	DateTimeType now;
+	
+	// Ask for confirmation before deletion
+	deleteConf = FrmCustomAlert(ConfirmActionHomeworkAlert, "complete", NULL, NULL);
+	if (deleteConf != 0)
+	{
+		// TODO: Better error management
+		return 1;
+	}
+	
+	TimSecondsToDateTime(TimGetSeconds(), &now);
+	hmwrkVars->record.completedDate = now;
+	
+	return SaveHomeworkChangesToDatabase(hmwrkVars);
 }
 
 Err DeleteHomework(ManageHomeworkVariables* hmwrkVars)
@@ -264,7 +280,8 @@ Err DeleteHomework(ManageHomeworkVariables* hmwrkVars)
 	Err error = errNone;
 	UInt32 pstSharedInt, pstInt;
 	SharedHomeworksVariables *pSharedPrefs;
-	UInt16 index = -1, deleteConf = -1;
+	UInt16 index = -1;
+	Int8 deleteConf = -1;
 	DmOpenRef gDB;
 
 	// Check if we are editing, and get the index.
