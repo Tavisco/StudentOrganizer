@@ -309,7 +309,7 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
 		recH = DmResizeRecord(gDB, index, newSize);
 		recP = MemHandleLock(recH);
 		DmWrite(recP, 0, &(hmwrkVars->record), sizeof(hmwrkVars->record));
-		error = DmReleaseRecord(gDB, index, true);
+		// error = DmReleaseRecord(gDB, index, true);
 		MemHandleUnlock(recH);
 	}
 	return error;
@@ -411,9 +411,14 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 	}
 	case frmCloseEvent:
 	{
+		void *temp;
+		
 		// Free ManageHomework variables
 		FtrPtrFree(appFileCreator, ftrManageHomeworkNum);
-		FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
+		if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, (UInt32 *)&temp) == errNone)
+		{
+			FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
+		}
 		break;
 	}
 	}

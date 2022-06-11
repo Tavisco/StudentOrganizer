@@ -96,7 +96,6 @@ Err LoadSelectedHomeworkIntoMemory()
 	SharedHomeworksVariables *sharedVars;
 	Int16 selectedItem;
 	ListType *list;
-	MemHandle recH;
 
 	// Load shared Vars
 	sharedVars = (SharedHomeworksVariables *)MemPtrNew(sizeof(SharedHomeworksVariables));
