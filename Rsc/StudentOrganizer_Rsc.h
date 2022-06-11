@@ -1,5 +1,5 @@
 /* pilrc generated file.  Do not edit!*/
-#define ConfirmDeleteHomeworkAlert 1092
+#define ConfirmActionHomeworkAlert 1092
 #define OptionsDeleteHomeworHrmwrksBar 1091
 #define DeleteNewHomeworkAlert 1090
 #define HmwrkDueDateNeededAlert 1089

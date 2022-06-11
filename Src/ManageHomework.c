@@ -282,7 +282,7 @@ Err DeleteHomework(ManageHomeworkVariables* hmwrkVars)
 	}
 
 	// Ask for confirmation before deletion
-	deleteConf = FrmCustomAlert(ConfirmDeleteHomeworkAlert, NULL, NULL, NULL);
+	deleteConf = FrmCustomAlert(ConfirmActionHomeworkAlert, "delete", NULL, NULL);
 	if (deleteConf != 0)
 	{
 		error = 1;

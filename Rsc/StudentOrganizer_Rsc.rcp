@@ -284,10 +284,10 @@ BEGIN
 
 END	
 
-ALERT ID ConfirmDeleteHomeworkAlert 
+ALERT ID ConfirmActionHomeworkAlert 
 CONFIRMATION
 BEGIN
      TITLE "Confirm action"
      MESSAGE "Do you really wanna ^1 this homework?"
-     BUTTONS "Yes" "Cancel"
+     BUTTONS "Yes" "No"
 END
