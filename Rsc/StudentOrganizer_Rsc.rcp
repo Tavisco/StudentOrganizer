@@ -283,3 +283,11 @@ BEGIN
 	END
 
 END	
+
+ALERT ID ConfirmDeleteHomeworkAlert 
+CONFIRMATION
+BEGIN
+     TITLE "Confirm action"
+     MESSAGE "Do you really wanna ^1 this homework?"
+     BUTTONS "Yes" "Cancel"
+END

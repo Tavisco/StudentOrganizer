@@ -75,6 +75,8 @@ typedef struct HomeworkDB
 	Char hmwrkName[19];
 	Char className[19];
 	Char hmwrkComments[87];
+	DateTimeType completedDate;
+	
 } HomeworkDB;
 
 typedef struct ManageHomeworkVariables
@@ -158,6 +160,8 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars);
 void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars);
 void redirectToCorrectForm();
 void FillHomeworksList();
+Err DeleteHomework(ManageHomeworkVariables* hmwrkVars);
+Err CompleteHomework(ManageHomeworkVariables* hmwrkVars);
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);

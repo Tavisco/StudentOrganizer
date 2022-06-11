@@ -213,7 +213,7 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 		if (SaveHomeworkChanges(hmwrkVars) == errNone)
 		{
 			redirectToCorrectForm();
-		}
+		}// TODO: Better error management
 		handled = true;
 		break;
 	}
@@ -230,9 +230,69 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 		handled = true;
 		break;
 	}
+	case CompleteMngHmwrkButton:
+	{
+		if (CompleteHomework(hmwrkVars) == errNone)
+		{
+			redirectToCorrectForm();
+		}
+		handled = true;
+		break;
+	}
+	case OptionsDeleteHomeworHrmwrksBar:
+	{
+		if (DeleteHomework(hmwrkVars) == errNone)
+		{
+			redirectToCorrectForm();
+		}
+		handled = true;
+		break;
+	}
 	}
 
 	return handled;
+}
+
+Err CompleteHomework(ManageHomeworkVariables* hmwrkVars)
+{
+	Err error = errNone;
+	return error;
+}
+
+Err DeleteHomework(ManageHomeworkVariables* hmwrkVars)
+{
+	Err error = errNone;
+	UInt32 pstSharedInt, pstInt;
+	SharedHomeworksVariables *pSharedPrefs;
+	UInt16 index = -1, deleteConf = -1;
+	DmOpenRef gDB;
+
+	// Check if we are editing, and get the index.
+	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == 0)
+	{
+		pSharedPrefs = (SharedHomeworksVariables *)pstSharedInt;
+		index = pSharedPrefs->selectedHomeworkDbIndex;
+	}
+
+	// If we are not editing, throw an error
+	if (index == (UInt16)-1)
+	{
+		FrmCustomAlert(DeleteNewHomeworkAlert, NULL, NULL, NULL);
+		return error;
+	}
+
+	// Ask for confirmation before deletion
+	deleteConf = FrmCustomAlert(ConfirmDeleteHomeworkAlert, NULL, NULL, NULL);
+	if (deleteConf != 0)
+	{
+		error = 1;
+		return error;
+	}
+
+	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+
+	return DmRemoveRecord(gDB, index);
 }
 
 Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
