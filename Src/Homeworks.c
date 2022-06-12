@@ -4,51 +4,72 @@
 #include "Rsc/StudentOrganizer_Rsc.h"
 #include "StudentOrganizer.h"
 
-static Char *GetHomeworkNameFromDbIndex(Int16 i)
-{
-	UInt32 pstInt;
-	DmOpenRef gDB;
-	HomeworkDB *rec;
-	MemHandle recH;
-	Char *itemTextP;
-
-	// Get the database pointer from feature memory
-	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
-	gDB = (DmOpenRef)pstInt;
-
-	// Open and lock the correct record on the DB
-	recH = DmQueryRecord(gDB, i);
-	rec = MemHandleLock(recH);
-	itemTextP = rec->hmwrkName;
-	// Unlock record and database
-	MemPtrUnlock(rec);
-
-	return itemTextP;
-}
 
 static void HomeworksListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 {
-	Char* itemTextP = GetHomeworkNameFromDbIndex(itemNum);
+	UInt32 pstInt;
+	UInt16 numRecs, iNoYear, i;
+	DmOpenRef gDB;
+	HomeworkDB *rec;
+	MemHandle recH;
+	
+	// Get the database pointer from feature memory
+	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
 
-	// Draw the className on the list
-	WinDrawChars(itemTextP, StrLen(itemTextP), bounds->topLeft.x, bounds->topLeft.y);
+	iNoYear = 0;
+
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (rec->completedDate.year == 0)
+		{
+			if (iNoYear == itemNum)
+			{
+				WinDrawChars(rec->hmwrkName, StrLen(rec->hmwrkName), bounds->topLeft.x, bounds->topLeft.y);
+			}
+			iNoYear += 1;
+		}
+	}
 }
 
 void FillHomeworksList() {
 	UInt32 pstInt;
 	DmOpenRef gDB;
 	UInt16 numRecs;
+	HomeworkDB *rec;
+	MemHandle recH;
 	ListType *list = GetObjectPtr(HomeworksViewList);
+	UInt16 itemCount = 0;
+	UInt16 i;
 
 	// The number of choices is equal to the number os classes
 	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
 	numRecs = DmNumRecords(gDB);
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (rec->completedDate.year == 0)
+		{
+			// TODO: Save the index on a global to fetch later
+			// in order to avoid reescaning the whole DB on
+			// every freaking line draw
+			itemCount += 1;
+		}
+	}
 	
 	// Set custom list drawing callback function.
 	LstSetDrawFunction(list, HomeworksListDraw);
 	// Set list item number
-	LstSetListChoices(list, NULL, numRecs);
+	LstSetListChoices(list, NULL, itemCount);
 	LstSetSelection(list, -1);
 }
 
@@ -94,7 +115,7 @@ Boolean HomeworksFormDoCommand(UInt16 command)
 Err LoadSelectedHomeworkIntoMemory()
 {
 	SharedHomeworksVariables *sharedVars;
-	Int16 selectedItem;
+	UInt16 selectedItem;
 	ListType *list;
 
 	// Load shared Vars
@@ -113,8 +134,43 @@ Err LoadSelectedHomeworkIntoMemory()
 		return 1;
 	}
 
-	sharedVars->selectedHomeworkDbIndex = selectedItem;
+	sharedVars->selectedHomeworkDbIndex = GetDbIndexForSelected(selectedItem);
 	return FtrSet(appFileCreator, ftrShrdHomeworksVarsNum, (UInt32)sharedVars);
+}
+
+UInt16 GetDbIndexForSelected(UInt16 sel)
+{
+	UInt32 pstInt;
+	UInt16 numRecs, iNoYear, i;
+	DmOpenRef gDB;
+	HomeworkDB *rec;
+	MemHandle recH;
+	
+	// Get the database pointer from feature memory
+	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
+
+	iNoYear = 0;
+
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (rec->completedDate.year == 0)
+		{
+			if (iNoYear == sel)
+			{
+				// Found it!
+				break;
+			}
+			iNoYear += 1;
+		}
+	}
+	
+	return i;
 }
 
 void HomeworksFormInit(FormType *frmP)

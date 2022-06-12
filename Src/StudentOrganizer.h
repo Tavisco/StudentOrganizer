@@ -168,3 +168,4 @@ Boolean HomeworksFormDoCommand(UInt16 command);
 void HomeworksFormInit(FormType *frmP);
 Boolean HomeworksFormHandleEvent(EventPtr eventP);
 Err LoadSelectedHomeworkIntoMemory();
+UInt16 GetDbIndexForSelected(UInt16 sel);
