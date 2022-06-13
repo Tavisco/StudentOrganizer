@@ -230,7 +230,7 @@ BEGIN
 	BUTTON "New" ID HomeworksNewButton  AT (47 147 36 12)
 	BUTTON "Edit" ID HomeworksEditButton  AT (90 147 36 12)
 	LIST ""         ID HomeworksViewList     AT (5 30 144 112) VISIBLEITEMS 10
-	LABEL "Homeworks:" ID TableHomeworksLabel  AT (9 18) FONT 1
+	LABEL "Pending homeworks:" ID TableHomeworksLabel  AT (5 16) FONT 1
 	
 	SCROLLBAR ID HmwrkListScrollBar  AT (152 30 7 112) USABLE VALUE 50 MIN 0 MAX 0 PAGESIZE 1
 END

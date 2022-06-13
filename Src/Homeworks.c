@@ -13,6 +13,7 @@ static void HomeworksListDraw(Int16 itemNum, RectangleType *bounds, Char **unuse
 	DmOpenRef gDB;
 	HomeworkDB *rec;
 	MemHandle recH;
+	Char dateStr[dateStringLength];
 	
 	// Get the database pointer from feature memory
 	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
@@ -31,7 +32,17 @@ static void HomeworksListDraw(Int16 itemNum, RectangleType *bounds, Char **unuse
 		{
 			if (iNoYear == itemNum)
 			{
-				WinDrawChars(rec->hmwrkName, StrLen(rec->hmwrkName), bounds->topLeft.x, bounds->topLeft.y);
+				// Draw homework name
+				WinDrawTruncChars(rec->hmwrkName, StrLen(rec->hmwrkName), bounds->topLeft.x, bounds->topLeft.y, bounds->topLeft.x + 70);
+				
+				// Draw due in bold font
+				FntSetFont(boldFont);
+				WinDrawChars("Due: ", StrLen("Due: "), bounds->topLeft.x + 80, bounds->topLeft.y);
+				FntSetFont(stdFont);
+
+				// Draw due date
+				DateToAscii(rec->dueMonth, rec->dueDay, rec->dueYear, dfDMYWithSlashes, dateStr);
+				WinDrawChars(dateStr, StrLen(dateStr), bounds->topLeft.x + 105, bounds->topLeft.y);
 			}
 			iNoYear += 1;
 		}
