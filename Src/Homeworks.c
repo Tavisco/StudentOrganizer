@@ -8,7 +8,8 @@
 static void HomeworksListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 {
 	UInt32 pstInt;
-	UInt16 numRecs, iNoYear, i;
+	UInt16 numRecs, i;
+	Int16 iNoYear;
 	DmOpenRef gDB;
 	HomeworkDB *rec;
 	MemHandle recH;
@@ -115,7 +116,7 @@ Boolean HomeworksFormDoCommand(UInt16 command)
 Err LoadSelectedHomeworkIntoMemory()
 {
 	SharedHomeworksVariables *sharedVars;
-	UInt16 selectedItem;
+	Int16 selectedItem;
 	ListType *list;
 
 	// Load shared Vars
