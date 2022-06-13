@@ -1,12 +1,11 @@
 /* pilrc generated file.  Do not edit!*/
-#define ConfirmActionHomeworkAlert 1092
-#define OptionsDeleteHomeworHrmwrksBar 1091
-#define DeleteNewHomeworkAlert 1090
-#define HmwrkDueDateNeededAlert 1089
-#define HmwrkClassNeededAlert 1088
-#define HmwrkNameNeededAlert 1087
-#define ConfirmDeleteClassAlert 1086
-#define HmwrkListScrollBar 1085
+#define ConfirmActionHomeworkAlert 1091
+#define OptionsDeleteHomeworHrmwrksBar 1090
+#define DeleteNewHomeworkAlert 1089
+#define HmwrkDueDateNeededAlert 1088
+#define HmwrkClassNeededAlert 1087
+#define HmwrkNameNeededAlert 1086
+#define ConfirmDeleteClassAlert 1085
 #define TableHomeworksLabel 1084
 #define HomeworksViewList 1083
 #define HomeworksEditButton 1082
