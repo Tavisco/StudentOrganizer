@@ -201,7 +201,7 @@ MENUID ManageHomeworkMenuBar
 BEGIN
     TITLE "Manage homework"
 	LABEL "Name:" ID NameMngHwrkLabel  AT (2 20) FONT 1
-	FIELD ID NameMngHomeworkField  AT (35 20 123 13) MAXCHARS 255 EDITABLE UNDERLINED AUTOSHIFT
+	FIELD ID NameMngHomeworkField  AT (35 20 123 13) MAXCHARS 18 EDITABLE UNDERLINED AUTOSHIFT
 	
 	LABEL "Class:" ID ClassMngHmwrkLabel  AT (5 38) FONT 1
 	POPUPTRIGGER "Select Class" ClassMngHmwrkTrigger AT (35 38 AUTO AUTO)
