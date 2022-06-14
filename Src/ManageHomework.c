@@ -69,7 +69,7 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	MemHandle recH, oldTextH, newTextH;
 	FieldType *fldP;
 	Err error;
-	char *str;
+	Char* str;
 	ControlType *popTrig;
 	FormPtr formP;
 
@@ -121,8 +121,7 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	}
 
 	// Update class trigger label
-	popTrig = GetObjectPtr(ClassMngHmwrkTrigger);
-	CtlSetLabel(popTrig, hmwrkVars->record.className);
+	MngHmwkHandlePopSelected(hmwrkVars->record.classIndex, hmwrkVars);
 
 	UpdateDueDateTriggerLabel(hmwrkVars);
 	
@@ -178,7 +177,8 @@ Boolean MngHmwkHandlePopSelected(Int16 selIndex, ManageHomeworkVariables* hmwrkV
 	Char* itemTextP = GetClassNameFromDbIndex(selIndex);
 
 	CtlSetLabel(popTrig, itemTextP);
-	StrCopy(hmwrkVars->record.className, itemTextP);
+	hmwrkVars->record.classIndex = selIndex;
+	hmwrkVars->classSelected = true;
 
 	return true;
 }
@@ -324,11 +324,10 @@ Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
 	}
 	
 	// Validate class
-	error = ValidateClass(hmwrkVars);
-	if (error != errNone)
+	if (!hmwrkVars->classSelected)
 	{
 		FrmCustomAlert(HmwrkClassNeededAlert, NULL, NULL, NULL);
-		return error;
+		return 1;
 	}
 	
 	// Validate due date
@@ -406,12 +405,6 @@ void ParseComments(ManageHomeworkVariables* hmwrkVars)
 	{
 		StrCopy(hmwrkVars->record.hmwrkComments, fldCommentsTxt);	
 	}
-}
-
-Err ValidateClass(ManageHomeworkVariables* hmwrkVars)
-{
-	return StrLen(hmwrkVars->record.className) == 0;
-
 }
 
 Err ValidateDueDate(ManageHomeworkVariables* hmwrkVars)

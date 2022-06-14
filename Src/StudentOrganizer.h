@@ -73,7 +73,7 @@ typedef struct HomeworkDB
 {
 	Int16 dueDay, dueMonth, dueYear; // Due date
 	Char hmwrkName[19];
-	Char className[19];
+	UInt16 classIndex;
 	Char hmwrkComments[87];
 	DateTimeType completedDate;
 	
@@ -82,6 +82,7 @@ typedef struct HomeworkDB
 typedef struct ManageHomeworkVariables
 {
 	HomeworkDB record;
+	Boolean classSelected;
 } ManageHomeworkVariables;
 
 typedef struct SharedHomeworksVariables
@@ -141,6 +142,7 @@ Err SaveClassesChangesToDatabase(ManageClassVariables *pstVars);
 void CheckForAlreadySelected(ManageClassVariables *pstVars);
 Boolean IsScheduleInvalid(ManageClassVariables *pstVars);
 Err DeleteClass(ManageClassVariables *pstVars);
+Err DeleteAllHomeworksForClass(UInt16 index);
 
 /* Functions in ManageHomework.c */
 Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars);
