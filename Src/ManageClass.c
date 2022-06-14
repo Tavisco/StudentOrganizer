@@ -137,10 +137,19 @@ Err DeleteClass(ManageClassVariables *pstVars)
 		return error;
 	}
 
+	error = DeleteAllHomeworksForClass(index);
+	if (error != errNone) {
+		return error;
+	}
+
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
 
 	return DmRemoveRecord(gDB, index);
+}
+
+Err DeleteAllHomeworksForClass(UInt16 index) {
+	return errNone;
 }
 
 Err SaveClassesChanges(ManageClassVariables *pstVars)
