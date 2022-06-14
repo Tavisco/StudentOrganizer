@@ -289,3 +289,11 @@ BEGIN
      MESSAGE "Do you really wanna ^1 this homework?"
      BUTTONS "Yes" "No"
 END
+
+ALERT ID ClassNameMustBeUniqueAlert  
+ERROR
+BEGIN
+     TITLE "Invalid action"
+     MESSAGE "There is at least one class with that name already. The class name must be unique."
+     BUTTONS "OK" 
+END

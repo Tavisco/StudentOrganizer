@@ -162,6 +162,7 @@ void redirectToCorrectForm();
 void FillHomeworksList();
 Err DeleteHomework(ManageHomeworkVariables* hmwrkVars);
 Err CompleteHomework(ManageHomeworkVariables* hmwrkVars);
+Boolean ClassNameIsUnique(Char* className);
 
 /* Functions in Homeworks.c */
 Boolean HomeworksFormDoCommand(UInt16 command);

@@ -175,7 +175,41 @@ Err SaveClassesChanges(ManageClassVariables *pstVars)
 		return error;
 	}
 
+	if (!ClassNameIsUnique(fldNameTxt))
+	{
+		FrmCustomAlert(ClassNameMustBeUniqueAlert, NULL, NULL, NULL);
+		error = 1;
+		return error;
+	}
+
 	return SaveClassesChangesToDatabase(pstVars);
+}
+
+Boolean ClassNameIsUnique(Char* className)
+{
+	UInt32 pstInt;
+	UInt16 numRecs, i;
+	DmOpenRef gDB;
+	ClassDB *rec;
+	MemHandle recH;
+	Boolean hasClass = false;
+
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
+
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (StrCompare(className, rec->className) == 0)
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 Boolean IsScheduleInvalid(ManageClassVariables *pstVars)

@@ -1,4 +1,5 @@
 /* pilrc generated file.  Do not edit!*/
+#define ClassNameMustBeUniqueAlert 1092
 #define ConfirmActionHomeworkAlert 1091
 #define OptionsDeleteHomeworHrmwrksBar 1090
 #define DeleteNewHomeworkAlert 1089
