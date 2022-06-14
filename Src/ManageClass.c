@@ -112,7 +112,7 @@ Err DeleteClass(ManageClassVariables *pstVars)
 	Err error = errNone;
 	UInt32 pstSharedInt, pstInt;
 	SharedClassesVariables *pSharedPrefs;
-	UInt16 index = -1, deleteConf = -1;
+	UInt16 index = -1, deleteConf;
 	DmOpenRef gDB;
 
 	// Check if we are editing, and get the index.
@@ -149,7 +149,35 @@ Err DeleteClass(ManageClassVariables *pstVars)
 }
 
 Err DeleteAllHomeworksForClass(UInt16 index) {
-	return errNone;
+	UInt32 pstInt;
+	UInt16 numRecs, i;
+	DmOpenRef gDB;
+	HomeworkDB *rec;
+	MemHandle recH;
+	Err error = errNone;
+	
+	// Get the database pointer from feature memory
+	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
+	
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		
+		if (rec->classIndex == index)
+		{
+			MemHandleUnlock(recH);
+			DmRemoveRecord(gDB, i);
+			// error = DmRemoveRecord(gDB, i);
+			// if (error != errNone)
+			// {
+			// 	return error;
+			// }
+		}
+	}
+	return error;
 }
 
 Err SaveClassesChanges(ManageClassVariables *pstVars)

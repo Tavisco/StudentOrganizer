@@ -97,7 +97,7 @@ FORM ID ClassesForm  AT ( 0 0 160 160 )
 NOFRAME
 BEGIN
     TITLE "Classes"
-	BUTTON "Save" ID ClassesDoneButton  AT (1 147 36 12)
+	BUTTON "Done" ID ClassesDoneButton  AT (1 147 36 12)
 	BUTTON "New class" ID ClassesNewButton  AT (43 147 46 12)
 	PUSHBUTTON  "Sun" ID ClassesSunPushButton  AT (27 22 25 12) GROUP 1
 	PUSHBUTTON  "Mon" ID ClassesMonPushButton  AT (53 22 25 12) GROUP 1
