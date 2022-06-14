@@ -97,7 +97,7 @@ FORM ID ClassesForm  AT ( 0 0 160 160 )
 NOFRAME
 BEGIN
     TITLE "Classes"
-	BUTTON "Done" ID ClassesDoneButton  AT (1 147 36 12)
+	BUTTON "Save" ID ClassesDoneButton  AT (1 147 36 12)
 	BUTTON "New class" ID ClassesNewButton  AT (43 147 46 12)
 	PUSHBUTTON  "Sun" ID ClassesSunPushButton  AT (27 22 25 12) GROUP 1
 	PUSHBUTTON  "Mon" ID ClassesMonPushButton  AT (53 22 25 12) GROUP 1
@@ -129,7 +129,7 @@ BEGIN
 	LABEL "Room:" ID ManageClassRoomLabel   AT (6 41) FONT 1
 	FIELD ID ManageClassRoomField  AT (42 41 50 11) MAXCHARS 8 EDITABLE UNDERLINED AUTOSHIFT
 	GRAFFITISTATEINDICATOR AT (135 150)
-	BUTTON "Done" ID ManageClassDoneButton  AT (1 147 36 AUTO)
+	BUTTON "Save" ID ManageClassDoneButton  AT (1 147 36 AUTO)
 	BUTTON "Cancel" ID ManageClassCancelButton  AT (43 147 37 AUTO)
 	PUSHBUTTON  "Sun" ID ManageClassSunPushButton  AT (27 62 25 12) GROUP 1
 	PUSHBUTTON  "Mon" ID ManageClassMonPushButton  AT (53 62 25 12) GROUP 1
@@ -216,7 +216,7 @@ BEGIN
 	LABEL "Comments:" ID CommentsMngHmwrkLabel  AT (6 88) FONT 1
 	FIELD ID CommentsMngHmwrkField  AT (7 100 145 41) MAXCHARS 86 EDITABLE  MULTIPLELINES UNDERLINED AUTOSHIFT
 
-	BUTTON "Done" ID DoneMngHmwrkButton  AT (5 147 32 AUTO)
+	BUTTON "Save" ID DoneMngHmwrkButton  AT (5 147 32 AUTO)
 	BUTTON "Cancel" ID CancelMngHmwrkButton  AT (42 147 32 AUTO)
 	GRAFFITISTATEINDICATOR AT (135 150)
 	BUTTON "Complete" ID CompleteMngHmwrkButton   AT (79 147 45 AUTO) NONUSABLE
@@ -228,7 +228,7 @@ BEGIN
     TITLE "Homeworks"
 	BUTTON "Done" ID HomeworksDoneButton  AT (5 147 36 12)
 	BUTTON "New" ID HomeworksNewButton  AT (47 147 36 12)
-	BUTTON "Edit" ID HomeworksEditButton  AT (90 147 36 12)
+	BUTTON "View" ID HomeworksEditButton  AT (90 147 36 12)
 	LIST ""         ID HomeworksViewList     AT (5 30 150 112) VISIBLEITEMS 10
 	LABEL "Pending homeworks:" ID TableHomeworksLabel  AT (5 16) FONT 1
 END

@@ -14,6 +14,7 @@ static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 	MemHandle recH;
 	ClassesVariables *pstVars;
 	Boolean hasClass = false;
+	Char timeStrFrom[timeStringLength], timeStrTo[timeStringLength];
 
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
@@ -33,7 +34,17 @@ static void ClassesListDraw(Int16 itemNum, RectangleType *bounds, Char **unused)
 		{
 			if (iDoW == itemNum)
 			{
-				WinDrawChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y);
+				// Draw class name
+				WinDrawTruncChars(rec->className, StrLen(rec->className), bounds->topLeft.x, bounds->topLeft.y, bounds->topLeft.x + 81);
+				
+				// Parse class hours
+				TimeToAscii(rec->classOcurrence[pstVars->selectedDoW].sHour, rec->classOcurrence[pstVars->selectedDoW].sMinute, tfColon24h, timeStrFrom);
+				TimeToAscii(rec->classOcurrence[pstVars->selectedDoW].fHour, rec->classOcurrence[pstVars->selectedDoW].fMinute, tfColon24h, timeStrTo);
+				
+				// Draw class hours
+				WinDrawChars(timeStrFrom, StrLen(timeStrFrom), bounds->topLeft.x + 90, bounds->topLeft.y);
+				WinDrawChars("-", 1, bounds->topLeft.x + 114, bounds->topLeft.y);
+				WinDrawChars(timeStrTo, StrLen(timeStrTo), bounds->topLeft.x + 120, bounds->topLeft.y);
 			}
 			iDoW += 1;
 		}
