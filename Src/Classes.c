@@ -195,7 +195,8 @@ void LoadClasses(ClassesVariables *pstVars)
 Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars)
 {
 	SharedClassesVariables *vars;
-	Int16 selectedItem, numRecs, i, itemNum;
+	Int16 selectedItem, itemNum;
+	UInt16 numRecs, i;
 	ListType *list;
 	UInt32 pstInt;
 	DmOpenRef gDB;
@@ -233,8 +234,6 @@ Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars)
 	{
 		recH = DmQueryRecord(gDB, i);
 		rec = MemHandleLock(recH);
-		MemHandleUnlock(recH);
-
 		// Check if the class has current DoW Active
 		if (rec->classOcurrence[pstVars->selectedDoW].active)
 		{
@@ -249,6 +248,7 @@ Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars)
 			}
 			itemNum += 1;
 		}
+		MemHandleUnlock(recH);
 	}
 
 	return FtrSet(appFileCreator, ftrShrdClassesVarsNum, (UInt32)vars);

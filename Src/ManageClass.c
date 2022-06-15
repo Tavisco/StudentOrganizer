@@ -111,23 +111,24 @@ Err DeleteClass(ManageClassVariables *pstVars)
 {
 	Err error = errNone;
 	UInt32 pstSharedInt, pstInt;
-	SharedClassesVariables *pSharedPrefs;
-	UInt16 index = -1, deleteConf;
+	SharedClassesVariables* pSharedPrefs;
+	UInt16 deleteConf;
 	DmOpenRef gDB;
 
 	// Check if we are editing, and get the index.
-	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
+	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) != 0)
 	{
-		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
-		index = pSharedPrefs->selectedClassDbIndex;
+		return 1;
+		//index = pSharedPrefs->selectedClassDbIndex;
 	}
 
+	pSharedPrefs = (SharedClassesVariables*)pstSharedInt;
 	// If we are not editing, throw an error
-	if (index == (UInt16)-1)
-	{
-		FrmCustomAlert(SelectClassBeforDeleteAlert, NULL, NULL, NULL);
-		return error;
-	}
+	// if (index == (UInt16)-1)
+	// {
+	// 	FrmCustomAlert(SelectClassBeforDeleteAlert, NULL, NULL, NULL);
+	// 	return error;
+	// }
 
 	// Ask for confirmation before deletion
 	deleteConf = FrmCustomAlert(ConfirmDeleteClassAlert, NULL, NULL, NULL);
@@ -137,47 +138,59 @@ Err DeleteClass(ManageClassVariables *pstVars)
 		return error;
 	}
 
-	error = DeleteAllHomeworksForClass(index);
+	error = DeleteAllHomeworksForClass(pSharedPrefs->selectedClassDbIndex);
 	if (error != errNone) {
 		return error;
 	}
 
+	pstInt = 0;
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
 
-	return DmRemoveRecord(gDB, index);
+	return DmRemoveRecord(gDB, pSharedPrefs->selectedClassDbIndex);
 }
 
-Err DeleteAllHomeworksForClass(UInt16 index) {
+Err DeleteAllHomeworksForClass(UInt16 classIndex) {
+	Int16 deleteIndex = -2;
 	UInt32 pstInt;
-	UInt16 numRecs, i;
+	UInt16 numRecs, i, hmwrkClassID;
 	DmOpenRef gDB;
-	HomeworkDB *rec;
+	HomeworkDB* rec;
 	MemHandle recH;
 	Err error = errNone;
-	
+
 	// Get the database pointer from feature memory
 	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
-	numRecs = DmNumRecords(gDB);
-	
-	for (i = 0; i < numRecs; i++)
-	{
-		recH = DmQueryRecord(gDB, i);
-		rec = MemHandleLock(recH);
-		
-		if (rec->classIndex == index)
+
+	while (deleteIndex != -1) {
+		numRecs = DmNumRecords(gDB);
+		deleteIndex = -2;
+		// Find the index we want to delete
+		for (i = 0; i < numRecs; i++)
 		{
+			recH = DmQueryRecord(gDB, i);
+			rec = (HomeworkDB*)MemHandleLock(recH);
+			if (classIndex == rec->classIndex)
+			{
+				deleteIndex = i;
+			}
 			MemHandleUnlock(recH);
-			DmRemoveRecord(gDB, i);
-			// error = DmRemoveRecord(gDB, i);
-			// if (error != errNone)
-			// {
-			// 	return error;
-			// }
+		}
+		if (deleteIndex >= 0)
+		{
+			error = DmRemoveRecord(gDB, deleteIndex);
+			if (error != errNone) {
+				return error;
+			}
+		} else {
+			// If we itareated over every entry on DB, and nothing
+			// was found, we set this to -1 to end the while loop.
+			deleteIndex = -1;
 		}
 	}
-	return error;
+
+	return errNone;
 }
 
 Err SaveClassesChanges(ManageClassVariables *pstVars)
@@ -461,7 +474,7 @@ void ManageClassFormInit(FormType *frmP, ManageClassVariables *pstVars)
 {
 	CheckForAlreadySelected(pstVars);
 	autoSelectCurrentDay(pstVars);
-	LoadDoW(pstVars);	
+	LoadDoW(pstVars);
 }
 
 void CheckForAlreadySelected(ManageClassVariables *pstVars)
@@ -486,7 +499,7 @@ void CheckForAlreadySelected(ManageClassVariables *pstVars)
 		pstVars->record = *rec;
 
 		MemHandleUnlock(recH);
-		
+
 		pstVars->selectedDoW = pSharedPrefs->selectedDoW;
 
 		// Update Class Name field
@@ -538,7 +551,7 @@ void autoSelectCurrentDay(ManageClassVariables *pstVars)
 		TimSecondsToDateTime(TimGetSeconds(), &now);
 		pstVars->selectedDoW = DayOfWeek(now.month, now.day, now.year);
 	}
-	
+
 	activateSelector(dowPushButtons[pstVars->selectedDoW]);
 }
 
