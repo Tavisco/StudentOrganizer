@@ -111,24 +111,17 @@ Err DeleteClass(ManageClassVariables *pstVars)
 {
 	Err error = errNone;
 	UInt32 pstSharedInt, pstInt;
-	SharedClassesVariables* pSharedPrefs;
+	SharedClassesVariables *pSharedPrefs;
 	UInt16 deleteConf;
 	DmOpenRef gDB;
 
 	// Check if we are editing, and get the index.
-	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) != 0)
+	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) != errNone)
 	{
+		FrmCustomAlert(SelectClassBeforDeleteAlert, NULL, NULL, NULL);
 		return 1;
-		//index = pSharedPrefs->selectedClassDbIndex;
 	}
-
-	pSharedPrefs = (SharedClassesVariables*)pstSharedInt;
-	// If we are not editing, throw an error
-	// if (index == (UInt16)-1)
-	// {
-	// 	FrmCustomAlert(SelectClassBeforDeleteAlert, NULL, NULL, NULL);
-	// 	return error;
-	// }
+	pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
 
 	// Ask for confirmation before deletion
 	deleteConf = FrmCustomAlert(ConfirmDeleteClassAlert, NULL, NULL, NULL);
@@ -153,9 +146,9 @@ Err DeleteClass(ManageClassVariables *pstVars)
 Err DeleteAllHomeworksForClass(UInt16 classIndex) {
 	Int16 deleteIndex = -2;
 	UInt32 pstInt;
-	UInt16 numRecs, i, hmwrkClassID;
+	UInt16 numRecs, i;
 	DmOpenRef gDB;
-	HomeworkDB* rec;
+	HomeworkDB *rec;
 	MemHandle recH;
 	Err error = errNone;
 
@@ -170,7 +163,7 @@ Err DeleteAllHomeworksForClass(UInt16 classIndex) {
 		for (i = 0; i < numRecs; i++)
 		{
 			recH = DmQueryRecord(gDB, i);
-			rec = (HomeworkDB*)MemHandleLock(recH);
+			rec = (HomeworkDB *)MemHandleLock(recH);
 			if (classIndex == rec->classIndex)
 			{
 				deleteIndex = i;
@@ -235,7 +228,7 @@ Err SaveClassesChanges(ManageClassVariables *pstVars)
 	return SaveClassesChangesToDatabase(pstVars);
 }
 
-Boolean ClassNameIsUnique(Char* className)
+Boolean ClassNameIsUnique(Char *className)
 {
 	UInt32 pstInt;
 	UInt16 numRecs, i;
@@ -295,17 +288,15 @@ Err SaveClassesChangesToDatabase(ManageClassVariables *pstVars)
 	UInt32 pstInt, pstSharedInt;
 	DmOpenRef gDB;
 	SharedClassesVariables *pSharedPrefs;
-	UInt16 index = -1;
 	UInt16 newSize;
+	Boolean isEditing;
 
 	// Check if we are editing, and get the index.
-	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
+	isEditing = FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == errNone;
+	if (isEditing)
 	{
 		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
-		index = pSharedPrefs->selectedClassDbIndex;
 	}
-
-	// TODO: Check if the class name is unique
 
 	recP = MemPtrNew(sizeof(ClassDB));
 	MemPtrFree(recP);
@@ -313,26 +304,23 @@ Err SaveClassesChangesToDatabase(ManageClassVariables *pstVars)
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
 
-	if (index == (UInt16)-1)
-	{
-		// New record
-		// recIndex = DmNumRecords(gDB);
-		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record));
-		if (recH)
-		{
-			recP = MemHandleLock(recH);
-			DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
-			error = DmReleaseRecord(gDB, recIndex, true);
-			MemHandleUnlock(recH);
-		}
-	}
-	else
+	if (isEditing)
 	{
 		// Edit record
 		newSize = sizeof(pstVars->record);
-		recH = DmResizeRecord(gDB, index, newSize);
+		recH = DmResizeRecord(gDB, pSharedPrefs->selectedClassDbIndex, newSize);
 		recP = MemHandleLock(recH);
 		DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
+		MemHandleUnlock(recH);
+	}
+	else
+	{
+		// New record
+		recH = DmNewRecord(gDB, &recIndex, sizeof(pstVars->record));
+		ErrFatalDisplayIf ((!recH), "Out of memory");
+		recP = MemHandleLock(recH);
+		DmWrite(recP, 0, &(pstVars->record), sizeof(pstVars->record));
+		error = DmReleaseRecord(gDB, recIndex, true);
 		MemHandleUnlock(recH);
 	}
 	return error;

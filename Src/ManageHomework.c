@@ -10,7 +10,7 @@ static Char* GetClassNameFromDbIndex(Int16 i)
 	DmOpenRef gDB;
 	ClassDB *rec;
 	MemHandle recH;
-	Char *	itemTextP;
+	Char *itemTextP;
 
 	// Get the database pointer from feature memory
 	FtrGet(appFileCreator, ftrClassesDBNum, &pstInt);
@@ -69,8 +69,7 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	MemHandle recH, oldTextH, newTextH;
 	FieldType *fldP;
 	Err error;
-	Char* str;
-	ControlType *popTrig;
+	Char *str;
 	FormPtr formP;
 
 	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
@@ -174,7 +173,7 @@ Boolean AtLeastOneClassExists() {
 Boolean MngHmwkHandlePopSelected(Int16 selIndex, ManageHomeworkVariables* hmwrkVars)
 {
 	ControlType *popTrig = GetObjectPtr(ClassMngHmwrkTrigger);
-	Char* itemTextP = GetClassNameFromDbIndex(selIndex);
+	Char *itemTextP = GetClassNameFromDbIndex(selIndex);
 
 	CtlSetLabel(popTrig, itemTextP);
 	hmwrkVars->record.classIndex = selIndex;
@@ -183,7 +182,7 @@ Boolean MngHmwkHandlePopSelected(Int16 selIndex, ManageHomeworkVariables* hmwrkV
 	return true;
 }
 
-void AskDateToUser(ManageHomeworkVariables* hmwrkVars)
+void AskDateToUser(ManageHomeworkVariables *hmwrkVars)
 {
 	Int16 day, month, year;
 	DateTimeType now;
@@ -205,7 +204,7 @@ void AskDateToUser(ManageHomeworkVariables* hmwrkVars)
 	} 
 }
 
-Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars)
+Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables *hmwrkVars)
 {
 	Boolean handled = false;
 
@@ -256,9 +255,9 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars
 	return handled;
 }
 
-Err CompleteHomework(ManageHomeworkVariables* hmwrkVars)
+Err CompleteHomework(ManageHomeworkVariables *hmwrkVars)
 {
-	Int8 deleteConf = -1;
+	Int8 deleteConf;
 	DateTimeType now;
 	
 	// Ask for confirmation before deletion
@@ -275,28 +274,24 @@ Err CompleteHomework(ManageHomeworkVariables* hmwrkVars)
 	return SaveHomeworkChangesToDatabase(hmwrkVars);
 }
 
-Err DeleteHomework(ManageHomeworkVariables* hmwrkVars)
+Err DeleteHomework(ManageHomeworkVariables *hmwrkVars)
 {
 	Err error = errNone;
 	UInt32 pstSharedInt, pstInt;
 	SharedHomeworksVariables *pSharedPrefs;
-	UInt16 index = -1;
-	Int8 deleteConf = -1;
+	UInt16 index;
+	Int8 deleteConf;
 	DmOpenRef gDB;
 
 	// Check if we are editing, and get the index.
-	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == 0)
-	{
-		pSharedPrefs = (SharedHomeworksVariables *)pstSharedInt;
-		index = pSharedPrefs->selectedHomeworkDbIndex;
-	}
-
-	// If we are not editing, throw an error
-	if (index == (UInt16)-1)
+	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) != errNone)
 	{
 		FrmCustomAlert(DeleteNewHomeworkAlert, NULL, NULL, NULL);
-		return error;
+		return 1;
 	}
+	
+	pSharedPrefs = (SharedHomeworksVariables *)pstSharedInt;
+	index = pSharedPrefs->selectedHomeworkDbIndex;
 
 	// Ask for confirmation before deletion
 	deleteConf = FrmCustomAlert(ConfirmActionHomeworkAlert, "delete", NULL, NULL);
@@ -312,7 +307,7 @@ Err DeleteHomework(ManageHomeworkVariables* hmwrkVars)
 	return DmRemoveRecord(gDB, index);
 }
 
-Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
+Err SaveHomeworkChanges(ManageHomeworkVariables *hmwrkVars)
 {
 	// Parse and validate Name field
 	Err error = errNone;
@@ -345,7 +340,7 @@ Err SaveHomeworkChanges(ManageHomeworkVariables* hmwrkVars)
 	return SaveHomeworkChangesToDatabase(hmwrkVars);
 }
 
-Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
+Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables *hmwrkVars)
 {
 	Err error = errNone;
 	UInt16 recIndex = dmMaxRecordIndex;
@@ -354,14 +349,15 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
 	UInt32 pstInt, pstSharedInt;
 	DmOpenRef gDB;
 	SharedHomeworksVariables *sharedVars;
-	UInt16 index = -1;
 	UInt16 newSize;
+	Boolean isEditing;
 
+	
 	// Check if we are editing, and get the index.
-	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == 0)
+	isEditing = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == errNone;
+	if (isEditing)
 	{
 		sharedVars = (SharedHomeworksVariables *)pstSharedInt;
-	 	index = sharedVars->selectedHomeworkDbIndex;
 	}
 
 	recP = MemPtrNew(sizeof(HomeworkDB));
@@ -370,32 +366,30 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables* hmwrkVars)
 	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
 
-	if (index == (UInt16)-1)
-	{
-		// New record
-		//recIndex = DmNumRecords(gDB);
-		recH = DmNewRecord(gDB, &recIndex, sizeof(hmwrkVars->record));
-		if (recH)
-		{
-			recP = MemHandleLock(recH);
-			DmWrite(recP, 0, &(hmwrkVars->record), sizeof(hmwrkVars->record));
-			error = DmReleaseRecord(gDB, recIndex, true);
-			MemHandleUnlock(recH);
-		}
-	}
-	else
+	if (isEditing)
 	{
 		// Edit record
 		newSize = sizeof(hmwrkVars->record);
-		recH = DmResizeRecord(gDB, index, newSize);
+		recH = DmResizeRecord(gDB, sharedVars->selectedHomeworkDbIndex, newSize);
 		recP = MemHandleLock(recH);
 		DmWrite(recP, 0, &(hmwrkVars->record), sizeof(hmwrkVars->record));
+		MemHandleUnlock(recH);
+	}
+	else
+	{
+		// New record
+		recH = DmNewRecord(gDB, &recIndex, sizeof(hmwrkVars->record));
+		ErrFatalDisplayIf ((!recH), "Out of memory");
+
+		recP = MemHandleLock(recH);
+		DmWrite(recP, 0, &(hmwrkVars->record), sizeof(hmwrkVars->record));
+		error = DmReleaseRecord(gDB, recIndex, true);
 		MemHandleUnlock(recH);
 	}
 	return error;
 }
 
-void ParseComments(ManageHomeworkVariables* hmwrkVars)
+void ParseComments(ManageHomeworkVariables *hmwrkVars)
 {
 	Char *fldCommentsTxt;
 	FieldType *fldCommentsP = GetObjectPtr(CommentsMngHmwrkField);
@@ -407,12 +401,12 @@ void ParseComments(ManageHomeworkVariables* hmwrkVars)
 	}
 }
 
-Err ValidateDueDate(ManageHomeworkVariables* hmwrkVars)
+Err ValidateDueDate(ManageHomeworkVariables *hmwrkVars)
 {
 	return hmwrkVars->record.dueDay == NULL;
 }
 
-Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars)
+Err ParseHmwrkNameField(ManageHomeworkVariables *hmwrkVars)
 {
 	Char *fldNameTxt;
 	FieldType *fldNameP = GetObjectPtr(NameMngHomeworkField);
@@ -426,7 +420,7 @@ Err ParseHmwrkNameField(ManageHomeworkVariables* hmwrkVars)
 	return errNone;
 }
 
-void UpdateDueDateTriggerLabel(ManageHomeworkVariables* hmwrkVars) {
+void UpdateDueDateTriggerLabel(ManageHomeworkVariables *hmwrkVars) {
 	ControlPtr ctl;
 	Char *label;
 
