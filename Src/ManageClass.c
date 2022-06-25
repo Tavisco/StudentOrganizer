@@ -471,9 +471,7 @@ void CheckForAlreadySelected(ManageClassVariables *pstVars)
 	SharedClassesVariables *pSharedPrefs;
 	DmOpenRef gDB;
 	ClassDB *rec;
-	MemHandle recH, oldTextH, newTextH;
-	FieldType *fldP;
-	char *str;
+	MemHandle recH;
 
 	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
 	{
@@ -491,34 +489,42 @@ void CheckForAlreadySelected(ManageClassVariables *pstVars)
 		pstVars->selectedDoW = pSharedPrefs->selectedDoW;
 
 		// Update Class Name field
-		// TODO: Extract this to a function
-		fldP = GetObjectPtr(ManageClassNameField);
-		oldTextH = FldGetTextHandle(fldP);
-		newTextH = MemHandleNew(sizeof(pstVars->record.className));
-		str = MemHandleLock(newTextH);
-		StrCopy(str, pstVars->record.className);
-		MemHandleUnlock(newTextH);
-		FldSetTextHandle(fldP, newTextH);
-		FldDrawField(fldP);
-		if (oldTextH != NULL)
-		{
-			MemHandleFree(oldTextH);
-		}
+		setFieldValue(ManageClassNameField, pstVars->record.className);
 
 		// Update Class Room field
-		fldP = GetObjectPtr(ManageClassRoomField);
-		oldTextH = FldGetTextHandle(fldP);
-		newTextH = MemHandleNew(sizeof(pstVars->record.classRoom));
-		str = MemHandleLock(newTextH);
-		StrCopy(str, pstVars->record.classRoom);
-		MemHandleUnlock(newTextH);
-		FldSetTextHandle(fldP, newTextH);
-		FldDrawField(fldP);
-		if (oldTextH != NULL)
-		{
-			MemHandleFree(oldTextH);
-		}
+		setFieldValue(ManageClassRoomField, pstVars->record.classRoom);
 	}
+}
+
+void setFieldValue(UInt16 objectID, char *newText) {
+	FieldType *fldP;
+	MemHandle newTextH, oldTextH;
+	char *str;
+	
+	fldP = GetObjectPtr(objectID);
+	// Get the current text handle for the field, if any
+	oldTextH = FldGetTextHandle(fldP);
+	// Have the field stop using that handle
+	FldSetTextHandle(fldP, NULL);
+	
+	// If there is a handle, free it
+	if (oldTextH != NULL)
+	{
+		MemHandleFree(oldTextH);
+	}
+	
+	// Create a new memory chunk
+	newTextH = MemHandleNew(StrLen(newText) + 1);
+	// Allocate it, and lock
+	str = MemHandleLock(newTextH);
+	
+	// Copy our new text to the memory chunk
+	StrCopy(str, newText);
+	// and unlock it
+	MemPtrUnlock(str);
+	
+	// Have the field use that new handle
+	FldSetTextHandle(fldP, newTextH);
 }
 
 /*
@@ -588,7 +594,6 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 	case frmOpenEvent:
 	{
 		frmP = FrmGetActiveForm();
-		FrmDrawForm(frmP);
 
 		pstVars = (ManageClassVariables *)MemPtrNew(sizeof(ManageClassVariables));
 		if ((UInt32)pstVars == 0)
@@ -596,6 +601,7 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 		MemSet(pstVars, sizeof(ManageClassVariables), 0);
 		FtrSet(appFileCreator, ftrManageClassNum, (UInt32)pstVars);
 		ManageClassFormInit(frmP, pstVars);
+		FrmDrawForm(frmP);
 		handled = true;
 		break;
 	}

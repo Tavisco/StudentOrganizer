@@ -143,6 +143,7 @@ void CheckForAlreadySelected(ManageClassVariables *pstVars);
 Boolean IsScheduleInvalid(ManageClassVariables *pstVars);
 Err DeleteClass(ManageClassVariables *pstVars);
 Err DeleteAllHomeworksForClass(UInt16 index);
+void setFieldValue(UInt16 objectID, char *str);
 
 /* Functions in ManageHomework.c */
 Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars);
