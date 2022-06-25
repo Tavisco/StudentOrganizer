@@ -426,42 +426,36 @@ void AskTimeToUser(UInt16 field, ManageClassVariables *pstVars)
 void SetTimeSelectorLabels(UInt16 field, ManageClassVariables *pstVars)
 {
 	ControlPtr ctl;
-	char *label, *newStr;
-	MemHandle strHandle;
+	char *label;
 
 	// Get the pointer of our object
 	ctl = GetObjectPtr(field);
 	// and get the pointer to it's label
 	label = (Char *)CtlGetLabel(ctl);
-
-	strHandle = MemHandleNew(15);
-	newStr = MemHandleLock(strHandle);
 	
 	// If the time has not been set
 	// (ie. when the form is starting and the class is new)
 	// set the label to that string
 	if (!pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet)
 	{
-		newStr = "Select time...";
+		StrCopy(label, "Select time...");
 	}
 	else if (field == ManageClassStartSelectorTrigger)
 	{
 		TimeToAscii(
 			pstVars->record.classOcurrence[pstVars->selectedDoW].sHour,
 			pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute,
-			tfColon24h, newStr);
+			tfColon24h, label);
 	}
 	else
 	{
 		TimeToAscii(
 			pstVars->record.classOcurrence[pstVars->selectedDoW].fHour,
 			pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute,
-			tfColon24h, newStr);
+			tfColon24h, label);
 	}
 
-	StrCopy(label, newStr);
 	CtlSetLabel(ctl, label);
-	MemHandleUnlock(strHandle);
 }
 
 /*
@@ -644,8 +638,10 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 
 	case frmCloseEvent:
 	{
-		// Free shared variables, if exists
 		void *temp;
+		UInt32 *labelPtr;
+		ControlPtr ctl;
+		
 		if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == errNone)
 		{
 			FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
@@ -653,6 +649,16 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 
 		// Free ManageClass variables
 		FtrPtrFree(appFileCreator, ftrManageClassNum);
+		
+	
+		ctl = GetObjectPtr(ManageClassStartSelectorTrigger);
+		labelPtr = (UInt32 *)CtlGetLabel(ctl);
+		MemPtrFree(labelPtr);
+		
+		ctl = GetObjectPtr(ManageClassFinishSelectorTrigger);
+		labelPtr = (UInt32 *)CtlGetLabel(ctl);
+		MemPtrFree(labelPtr);
+		
 		break;
 	}
 
