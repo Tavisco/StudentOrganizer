@@ -425,27 +425,37 @@ void AskTimeToUser(UInt16 field, ManageClassVariables *pstVars)
 
 void SetTimeSelectorLabels(UInt16 field, ManageClassVariables *pstVars)
 {
-	ControlType *fldP;
-	char timeStr[timeStringLength];
+	ControlPtr ctl;
+	char *label;
 
-	fldP = GetObjectPtr(field);
+	// Get the pointer of our object
+	ctl = GetObjectPtr(field);
+	// and get the pointer to it's label
+	label = (Char *)CtlGetLabel(ctl);
 
+	// If the time has not been set
+	// (ie. when the form is starting and the class is new)
+	// set the label to that string
 	if (!pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet)
 	{
-		CtlSetLabel(fldP, "Select time...");
-		return;
+		label = "Select time...";
 	}
-
-	if (field == ManageClassStartSelectorTrigger)
+	else if (field == ManageClassStartSelectorTrigger)
 	{
-		TimeToAscii(pstVars->record.classOcurrence[pstVars->selectedDoW].sHour, pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute, tfColon24h, timeStr);
+		TimeToAscii(
+			pstVars->record.classOcurrence[pstVars->selectedDoW].sHour,
+			pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute,
+			tfColon24h, label);
 	}
 	else
 	{
-		TimeToAscii(pstVars->record.classOcurrence[pstVars->selectedDoW].fHour, pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute, tfColon24h, timeStr);
+		TimeToAscii(
+			pstVars->record.classOcurrence[pstVars->selectedDoW].fHour,
+			pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute,
+			tfColon24h, label);
 	}
 
-	CtlSetLabel(fldP, timeStr);
+	CtlSetLabel(ctl, label);
 }
 
 /*
