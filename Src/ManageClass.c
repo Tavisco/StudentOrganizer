@@ -426,36 +426,42 @@ void AskTimeToUser(UInt16 field, ManageClassVariables *pstVars)
 void SetTimeSelectorLabels(UInt16 field, ManageClassVariables *pstVars)
 {
 	ControlPtr ctl;
-	char *label;
+	char *label, *newStr;
+	MemHandle strHandle;
 
 	// Get the pointer of our object
 	ctl = GetObjectPtr(field);
 	// and get the pointer to it's label
 	label = (Char *)CtlGetLabel(ctl);
 
+	strHandle = MemHandleNew(15);
+	newStr = MemHandleLock(strHandle);
+	
 	// If the time has not been set
 	// (ie. when the form is starting and the class is new)
 	// set the label to that string
 	if (!pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet)
 	{
-		label = "Select time...";
+		newStr = "Select time...";
 	}
 	else if (field == ManageClassStartSelectorTrigger)
 	{
 		TimeToAscii(
 			pstVars->record.classOcurrence[pstVars->selectedDoW].sHour,
 			pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute,
-			tfColon24h, label);
+			tfColon24h, newStr);
 	}
 	else
 	{
 		TimeToAscii(
 			pstVars->record.classOcurrence[pstVars->selectedDoW].fHour,
 			pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute,
-			tfColon24h, label);
+			tfColon24h, newStr);
 	}
 
+	StrCopy(label, newStr);
 	CtlSetLabel(ctl, label);
+	MemHandleUnlock(strHandle);
 }
 
 /*
@@ -470,6 +476,18 @@ void SetTimeSelectorLabels(UInt16 field, ManageClassVariables *pstVars)
  */
 void ManageClassFormInit(FormType *frmP, ManageClassVariables *pstVars)
 {
+	Char *startSelectorTriggetLabelStr, *finishSelectorTriggetLabelStr;
+	ControlPtr ctl, ctl2;
+	
+	startSelectorTriggetLabelStr = MemPtrNew(15);
+	finishSelectorTriggetLabelStr = MemPtrNew(15);
+	
+	ctl = GetObjectPtr(ManageClassStartSelectorTrigger);
+	CtlSetLabel(ctl, startSelectorTriggetLabelStr);
+	
+	ctl2 = GetObjectPtr(ManageClassFinishSelectorTrigger);
+	CtlSetLabel(ctl2, finishSelectorTriggetLabelStr);
+	
 	CheckForAlreadySelected(pstVars);
 	autoSelectCurrentDay(pstVars);
 	LoadDoW(pstVars);
@@ -483,27 +501,32 @@ void CheckForAlreadySelected(ManageClassVariables *pstVars)
 	ClassDB *rec;
 	MemHandle recH;
 
-	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == 0)
+	if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstSharedInt) == ftrErrNoSuchFeature)
 	{
-		pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
-
-		FtrGet(appFileCreator, ftrClassesDBNum, &pstDbInt);
-		gDB = (DmOpenRef)pstDbInt;
-		recH = DmQueryRecord(gDB, pSharedPrefs->selectedClassDbIndex);
-		rec = MemHandleLock(recH);
-
-		pstVars->record = *rec;
-
-		MemHandleUnlock(recH);
-
-		pstVars->selectedDoW = pSharedPrefs->selectedDoW;
-
-		// Update Class Name field
-		setFieldValue(ManageClassNameField, pstVars->record.className);
-
-		// Update Class Room field
-		setFieldValue(ManageClassRoomField, pstVars->record.classRoom);
+		// There is no class already selected
+		// so nothing to do here
+		return;
 	}
+	
+	pSharedPrefs = (SharedClassesVariables *)pstSharedInt;
+
+	// Load selected class data
+	FtrGet(appFileCreator, ftrClassesDBNum, &pstDbInt);
+	gDB = (DmOpenRef)pstDbInt;
+	recH = DmQueryRecord(gDB, pSharedPrefs->selectedClassDbIndex);
+	rec = MemHandleLock(recH);
+	// Point current form data, to database data
+	pstVars->record = *rec;
+	MemHandleUnlock(recH);
+
+	// Use selected DoW from previous form, for better QoL
+	pstVars->selectedDoW = pSharedPrefs->selectedDoW;
+	
+	// Update Class Name field
+	setFieldValue(ManageClassNameField, pstVars->record.className);
+	
+	// Update Class Room field
+	setFieldValue(ManageClassRoomField, pstVars->record.classRoom);
 }
 
 void setFieldValue(UInt16 objectID, char *newText) {
@@ -524,6 +547,8 @@ void setFieldValue(UInt16 objectID, char *newText) {
 	}
 	
 	// Create a new memory chunk
+	// the +1 on the length is for
+	// the null terminator
 	newTextH = MemHandleNew(StrLen(newText) + 1);
 	// Allocate it, and lock
 	str = MemHandleLock(newTextH);
@@ -606,11 +631,12 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 		frmP = FrmGetActiveForm();
 
 		pstVars = (ManageClassVariables *)MemPtrNew(sizeof(ManageClassVariables));
-		if ((UInt32)pstVars == 0)
-			return -1;
+		ErrFatalDisplayIf (((UInt32)pstVars == 0), "Out of memory");
 		MemSet(pstVars, sizeof(ManageClassVariables), 0);
 		FtrSet(appFileCreator, ftrManageClassNum, (UInt32)pstVars);
+		
 		ManageClassFormInit(frmP, pstVars);
+		
 		FrmDrawForm(frmP);
 		handled = true;
 		break;
@@ -620,7 +646,7 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 	{
 		// Free shared variables, if exists
 		void *temp;
-		if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == 0)
+		if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == errNone)
 		{
 			FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
 		}
