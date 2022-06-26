@@ -98,8 +98,6 @@ Boolean MainFormDoCommand(UInt16 command)
 void MainFormInit(FormType *frmP)
 {
 	Char *CurrClass;
-	MemHandle resH;
-	BitmapType *bitmap;
 
 	CurrClass = (Char *)MemPtrNew(sizeof(Char[19]));
 	if ((UInt32)CurrClass == 0)
@@ -110,12 +108,59 @@ void MainFormInit(FormType *frmP)
 	ShowCurrentWeekday(frmP);
 	SetCurrentClass(frmP, CurrClass);
 	SetNextClass(frmP, CurrClass);
+	SetDueHomework();
 	MemPtrFree(CurrClass);
+}
+
+
+void SetDueHomework()
+{
+	UInt32 pstInt;
+	DmOpenRef gDB;
+	HomeworkDB *rec;
+	MemHandle recH;
+	UInt16 i, dueCount, numRecs;
+	dueCount = 0;
+
+	// The number of choices is equal to the number os classes
+	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
+	gDB = (DmOpenRef)pstInt;
+	numRecs = DmNumRecords(gDB);
+	for (i = 0; i < numRecs; i++)
+	{
+		recH = DmQueryRecord(gDB, i);
+		rec = MemHandleLock(recH);
+		MemHandleUnlock(recH);
+
+		if (rec->completedDate.year == 0)
+		{
+			// TODO: Save the index on a global to fetch later
+			// in order to avoid reescaning the whole DB on
+			// every freaking line draw
+
+		}
+	}
+
+}
+
+void SetDueCount(UInt16 dueCount)
+{
+	DrawDueHomeworkIcon(TaskAttemptFamily);
+}
+
+void SetNoDue()
+{
+	DrawDueHomeworkIcon(TaskCompleteFamily);
+}
+
+void DrawDueHomeworkIcon(DmResID bmpFamilyID)
+{
+	MemHandle resH;
+	BitmapType *bitmap;
 	
-	resH = DmGetResource(bitmapRsc, TaskAttemptFamily); 
+	resH = DmGetResource(bitmapRsc, bmpFamilyID); 
 	bitmap = MemHandleLock (resH); 
 	WinPaintBitmap(bitmap, 79, 133); 
-
 }
 
 /**
