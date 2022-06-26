@@ -60,6 +60,13 @@ void *GetObjectPtr(UInt16 objectID)
 	return FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, objectID));
 }
 
+
+Int16 GetUserListSelection(UInt16 listID)
+{
+	ListType *list = GetObjectPtr(listID);
+	return LstGetSelection(list);
+}
+
 /*
  * FUNCTION: AppHandleEvent
  *
@@ -183,7 +190,18 @@ void CloseClassesDB() {
 
 Err AppStart(void)
 {
-	Err error = InitializeClassesDB();
+	Err error;
+	
+	// Clean all feature memory
+	FtrPtrFree(appFileCreator, ftrManageClassNum);
+	FtrPtrFree(appFileCreator, ftrClassesDBNum);
+	FtrPtrFree(appFileCreator, ftrClassesNum);
+	FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
+	FtrPtrFree(appFileCreator, ftrManageHomeworkNum);
+	FtrPtrFree(appFileCreator, ftrHmwrkDBNum);
+	FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
+	
+	error = InitializeClassesDB();
 	if (error != errNone)
 	{
 		return error;

@@ -87,6 +87,7 @@ typedef struct ManageHomeworkVariables
 
 typedef struct SharedHomeworksVariables
 {
+	Boolean hasSelectedItem;
 	UInt16 selectedHomeworkDbIndex; // DB Index of selected homework on the list
 } SharedHomeworksVariables;
 
@@ -96,6 +97,7 @@ typedef struct SharedHomeworksVariables
 
 /* Functions in StudentOrganizer.c */
 void *GetObjectPtr(UInt16 objectID);
+Int16 GetUserListSelection(UInt16 listID);
 Boolean AppHandleEvent(EventPtr eventP);
 void AppEventLoop(void);
 void AppStop(void);
@@ -171,5 +173,6 @@ Boolean ClassNameIsUnique(Char* className);
 Boolean HomeworksFormDoCommand(UInt16 command);
 void HomeworksFormInit(FormType *frmP);
 Boolean HomeworksFormHandleEvent(EventPtr eventP);
-Err LoadSelectedHomeworkIntoMemory();
+Err SetHomeworksSharedMemory();
 UInt16 GetDbIndexForSelected(UInt16 sel);
+Boolean userHasSelectedAItem();

@@ -99,6 +99,10 @@ Boolean HomeworksFormDoCommand(UInt16 command)
 	}
     case HomeworksNewButton:
 	{
+		Err error = errNone;
+		error = SetHomeworksSharedMemory();
+		ErrFatalDisplayIf ((error != errNone), "Error setting feature memory");
+		
 		FrmGotoForm(ManageHomeworkForm);
 		handled = true;
 		break;
@@ -106,14 +110,17 @@ Boolean HomeworksFormDoCommand(UInt16 command)
 	case HomeworksEditButton:
 	{
 		Err error = errNone;
-		error = LoadSelectedHomeworkIntoMemory();
-		if (error == errNone)
+		error = SetHomeworksSharedMemory();
+		ErrFatalDisplayIf ((error != errNone), "Error setting feature memory");
+		
+		if (userHasSelectedAItem())
 		{
 			FrmGotoForm(ManageHomeworkForm);
 		}
 		else
 		{
 			FrmCustomAlert(SelectClassBeforEditAlert, NULL, NULL, NULL);
+			FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
 		}
 
 		handled = true;
@@ -124,29 +131,31 @@ Boolean HomeworksFormDoCommand(UInt16 command)
 	return handled;
 }
 
-Err LoadSelectedHomeworkIntoMemory()
+Boolean userHasSelectedAItem()
+{
+	return GetUserListSelection(HomeworksViewList) != noListSelection;
+}
+
+Err SetHomeworksSharedMemory()
 {
 	SharedHomeworksVariables *sharedVars;
 	Int16 selectedItem;
-	ListType *list;
+	
+	selectedItem = GetUserListSelection(HomeworksViewList);
 
 	// Load shared Vars
 	sharedVars = (SharedHomeworksVariables *)MemPtrNew(sizeof(SharedHomeworksVariables));
 	ErrFatalDisplayIf ((!sharedVars), "Out of memory");
 	MemSet(sharedVars, sizeof(SharedHomeworksVariables), 0);
-
-	// Get selected item Index
-	list = GetObjectPtr(HomeworksViewList);
-	selectedItem = LstGetSelection(list);
-
-	if (selectedItem == noListSelection)
+	
+	if (selectedItem != noListSelection)
 	{
-		// TODO: properly handle error
-		MemPtrFree(sharedVars);
-		return 1;
+		sharedVars->selectedHomeworkDbIndex = GetDbIndexForSelected(selectedItem);
+		sharedVars->hasSelectedItem = true;
+	} else {
+		sharedVars->hasSelectedItem = false;
 	}
-
-	sharedVars->selectedHomeworkDbIndex = GetDbIndexForSelected(selectedItem);
+	
 	return FtrSet(appFileCreator, ftrShrdHomeworksVarsNum, (UInt32)sharedVars);
 }
 
@@ -171,11 +180,13 @@ UInt16 GetDbIndexForSelected(UInt16 sel)
 		rec = MemHandleLock(recH);
 		MemHandleUnlock(recH);
 
+		// If the class has no year set, it must be not-finished
 		if (rec->completedDate.year == 0)
 		{
+			// If the no-year index == our selection index...
 			if (iNoYear == sel)
 			{
-				// Found it!
+				// ... we have found it!
 				break;
 			}
 			iNoYear += 1;

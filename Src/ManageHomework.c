@@ -48,18 +48,6 @@ void MngHmwrkFormInit(FormType *frmP, ManageHomeworkVariables* hmwrkVars)
 	CheckForSelectedHomework(hmwrkVars);
 }
 
-void redirectToCorrectForm() {
-	Err error;
-	UInt32 pstSharedInt = 0;
-	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
-	if (error != errNone)
-	{
-		FrmGotoForm(MainForm);
-	} else {
-		FrmGotoForm(HomeworksForm);
-	}
-}
-
 void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 {
 	UInt32 pstSharedInt, pstDbInt;
@@ -80,6 +68,11 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	}
 
 	sharedVars = (SharedHomeworksVariables *)pstSharedInt;
+	
+	if (!sharedVars->hasSelectedItem)
+	{
+		return;
+	}
 
 	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstDbInt);
 	gDB = (DmOpenRef)pstDbInt;
@@ -255,6 +248,21 @@ Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables *hmwrkVars
 	return handled;
 }
 
+void redirectToCorrectForm() {
+	UInt32 pstSharedInt = 0;
+	
+	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == errNone)
+	{
+		// If it has shared vars, the user must come from
+		// the homeworks form
+		FrmGotoForm(HomeworksForm);	
+	} else {
+		// Otherwise, it come from the main form
+		FrmGotoForm(MainForm);
+	}
+}
+
+
 Err CompleteHomework(ManageHomeworkVariables *hmwrkVars)
 {
 	Int8 deleteConf;
@@ -352,12 +360,17 @@ Err SaveHomeworkChangesToDatabase(ManageHomeworkVariables *hmwrkVars)
 	UInt16 newSize;
 	Boolean isEditing;
 
+	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
 	
-	// Check if we are editing, and get the index.
-	isEditing = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) == errNone;
-	if (isEditing)
+	// Check if we are editing		
+	if (error == ftrErrNoSuchFeature)
+	{
+		isEditing = false;
+	}
+	else
 	{
 		sharedVars = (SharedHomeworksVariables *)pstSharedInt;
+		isEditing = sharedVars->hasSelectedItem;
 	}
 
 	recP = MemPtrNew(sizeof(HomeworkDB));
@@ -479,14 +492,11 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 	}
 	case frmCloseEvent:
 	{
-		void *temp;
-		
 		// Free ManageHomework variables
 		FtrPtrFree(appFileCreator, ftrManageHomeworkNum);
-		if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, (UInt32 *)&temp) == errNone)
-		{
-			FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
-		}
+		
+		// Free shared variables
+		FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
 		break;
 	}
 	}
