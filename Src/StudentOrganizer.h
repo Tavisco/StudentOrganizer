@@ -123,7 +123,7 @@ Boolean ClassesFormHandleEvent(EventPtr eventP);
 void ClassesFormInit(FormType *frmP, ClassesVariables *pstVars);
 void ClassesAutoSelectCurrentDay(ClassesVariables *pstVars);
 void ClassesActivateSelector(UInt16 field);
-void LoadClasses(ClassesVariables *pstVars);
+void LoadClasses(ClassesVariables *pstVars, Boolean firstRun);
 Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars);
 
 /* Functions in ManageClass.c */

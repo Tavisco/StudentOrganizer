@@ -91,43 +91,43 @@ Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables *pstVars)
 		break;
 	case ClassesSunPushButton:
 		pstVars->selectedDoW = 0;
-		LoadClasses(pstVars);
+		LoadClasses(pstVars, false);
 		handled = true;
 		break;
 
 	case ClassesMonPushButton:
 		pstVars->selectedDoW = 1;
-		LoadClasses(pstVars);
+		LoadClasses(pstVars, false);
 		handled = true;
 		break;
 
 	case ClassesTuesPushButton:
 		pstVars->selectedDoW = 2;
-		LoadClasses(pstVars);
+		LoadClasses(pstVars, false);
 		handled = true;
 		break;
 
 	case ClassesWedPushButton:
 		pstVars->selectedDoW = 3;
-		LoadClasses(pstVars);
+		LoadClasses(pstVars, false);
 		handled = true;
 		break;
 
 	case ClassesThursPushButton:
 		pstVars->selectedDoW = 4;
-		LoadClasses(pstVars);
+		LoadClasses(pstVars, false);
 		handled = true;
 		break;
 
 	case ClassesFriPushButton:
 		pstVars->selectedDoW = 5;
-		LoadClasses(pstVars);
+		LoadClasses(pstVars, false);
 		handled = true;
 		break;
 
 	case ClassesSatPushButton:
 		pstVars->selectedDoW = 6;
-		LoadClasses(pstVars);
+		LoadClasses(pstVars, false);
 		handled = true;
 		break;
 
@@ -151,10 +151,10 @@ Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables *pstVars)
 void ClassesFormInit(FormType *frmP, ClassesVariables *pstVars)
 {
 	ClassesAutoSelectCurrentDay(pstVars);
-	LoadClasses(pstVars);
+	LoadClasses(pstVars, true);
 }
 
-void LoadClasses(ClassesVariables *pstVars)
+void LoadClasses(ClassesVariables *pstVars, Boolean firstRun)
 {
 	UInt32 pstInt;
 	DmOpenRef gDB;
@@ -189,6 +189,9 @@ void LoadClasses(ClassesVariables *pstVars)
 	}
 
 	LstSetListChoices(list, NULL, itemCount);
+	if (!firstRun) {
+		LstDrawList(list);
+	}
 }
 
 Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars)
