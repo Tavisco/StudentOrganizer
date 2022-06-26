@@ -188,6 +188,8 @@ Err DeleteAllHomeworksForClass(UInt16 classIndex) {
 
 Err SaveClassesChanges(ManageClassVariables *pstVars)
 {
+	UInt32 tmp;
+	Boolean isEditing;
 	Err error = errNone;
 	Char *fldNameTxt, *fldRoomTxt = "\n";
 	FieldType *fldNameP = GetObjectPtr(ManageClassNameField);
@@ -217,8 +219,10 @@ Err SaveClassesChanges(ManageClassVariables *pstVars)
 		error = 1;
 		return error;
 	}
+	
+	isEditing = FtrGet(appFileCreator, ftrShrdClassesVarsNum, &tmp) == errNone;
 
-	if (!ClassNameIsUnique(fldNameTxt))
+	if (!isEditing && !ClassNameIsUnique(fldNameTxt))
 	{
 		FrmCustomAlert(ClassNameMustBeUniqueAlert, NULL, NULL, NULL);
 		error = 1;

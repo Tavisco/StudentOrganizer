@@ -267,13 +267,20 @@ Err DeleteHomework(ManageHomeworkVariables *hmwrkVars)
 	DmOpenRef gDB;
 
 	// Check if we are editing, and get the index.
-	if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt) != errNone)
+	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
+	if (error == ftrErrNoSuchFeature)
+	{
+		FrmCustomAlert(DeleteNewHomeworkAlert, NULL, NULL, NULL);
+		return 1;
+	}
+
+	pSharedPrefs = (SharedHomeworksVariables *)pstSharedInt;
+	if (!pSharedPrefs->hasSelectedItem)
 	{
 		FrmCustomAlert(DeleteNewHomeworkAlert, NULL, NULL, NULL);
 		return 1;
 	}
 	
-	pSharedPrefs = (SharedHomeworksVariables *)pstSharedInt;
 	index = pSharedPrefs->selectedHomeworkDbIndex;
 
 	// Ask for confirmation before deletion

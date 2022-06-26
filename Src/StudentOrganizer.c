@@ -226,15 +226,6 @@ Err AppStart(void)
 {
 	Err error;
 	
-	// Clean all feature memory
-	FtrPtrFree(appFileCreator, ftrManageClassNum);
-	FtrPtrFree(appFileCreator, ftrClassesDBNum);
-	FtrPtrFree(appFileCreator, ftrClassesNum);
-	FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
-	FtrPtrFree(appFileCreator, ftrManageHomeworkNum);
-	FtrPtrFree(appFileCreator, ftrHmwrkDBNum);
-	FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
-	
 	error = InitializeClassesDB();
 	if (error != errNone)
 	{
