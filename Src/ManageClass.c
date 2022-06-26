@@ -346,6 +346,8 @@ void ToggleTimeSelectorTrigger(ManageClassVariables *pstVars)
 {
 	pstVars->record.classOcurrence[pstVars->selectedDoW].active = !pstVars->record.classOcurrence[pstVars->selectedDoW].active;
 	SetTimeSelectorVisibility(pstVars);
+	SetTimeSelectorLabels(ManageClassStartSelectorTrigger, pstVars);
+	SetTimeSelectorLabels(ManageClassFinishSelectorTrigger, pstVars);
 }
 
 void SetTimeSelectorVisibility(ManageClassVariables *pstVars)
@@ -365,8 +367,7 @@ void SetTimeSelectorVisibility(ManageClassVariables *pstVars)
 		FrmShowObject(formP, startSelectorIndex);
 		FrmShowObject(formP, finishSelectorIndex);
 		FrmShowObject(formP, finishLabelIndex);
-		SetTimeSelectorLabels(ManageClassStartSelectorTrigger, pstVars);
-		SetTimeSelectorLabels(ManageClassFinishSelectorTrigger, pstVars);
+
 	}
 	else
 	{
@@ -401,7 +402,7 @@ void AskTimeToUser(UInt16 field, ManageClassVariables *pstVars)
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	hour = now.hour;
-	minute = now.minute;
+	minute = 0;
 
 	ok = SelectOneTime(&hour, &minute, "Select time");
 	if (ok)
@@ -484,7 +485,6 @@ void ManageClassFormInit(FormType *frmP, ManageClassVariables *pstVars)
 	
 	CheckForAlreadySelected(pstVars);
 	autoSelectCurrentDay(pstVars);
-	LoadDoW(pstVars);
 }
 
 void CheckForAlreadySelected(ManageClassVariables *pstVars)
@@ -512,15 +512,18 @@ void CheckForAlreadySelected(ManageClassVariables *pstVars)
 	// Point current form data, to database data
 	pstVars->record = *rec;
 	MemHandleUnlock(recH);
-
-	// Use selected DoW from previous form, for better QoL
-	pstVars->selectedDoW = pSharedPrefs->selectedDoW;
 	
 	// Update Class Name field
 	setFieldValue(ManageClassNameField, pstVars->record.className);
 	
 	// Update Class Room field
 	setFieldValue(ManageClassRoomField, pstVars->record.classRoom);
+	
+	// Use selected DoW from previous form, for better QoL
+	pstVars->selectedDoW = pSharedPrefs->selectedDoW;
+	
+	// Load DoW
+	LoadDoW(pstVars);
 }
 
 void setFieldValue(UInt16 objectID, char *newText) {
@@ -650,7 +653,6 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 		// Free ManageClass variables
 		FtrPtrFree(appFileCreator, ftrManageClassNum);
 		
-	
 		ctl = GetObjectPtr(ManageClassStartSelectorTrigger);
 		labelPtr = (UInt32 *)CtlGetLabel(ctl);
 		MemPtrFree(labelPtr);
@@ -658,7 +660,6 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 		ctl = GetObjectPtr(ManageClassFinishSelectorTrigger);
 		labelPtr = (UInt32 *)CtlGetLabel(ctl);
 		MemPtrFree(labelPtr);
-		
 		break;
 	}
 

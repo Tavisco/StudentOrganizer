@@ -466,7 +466,6 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 	case frmOpenEvent:
 	{
 		frmP = FrmGetActiveForm();
-		FrmDrawForm(frmP);
 
 		hmwrkVarsP = (ManageHomeworkVariables *)MemPtrNew(sizeof(ManageHomeworkVariables));
 		ErrFatalDisplayIf ((!hmwrkVarsP), "Out of memory");
@@ -474,6 +473,7 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 		MngHmwrkFormInit(frmP, hmwrkVarsP);
 		FtrSet(appFileCreator, ftrManageHomeworkNum, (UInt32)hmwrkVarsP);
 
+		FrmDrawForm(frmP);
 		handled = true;
 		break;
 	}

@@ -189,7 +189,6 @@ void LoadClasses(ClassesVariables *pstVars)
 	}
 
 	LstSetListChoices(list, NULL, itemCount);
-	LstDrawList(list);
 }
 
 Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars)
@@ -319,14 +318,17 @@ Boolean ClassesFormHandleEvent(EventPtr eventP)
 		ClassesVariables *pstVars;
 
 		frmP = FrmGetActiveForm();
-		FrmDrawForm(frmP);
 
 		pstVars = (ClassesVariables *)MemPtrNew(sizeof(ClassesVariables));
 		if ((UInt32)pstVars == 0)
 			return -1;
+		
 		MemSet(pstVars, sizeof(ClassesVariables), 0);
 		FtrSet(appFileCreator, ftrClassesNum, (UInt32)pstVars);
+
 		ClassesFormInit(frmP, pstVars);
+
+		FrmDrawForm(frmP);
 		handled = true;
 		break;
 	}
