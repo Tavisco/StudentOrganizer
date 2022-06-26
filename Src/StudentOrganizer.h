@@ -98,6 +98,7 @@ typedef struct SharedHomeworksVariables
 /* Functions in StudentOrganizer.c */
 void *GetObjectPtr(UInt16 objectID);
 Int16 GetUserListSelection(UInt16 listID);
+void SetFieldValue(UInt16 objectID, char *str);
 Boolean AppHandleEvent(EventPtr eventP);
 void AppEventLoop(void);
 void AppStop(void);
@@ -145,7 +146,6 @@ void CheckForAlreadySelected(ManageClassVariables *pstVars);
 Boolean IsScheduleInvalid(ManageClassVariables *pstVars);
 Err DeleteClass(ManageClassVariables *pstVars);
 Err DeleteAllHomeworksForClass(UInt16 index);
-void setFieldValue(UInt16 objectID, char *str);
 
 /* Functions in ManageHomework.c */
 Boolean MngHmwrkFormDoCommand(UInt16 command, ManageHomeworkVariables* hmwrkVars);

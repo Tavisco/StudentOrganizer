@@ -67,6 +67,40 @@ Int16 GetUserListSelection(UInt16 listID)
 	return LstGetSelection(list);
 }
 
+
+void SetFieldValue(UInt16 objectID, char *newText) {
+	FieldType *fldP;
+	MemHandle newTextH, oldTextH;
+	char *str;
+	
+	fldP = GetObjectPtr(objectID);
+	// Get the current text handle for the field, if any
+	oldTextH = FldGetTextHandle(fldP);
+	// Have the field stop using that handle
+	FldSetTextHandle(fldP, NULL);
+	
+	// If there is a handle, free it
+	if (oldTextH != NULL)
+	{
+		MemHandleFree(oldTextH);
+	}
+	
+	// Create a new memory chunk
+	// the +1 on the length is for
+	// the null terminator
+	newTextH = MemHandleNew(StrLen(newText) + 1);
+	// Allocate it, and lock
+	str = MemHandleLock(newTextH);
+	
+	// Copy our new text to the memory chunk
+	StrCopy(str, newText);
+	// and unlock it
+	MemPtrUnlock(str);
+	
+	// Have the field use that new handle
+	FldSetTextHandle(fldP, newTextH);
+}
+
 /*
  * FUNCTION: AppHandleEvent
  *

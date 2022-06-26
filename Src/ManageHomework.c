@@ -54,10 +54,8 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	SharedHomeworksVariables *sharedVars;
 	DmOpenRef gDB;
 	HomeworkDB *rec;
-	MemHandle recH, oldTextH, newTextH;
-	FieldType *fldP;
+	MemHandle recH;
 	Err error;
-	Char *str;
 	FormPtr formP;
 
 	error = FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, &pstSharedInt);
@@ -84,33 +82,10 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	MemHandleUnlock(recH);
 	
 	// Update Class Name field
-	// TODO: Extract this to a function
-	fldP = GetObjectPtr(NameMngHomeworkField);
-	oldTextH = FldGetTextHandle(fldP);
-	newTextH = MemHandleNew(sizeof(hmwrkVars->record.hmwrkName));
-	str = MemHandleLock(newTextH);
-	StrCopy(str, hmwrkVars->record.hmwrkName);
-	MemHandleUnlock(newTextH);
-	FldSetTextHandle(fldP, newTextH);
-	FldDrawField(fldP);
-	if (oldTextH != NULL)
-	{
-		MemHandleFree(oldTextH);
-	}
-
+	SetFieldValue(NameMngHomeworkField, hmwrkVars->record.hmwrkName);
+	
 	// Update Comments Room field
-	fldP = GetObjectPtr(CommentsMngHmwrkField);
-	oldTextH = FldGetTextHandle(fldP);
-	newTextH = MemHandleNew(sizeof(hmwrkVars->record.hmwrkComments));
-	str = MemHandleLock(newTextH);
-	StrCopy(str, hmwrkVars->record.hmwrkComments);
-	MemHandleUnlock(newTextH);
-	FldSetTextHandle(fldP, newTextH);
-	FldDrawField(fldP);
-	if (oldTextH != NULL)
-	{
-		MemHandleFree(oldTextH);
-	}
+	SetFieldValue(CommentsMngHmwrkField, hmwrkVars->record.hmwrkComments);
 
 	// Update class trigger label
 	MngHmwkHandlePopSelected(hmwrkVars->record.classIndex, hmwrkVars);
