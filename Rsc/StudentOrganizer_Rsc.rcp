@@ -53,7 +53,7 @@ BEGIN
 	LABEL "Today is:" ID MainWeekdayDscrLabel  AT (77 82) FONT 1
 	LABEL "                  " ID MainWeekdayLabel  AT (80 93)
 	LABEL "Homework\rstatus:" ID MainHomeworkStatusLabel  AT (77 106) FONT 1
-		FORMBITMAP AT (78 135) BITMAP TaskCompleteFamily
+	LABEL "Found 99 due\rin 1 day" ID MainDueLabel  AT (100 130)
 END
 
 FORM ID AboutForm AT (2 58 156 100)
@@ -295,6 +295,8 @@ BEGIN
      BUTTONS "OK" 
 END
 
-BITMAPFAMILY ID TaskCompleteFamily  "task-attempt-1.bmp" "task-attempt-2.bmp" "" "task-attempt-8.bmp"
+BITMAPFAMILY ID TaskAttemptFamily  "" "task-attempt-2.bmp" "" "task-attempt-8.bmp"
+
+BITMAPFAMILY ID TaskCompleteFamily  "" "task-complete-2.bmp" "" "task-complete-8.bmp"
 
 BITMAPFAMILY ID TaviscoBitmapFamily  "" "tavisco-2.bmp" "tavisco-4.bmp" "tavisco-8.bmp"

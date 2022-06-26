@@ -98,6 +98,8 @@ Boolean MainFormDoCommand(UInt16 command)
 void MainFormInit(FormType *frmP)
 {
 	Char *CurrClass;
+	MemHandle resH;
+	BitmapType *bitmap;
 
 	CurrClass = (Char *)MemPtrNew(sizeof(Char[19]));
 	if ((UInt32)CurrClass == 0)
@@ -109,6 +111,11 @@ void MainFormInit(FormType *frmP)
 	SetCurrentClass(frmP, CurrClass);
 	SetNextClass(frmP, CurrClass);
 	MemPtrFree(CurrClass);
+	
+	resH = DmGetResource(bitmapRsc, TaskAttemptFamily); 
+	bitmap = MemHandleLock (resH); 
+	WinPaintBitmap(bitmap, 79, 133); 
+
 }
 
 /**

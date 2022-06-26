@@ -1,4 +1,6 @@
 /* pilrc generated file.  Do not edit!*/
+#define TaskCompleteFamily 1096
+#define TaskAttemptFamily 1095
 #define ClassNameMustBeUniqueAlert 1094
 #define ConfirmActionHomeworkAlert 1093
 #define OptionsDeleteHomeworHrmwrksBar 1092
@@ -72,7 +74,7 @@
 #define AboutAppTitleLabel 1023
 #define AboutOKButton 1022
 #define AboutForm 1021
-#define TaskCompleteFamily 1020
+#define MainDueLabel 1020
 #define MainHomeworkStatusLabel 1019
 #define MainWeekdayLabel 1018
 #define MainWeekdayDscrLabel 1017
