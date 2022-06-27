@@ -382,8 +382,8 @@ Boolean MainFormHandleEvent(EventPtr eventP)
 
 	case frmOpenEvent:
 		frmP = FrmGetActiveForm();
-		MainFormInit(frmP);
 		FrmDrawForm(frmP);
+		MainFormInit(frmP);
 		handled = true;
 		break;
 

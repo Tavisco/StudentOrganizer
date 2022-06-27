@@ -467,7 +467,6 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 		MemSet(hmwrkVarsP, sizeof(ManageHomeworkVariables), 0);
 		MngHmwrkFormInit(frmP, hmwrkVarsP);
 		FtrSet(appFileCreator, ftrManageHomeworkNum, (UInt32)hmwrkVarsP);
-
 		FrmDrawForm(frmP);
 		handled = true;
 		break;
