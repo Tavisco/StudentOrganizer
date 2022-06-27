@@ -61,8 +61,8 @@ FORM ID AboutForm AT (2 58 156 100)
     DEFAULTBTNID AboutOKButton
 BEGIN
 	TITLE "About"
-	LABEL "Student Organizer" ID AboutAppTitleLabel AT (3 29) FONT 1
-	LABEL "Version 1.0" ID AboutVersionLabel  AT (21 41) FONT 1
+	LABEL "Student Organizer" ID AboutAppTitleLabel AT (5 29) FONT 1
+	LABEL "Version 1.0" ID AboutVersionLabel  AT (23 41) FONT 1
 	LABEL "More at: https://palm.tavisco.dev" ID AboutDescriptionLabel AT (CENTER 70)
 	BUTTON "OK" ID AboutOKButton AT (CENTER 85 40 12)
 	FORMBITMAP AT (103 15) BITMAP TaviscoBitmapFamily
@@ -295,8 +295,8 @@ BEGIN
      BUTTONS "OK" 
 END
 
-BITMAPFAMILY ID TaskAttemptFamily  "" "Rsc/task-attempt-2.bmp" "" "Rsc/task-attempt-8.bmp"
+BITMAPFAMILY ID TaskAttemptFamily  "Rsc/task-attempt-2.bmp" "" "" "Rsc/task-attempt-8.bmp"
 
-BITMAPFAMILY ID TaskCompleteFamily  "" "Rsc/task-complete-2.bmp" "" "Rsc/task-complete-8.bmp"
+BITMAPFAMILY ID TaskCompleteFamily  "Rsc/task-complete-2.bmp" "" "" "Rsc/task-complete-8.bmp"
 
-BITMAPFAMILY ID TaviscoBitmapFamily  "" "Rsc/tavisco-2.bmp" "Rsc/tavisco-4.bmp" "Rsc/tavisco-8.bmp"
+BITMAPFAMILY ID TaviscoBitmapFamily  "Rsc/tavisco-2.bmp" "" "" "Rsc/tavisco-8.bmp"
