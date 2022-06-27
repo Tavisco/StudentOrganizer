@@ -167,6 +167,13 @@ void SetDueHomework(FormType *frmP)
 
 void SetDueCount(FormType *frmP, UInt16 dueCount)
 {
+	Char label[22];
+	Char dueCountStr[3];
+	StrCat(label, "Found ");
+	StrIToA(dueCountStr, dueCount);
+	StrCat(label, dueCountStr);
+	StrCat(label,  " due\rin 1 day");
+	FrmCopyLabel(frmP, MainDueLabel, label);
 	DrawDueHomeworkIcon(TaskAttemptFamily);
 }
 
