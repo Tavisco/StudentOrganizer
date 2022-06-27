@@ -108,21 +108,29 @@ void MainFormInit(FormType *frmP)
 	ShowCurrentWeekday(frmP);
 	SetCurrentClass(frmP, CurrClass);
 	SetNextClass(frmP, CurrClass);
-	SetDueHomework();
+	SetDueHomework(frmP);
 	MemPtrFree(CurrClass);
 }
 
 
-void SetDueHomework()
+void SetDueHomework(FormType *frmP)
 {
-	UInt32 pstInt;
+	UInt32 pstInt, tomorrowSec, nowSec, classDueSec;
+	DateTimeType now, tomorrowLast, classDue;
 	DmOpenRef gDB;
 	HomeworkDB *rec;
 	MemHandle recH;
 	UInt16 i, dueCount, numRecs;
 	dueCount = 0;
 
-	// The number of choices is equal to the number os classes
+	nowSec = TimGetSeconds();
+	TimSecondsToDateTime(nowSec, &now);
+	now.hour = 23;
+	now.minute = 59;
+	nowSec = TimDateTimeToSeconds(&now);
+	tomorrowSec = nowSec + 86400; // Seconds in one day
+	
+	
 	FtrGet(appFileCreator, ftrHmwrkDBNum, &pstInt);
 	gDB = (DmOpenRef)pstInt;
 	numRecs = DmNumRecords(gDB);
@@ -134,22 +142,37 @@ void SetDueHomework()
 
 		if (rec->completedDate.year == 0)
 		{
-			// TODO: Save the index on a global to fetch later
-			// in order to avoid reescaning the whole DB on
-			// every freaking line draw
+			classDue.year = rec->dueYear;
+			classDue.month = rec->dueMonth;
+			classDue.day = rec->dueDay;
+			classDue.hour = 23;
+			classDue.minute = 58;
 
+			classDueSec = TimDateTimeToSeconds(&classDue);
+
+			if (classDueSec > nowSec && classDueSec < tomorrowSec)
+			{
+				dueCount++;
+			}
 		}
+	}
+
+	if (dueCount == 0) {
+		SetNoDue(frmP);
+	} else {
+		SetDueCount(frmP, dueCount);
 	}
 
 }
 
-void SetDueCount(UInt16 dueCount)
+void SetDueCount(FormType *frmP, UInt16 dueCount)
 {
 	DrawDueHomeworkIcon(TaskAttemptFamily);
 }
 
-void SetNoDue()
+void SetNoDue(FormType *frmP)
 {
+	FrmCopyLabel(frmP, MainDueLabel, "Nothing due\rin 1 day");
 	DrawDueHomeworkIcon(TaskCompleteFamily);
 }
 

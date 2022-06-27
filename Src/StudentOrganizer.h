@@ -121,8 +121,8 @@ void SetCurrentClass(FormType *frmP, Char *className);
 void SetNextClass(FormType *frmP, Char *currClass);
 void SetDueHomework();
 void DrawDueHomeworkIcon(DmResID bmpFamilyID);
-void SetNoDue();
-void SetDueCount(UInt16 dueCount);
+void SetNoDue(FormType *frmP);
+void SetDueCount(FormType *frmP, UInt16 dueCount);
 
 /* Functions in Classes.c */
 Boolean ClassesFormDoCommand(UInt16 command, ClassesVariables *pstVars);
