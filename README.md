@@ -30,3 +30,9 @@ As the Github description says, this is a recreation in C of a very similar appl
 That being said, this is my first contact with the C language and with the Palm toolchain. Mistakes were probably made, so proceed with caution, and as always, use it at your own risk, I do not guarantee that this software will work as intended.
 
 If you found an issue, please open one here in this repository that I may (or may not) fix it.
+
+## Building
+To build this application from source use the toolchain available [here](https://www.palm2000.com/projects/compilingAndBuildingPalmOsAppsOnUbuntu2004LTS.php), and simply run `make` in the root of the project.
+
+## Special thanks
+I'd like to thank all the awesome people on [PalmDB's Discord Server](https://palmdb.net/) that helped me with begginer's issues with C and Palm OS development; that demonstrated interest in the project and pushed me forward to complete it; that sent ideas and opinated about the features and looks of it; and probably much more things. Many thanks to you all :)
