@@ -27,6 +27,6 @@ The classes management supports classes that occur multiple days of the week.
 As the Github description says, this is a recreation in C of a very similar application I've developed using [HB++](http://web.archive.org/web/20090622021514/http://www.handheld-basic.com/) when I was about 13 years old. I got the motivation to re-do it in C just to provoke myself with a new challenge, as I'm professionally NOT a C programmer, and to give back some love to the Palm platform, as programming that application in particular back then was a pretty significant step in settling down on choosing "what I will do when I grow up" :)
 
 
-That being said, this is my first contact with the C language and with the Palm toolchain. Mistakes were probably made, so proceed with caution, and as always use it at your own risk, I do not guarantee that this software will work as intended.
+That being said, this is my first contact with the C language and with the Palm toolchain. Mistakes were probably made, so proceed with caution, and as always, use it at your own risk, I do not guarantee that this software will work as intended.
 
 If you found an issue, please open one here in this repository that I may (or may not) fix it.
