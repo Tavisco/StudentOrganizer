@@ -19,5 +19,5 @@ The classes management supports classes that occours multiple days of the week.
 
 ## Screenshots
 | Main | Classes | Homeworks | Manage Homework |
-| :-:  | :-  :   | :-:       | :-:             |
+| :-:  | :-:   | :-:       | :-:             |
 | ![Main](https://raw.githubusercontent.com/Tavisco/StudentOrganizer/master/Rsc/screenshot1.png) | ![Classes](https://raw.githubusercontent.com/Tavisco/StudentOrganizer/master/Rsc/screenshot2.png) | ![Homeworks](https://raw.githubusercontent.com/Tavisco/StudentOrganizer/master/Rsc/screenshot3.png) | ![manage Homework](https://raw.githubusercontent.com/Tavisco/StudentOrganizer/master/Rsc/screenshot4.png) | 
