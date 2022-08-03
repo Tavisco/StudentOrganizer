@@ -14,6 +14,18 @@ GENERATEHEADER "Rsc/StudentOrganizer_Rsc.h"
 
 RESETAUTOID 1000
 
+VERSION ID 1 "1.1"
+
+APPLICATIONICONNAME ID 1000 "S.O.R.G."
+
+LAUNCHERCATEGORY ID 1000  "Main"
+
+BITMAPFAMILY ID TaskAttemptFamily  "Rsc/task-attempt-2.bmp" "" "" "Rsc/task-attempt-8.bmp"
+
+BITMAPFAMILY ID TaskCompleteFamily  "Rsc/task-complete-2.bmp" "" "" "Rsc/task-complete-8.bmp"
+
+BITMAPFAMILY ID TaviscoBitmapFamily  "Rsc/tavisco-2.bmp" "" "" "Rsc/tavisco-8.bmp"
+
 MENU ID MainMenuBar
 BEGIN
 	PULLDOWN "Options"
@@ -62,7 +74,7 @@ FORM ID AboutForm AT (2 58 156 100)
 BEGIN
 	TITLE "About"
 	LABEL "Student Organizer" ID AboutAppTitleLabel AT (5 29) FONT 1
-	LABEL "Version 1.0" ID AboutVersionLabel  AT (23 41) FONT 1
+	LABEL "Version 1.1" ID AboutVersionLabel  AT (23 41) FONT 1
 	LABEL "More at: https://palm.tavisco.dev" ID AboutDescriptionLabel AT (CENTER 70)
 	BUTTON "OK" ID AboutOKButton AT (CENTER 85 40 12)
 	FORMBITMAP AT (103 15) BITMAP TaviscoBitmapFamily
@@ -178,12 +190,6 @@ BEGIN
      BUTTONS "OK" 
 END
 
-VERSION ID 1 "1.0"
-
-APPLICATIONICONNAME ID 1000 "S.O.R.G."
-
-LAUNCHERCATEGORY ID 1000  "Main"
-
 FORM ID ManageHomeworkForm   AT ( 0 0 160 160 )
 NOFRAME
 MENUID ManageHomeworkMenuBar
@@ -286,9 +292,3 @@ BEGIN
      MESSAGE "There is at least one class with that name already. The class name must be unique."
      BUTTONS "OK" 
 END
-
-BITMAPFAMILY ID TaskAttemptFamily  "Rsc/task-attempt-2.bmp" "" "" "Rsc/task-attempt-8.bmp"
-
-BITMAPFAMILY ID TaskCompleteFamily  "Rsc/task-complete-2.bmp" "" "" "Rsc/task-complete-8.bmp"
-
-BITMAPFAMILY ID TaviscoBitmapFamily  "Rsc/tavisco-2.bmp" "" "" "Rsc/tavisco-8.bmp"
