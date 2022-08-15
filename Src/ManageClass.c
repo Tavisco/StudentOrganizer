@@ -597,6 +597,7 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 	case frmOpenEvent:
 	{
 		frmP = FrmGetActiveForm();
+		FrmDrawForm(frmP);
 
 		pstVars = (ManageClassVariables *)MemPtrNew(sizeof(ManageClassVariables));
 		ErrFatalDisplayIf (((UInt32)pstVars == 0), "Out of memory");
@@ -605,7 +606,6 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 		
 		ManageClassFormInit(frmP, pstVars);
 		
-		FrmDrawForm(frmP);
 		handled = true;
 		break;
 	}

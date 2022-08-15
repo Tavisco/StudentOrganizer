@@ -83,6 +83,7 @@ void FillHomeworksList() {
 	// Set list item number
 	LstSetListChoices(list, NULL, itemCount);
 	LstSetSelection(list, -1);
+	LstDrawList(list);
 }
 
 Boolean HomeworksFormDoCommand(UInt16 command)
@@ -217,8 +218,9 @@ Boolean HomeworksFormHandleEvent(EventPtr eventP)
 
 	case frmOpenEvent:
 		frmP = FrmGetActiveForm();
-		HomeworksFormInit(frmP);
 		FrmDrawForm(frmP);
+		HomeworksFormInit(frmP);
+
 		handled = true;
 		break;
 	}

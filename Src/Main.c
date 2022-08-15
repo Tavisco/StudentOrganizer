@@ -172,14 +172,14 @@ void SetDueCount(FormType *frmP, UInt16 dueCount)
 	StrCat(label, "Found ");
 	StrIToA(dueCountStr, dueCount);
 	StrCat(label, dueCountStr);
-	StrCat(label,  " due\rin 1 day");
+	StrCat(label,  " due\rtomorrow");
 	FrmCopyLabel(frmP, MainDueLabel, label);
 	DrawDueHomeworkIcon(TaskAttemptFamily);
 }
 
 void SetNoDue(FormType *frmP)
 {
-	FrmCopyLabel(frmP, MainDueLabel, "Nothing due\rin 1 day");
+	FrmCopyLabel(frmP, MainDueLabel, "Nothing due\rtomorrow");
 	DrawDueHomeworkIcon(TaskCompleteFamily);
 }
 

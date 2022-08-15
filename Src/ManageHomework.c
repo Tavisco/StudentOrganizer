@@ -461,23 +461,34 @@ Boolean MngHmwrkFormHandleEvent(EventPtr eventP)
 	case frmOpenEvent:
 	{
 		frmP = FrmGetActiveForm();
+		FrmDrawForm(frmP);
 
 		hmwrkVarsP = (ManageHomeworkVariables *)MemPtrNew(sizeof(ManageHomeworkVariables));
 		ErrFatalDisplayIf ((!hmwrkVarsP), "Out of memory");
 		MemSet(hmwrkVarsP, sizeof(ManageHomeworkVariables), 0);
-		MngHmwrkFormInit(frmP, hmwrkVarsP);
 		FtrSet(appFileCreator, ftrManageHomeworkNum, (UInt32)hmwrkVarsP);
-		FrmDrawForm(frmP);
+		
+		MngHmwrkFormInit(frmP, hmwrkVarsP);
+
 		handled = true;
 		break;
 	}
 	case frmCloseEvent:
 	{
+		void *temp;
+		
 		// Free ManageHomework variables
-		FtrPtrFree(appFileCreator, ftrManageHomeworkNum);
+		if (FtrGet(appFileCreator, ftrManageHomeworkNum, (UInt32 *)&temp) == errNone)
+		{
+			FtrPtrFree(appFileCreator, ftrManageHomeworkNum);
+		}
 		
 		// Free shared variables
-		FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
+		if (FtrGet(appFileCreator, ftrShrdHomeworksVarsNum, (UInt32 *)&temp) == errNone)
+		{
+			FtrPtrFree(appFileCreator, ftrShrdHomeworksVarsNum);
+		}
+		
 		break;
 	}
 	}
