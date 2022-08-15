@@ -116,7 +116,7 @@ void MainFormInit(FormType *frmP)
 void SetDueHomework(FormType *frmP)
 {
 	UInt32 pstInt, tomorrowSec, nowSec, classDueSec;
-	DateTimeType now, tomorrowLast, classDue;
+	DateTimeType now, classDue;
 	DmOpenRef gDB;
 	HomeworkDB *rec;
 	MemHandle recH;
@@ -167,13 +167,31 @@ void SetDueHomework(FormType *frmP)
 
 void SetDueCount(FormType *frmP, UInt16 dueCount)
 {
-	Char label[22];
-	Char dueCountStr[3];
+	Char *label;
+	Char *dueCountStr;
+	
+	// Allocate memory in dynamic heap for the labels
+	label = (Char *)MemPtrNew(22);
+	ErrFatalDisplayIf ((!label), "Out of memory");
+	MemSet(label, 22, 0);
+	
+	dueCountStr = (Char *)MemPtrNew(3);
+	ErrFatalDisplayIf ((!dueCountStr), "Out of memory");
+	MemSet(dueCountStr, 3, 0);
+	
+	// Manipulate the labels
 	StrCat(label, "Found ");
 	StrIToA(dueCountStr, dueCount);
 	StrCat(label, dueCountStr);
 	StrCat(label,  " due\rtomorrow");
+	// Copy text from memory to the label structure
+	// and redraw the label
 	FrmCopyLabel(frmP, MainDueLabel, label);
+	
+	// As text was COPIED, we can free it in the heap
+	MemPtrFree(label);
+	MemPtrFree(dueCountStr);
+	
 	DrawDueHomeworkIcon(TaskAttemptFamily);
 }
 
@@ -221,8 +239,7 @@ void SetCurrentClass(FormType *frmP, Char *className)
 	{
 		recH = DmQueryRecord(gDB, i);
 		rec = MemHandleLock(recH);
-		MemHandleUnlock(recH);
-
+		
 		if (rec->classOcurrence[now.weekDay].active)
 		{
 			start.hour = rec->classOcurrence[now.weekDay].sHour;
@@ -240,6 +257,8 @@ void SetCurrentClass(FormType *frmP, Char *className)
 				set = true;
 			}
 		}
+		
+		MemHandleUnlock(recH);
 	}
 
 	if (!set)
@@ -279,7 +298,6 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 
 		recH = DmQueryRecord(gDB, i);
 		rec = MemHandleLock(recH);
-		MemHandleUnlock(recH);
 
 		if (rec->classOcurrence[now.weekDay].active)
 		{
@@ -309,6 +327,8 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 				TimSecondsToDateTime(nowSec, &now);
 			}
 		}
+		
+		MemHandleUnlock(recH);
 
 		if (set) {
 			break;
@@ -335,22 +355,36 @@ void SetNextClass(FormType *frmP, Char *currentClass)
 void ShowCurrentTime(FormType *frmP)
 {
 	DateTimeType now;
-	char timeStr[timeStringLength];
+	char *timeStr;
+	
+	// Allocate memory in dynamic heap for the label
+	timeStr = (Char *)MemPtrNew(timeStringLength);
+	ErrFatalDisplayIf ((!timeStr), "Out of memory");
+	MemSet(timeStr, timeStringLength, 0);
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	TimeToAscii(now.hour, now.minute, tfColon24h, timeStr);
 
 	FrmCopyLabel(frmP, MainTimeLabel, timeStr);
+	
+	MemPtrFree(timeStr);
 }
 
 void ShowCurrentWeekday(FormType *frmP)
 {
 	DateTimeType now;
-	Char dowNameStr[dowDateStringLength];
+	Char *dowNameStr;
+	
+	// Allocate memory in dynamic heap for the label
+	dowNameStr = (Char *)MemPtrNew(dowDateStringLength);
+	ErrFatalDisplayIf ((!dowNameStr), "Out of memory");
+	MemSet(dowNameStr, dowDateStringLength, 0);
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
-	DateTemplateToAscii("^1l", now.month, now.day, now.year, dowNameStr, sizeof(dowNameStr));
+	DateTemplateToAscii("^1l", now.month, now.day, now.year, dowNameStr, dowDateStringLength);
 	FrmCopyLabel(frmP, MainWeekdayLabel, dowNameStr);
+	
+	MemPtrFree(dowNameStr);
 }
 /*
  * FUNCTION: MainFormHandleEvent
