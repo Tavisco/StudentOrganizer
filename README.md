@@ -31,8 +31,11 @@ That being said, this is my first contact with the C language and with the Palm 
 
 If you found an issue, please open one here in this repository that I may (or may not) fix it.
 
+## Downloads
+You can find the pre-compiled binaries (the .prc files) on the release section of Github. [Or click here to go right to the latest version.](https://github.com/Tavisco/StudentOrganizer/releases/latest)
+
 ## Building
-To build this application from source use the toolchain available [here](https://www.palm2000.com/projects/compilingAndBuildingPalmOsAppsOnUbuntu2004LTS.php), and simply run `make` in the root of the project.
+To build this application from source use the toolchain available [here](https://www.palm2000.com/projects/compilingAndBuildingPalmOsAppsOnUbuntu2004LTS.php), edit the paths of the building tools on the makefile, then simply run `make` in the root of the project.
 
 ## Special thanks
-I'd like to thank all the awesome people on [PalmDB's Discord Server](https://palmdb.net/) that helped me with begginer's issues with C and Palm OS development; that demonstrated interest in the project and pushed me forward to complete it; that sent ideas and opinated about the features and looks of it; and probably much more things. Many thanks to you all :)
+I'd like to thank all the awesome people on [PalmDB's Discord Server](https://palmdb.net/) that helped me with begginer's issues with C and Palm OS development; that demonstrated interest in the project and pushed me forward to complete it; that sent ideas and opinated about the features and looks of it; and probably much more things. Many thanks to you all!
