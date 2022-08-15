@@ -145,14 +145,19 @@ void SetDueHomework(FormType *frmP)
 			classDue.year = rec->dueYear;
 			classDue.month = rec->dueMonth;
 			classDue.day = rec->dueDay;
+			classDue.weekDay = DayOfWeek(rec->dueMonth, rec->dueDay, rec->dueYear);
 			classDue.hour = 23;
 			classDue.minute = 58;
+			classDue.second = 1;
 
 			classDueSec = TimDateTimeToSeconds(&classDue);
 
-			if (classDueSec > nowSec && classDueSec < tomorrowSec)
+			if (classDueSec > nowSec)
 			{
-				dueCount++;
+				if (classDueSec < tomorrowSec)
+				{
+					dueCount++;
+				}
 			}
 		}
 	}
