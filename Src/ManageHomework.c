@@ -69,6 +69,7 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	
 	if (!sharedVars->hasSelectedItem)
 	{
+		hmwrkVars->isEditing = false;
 		return;
 	}
 
@@ -78,6 +79,7 @@ void CheckForSelectedHomework(ManageHomeworkVariables* hmwrkVars)
 	rec = MemHandleLock(recH);
 
 	hmwrkVars->record = *rec;
+	hmwrkVars->isEditing = true;
 
 	MemHandleUnlock(recH);
 	
@@ -156,10 +158,20 @@ void AskDateToUser(ManageHomeworkVariables *hmwrkVars)
 	DateTimeType now;
 	Boolean selected;
 
-	TimSecondsToDateTime(TimGetSeconds(), &now);
-	day = now.day;
-	month = now.month;
-	year = now.year;
+	if (hmwrkVars->isEditing)
+	{
+		day = hmwrkVars->record.dueDay;
+		month = hmwrkVars->record.dueMonth;
+		year = hmwrkVars->record.dueYear;
+	}
+	else
+	{
+		TimSecondsToDateTime(TimGetSeconds(), &now);
+		day = now.day;
+		month = now.month;
+		year = now.year;
+	}
+
 
 	selected = SelectDay(selectDayByDay, &month, &day, &year, "Select due date");
 	if (selected)

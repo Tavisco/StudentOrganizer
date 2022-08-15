@@ -83,6 +83,7 @@ typedef struct ManageHomeworkVariables
 {
 	HomeworkDB record;
 	Boolean classSelected;
+	Boolean isEditing;
 } ManageHomeworkVariables;
 
 typedef struct SharedHomeworksVariables

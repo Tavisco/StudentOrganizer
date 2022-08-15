@@ -407,7 +407,7 @@ void AskTimeToUser(UInt16 field, ManageClassVariables *pstVars)
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	hour = now.hour;
 	minute = 0;
-
+	
 	ok = SelectOneTime(&hour, &minute, "Select time");
 	if (ok)
 	{
