@@ -18,6 +18,7 @@
  */
 Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 {
+	HMSTime selectedTime;
 	Boolean handled = false;
 
 	switch (command)
@@ -36,12 +37,28 @@ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 		break;
 
 	case ManageClassStartSelectorTrigger:
-		AskTimeToUser(ManageClassStartSelectorTrigger, pstVars);
+		selectedTime = AskTimeToUser(pstVars);
+		if (selectedTime.reserved == 1)
+		{
+			pstVars->record.classOcurrence[pstVars->selectedDoW].sHour = selectedTime.hours;
+			pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute = selectedTime.minutes;
+		
+			SetTimeSelectorLabels(ManageClassStartSelectorTrigger, pstVars);
+		}	
+		
 		handled = true;
 		break;
 
 	case ManageClassFinishSelectorTrigger:
-		AskTimeToUser(ManageClassFinishSelectorTrigger, pstVars);
+		selectedTime = AskTimeToUser(pstVars);
+		if (selectedTime.reserved == 1)
+		{
+			pstVars->record.classOcurrence[pstVars->selectedDoW].fHour = selectedTime.hours;
+			pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute = selectedTime.minutes;
+		
+			SetTimeSelectorLabels(ManageClassFinishSelectorTrigger, pstVars);
+		}
+		
 		handled = true;
 		break;
 
@@ -350,8 +367,6 @@ void ToggleTimeSelectorTrigger(ManageClassVariables *pstVars)
 {
 	pstVars->record.classOcurrence[pstVars->selectedDoW].active = !pstVars->record.classOcurrence[pstVars->selectedDoW].active;
 	SetTimeSelectorVisibility(pstVars);
-	SetTimeSelectorLabels(ManageClassStartSelectorTrigger, pstVars);
-	SetTimeSelectorLabels(ManageClassFinishSelectorTrigger, pstVars);
 }
 
 void SetTimeSelectorVisibility(ManageClassVariables *pstVars)
@@ -366,6 +381,8 @@ void SetTimeSelectorVisibility(ManageClassVariables *pstVars)
 
 	if (status)
 	{
+		SetTimeSelectorLabels(ManageClassStartSelectorTrigger, pstVars);
+		SetTimeSelectorLabels(ManageClassFinishSelectorTrigger, pstVars);
 		CtlSetValue(chkBoxCtl, 1);
 		FrmShowObject(formP, startLabelIndex);
 		FrmShowObject(formP, startSelectorIndex);
@@ -398,39 +415,32 @@ void SetTimeSelectorVisibility(ManageClassVariables *pstVars)
  * field
  *     selector item id
  */
-void AskTimeToUser(UInt16 field, ManageClassVariables *pstVars)
+HMSTime AskTimeToUser(ManageClassVariables *pstVars)
 {
 	Boolean ok = false;
 	DateTimeType now;
+	HMSTime result;
 	Int16 hour, minute;
 
 	TimSecondsToDateTime(TimGetSeconds(), &now);
 	hour = now.hour;
 	minute = 0;
-	
+	result.reserved = 0;
 	ok = SelectOneTime(&hour, &minute, "Select time");
 	if (ok)
 	{
-		if (field == ManageClassStartSelectorTrigger)
-		{
-			pstVars->record.classOcurrence[pstVars->selectedDoW].sHour = hour;
-			pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute = minute;
-		}
-		else
-		{
-			pstVars->record.classOcurrence[pstVars->selectedDoW].fHour = hour;
-			pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute = minute;
-		}
-
-		pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet = true; // TODO: Update this to have set status by start and finish fields
+		result.hours = hour;
+		result.minutes = minute;
+		result.seconds = 0;
+		result.reserved = 1;
 	}
-
-	SetTimeSelectorLabels(field, pstVars);
+	return result;
 }
 
 void SetTimeSelectorLabels(UInt16 field, ManageClassVariables *pstVars)
 {
 	ControlPtr ctl;
+	HMSTime selectedTime;
 	char *label;
 
 	// Get the pointer of our object
@@ -438,26 +448,30 @@ void SetTimeSelectorLabels(UInt16 field, ManageClassVariables *pstVars)
 	// and get the pointer to it's label
 	label = (Char *)CtlGetLabel(ctl);
 	
+	if (field == ManageClassStartSelectorTrigger)
+	{
+		selectedTime.hours = pstVars->record.classOcurrence[pstVars->selectedDoW].sHour;
+		selectedTime.minutes = pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute;
+	}
+	else
+	{
+		selectedTime.hours = pstVars->record.classOcurrence[pstVars->selectedDoW].fHour;
+		selectedTime.minutes = pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute;
+	}
+
 	// If the time has not been set
 	// (ie. when the form is starting and the class is new)
-	// set the label to that string
-	if (!pstVars->record.classOcurrence[pstVars->selectedDoW].timeHasBeenSet)
+	// set the label to a helpful string
+	if (selectedTime.hours == 0 && selectedTime.minutes == 0)
 	{
 		StrCopy(label, "Select time...");
-	}
-	else if (field == ManageClassStartSelectorTrigger)
-	{
-		TimeToAscii(
-			pstVars->record.classOcurrence[pstVars->selectedDoW].sHour,
-			pstVars->record.classOcurrence[pstVars->selectedDoW].sMinute,
-			tfColon24h, label);
 	}
 	else
 	{
 		TimeToAscii(
-			pstVars->record.classOcurrence[pstVars->selectedDoW].fHour,
-			pstVars->record.classOcurrence[pstVars->selectedDoW].fMinute,
-			tfColon24h, label);
+		selectedTime.hours,
+		selectedTime.minutes,
+		tfColon24h, label);
 	}
 
 	CtlSetLabel(ctl, label);

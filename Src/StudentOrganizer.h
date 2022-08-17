@@ -138,7 +138,7 @@ Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars);
 Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars);
 Boolean ManageClassFormHandleEvent(EventPtr eventP);
 void ManageClassFormInit(FormType *frmP, ManageClassVariables *pstVars);
-void AskTimeToUser(UInt16 field, ManageClassVariables *pstVars);
+HMSTime AskTimeToUser(ManageClassVariables *pstVars);
 void ToggleTimeSelectorTrigger();
 void autoSelectCurrentDay();
 void activateSelector(UInt16 field);
