@@ -212,8 +212,9 @@ void DrawDueHomeworkIcon(DmResID bmpFamilyID)
 	BitmapType *bitmap;
 	
 	resH = DmGetResource(bitmapRsc, bmpFamilyID); 
-	bitmap = MemHandleLock (resH); 
-	WinPaintBitmap(bitmap, 79, 133); 
+	bitmap = MemHandleLock (resH);
+	WinPaintBitmap(bitmap, 79, 133);
+	MemHandleUnlock(resH);
 }
 
 /**
