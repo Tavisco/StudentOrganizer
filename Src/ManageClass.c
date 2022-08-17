@@ -281,6 +281,7 @@ Boolean IsScheduleInvalid(ManageClassVariables *pstVars)
 	Boolean invalid = false;
 	Boolean oneActive = false;
 	Int16 i;
+	HMSTime start, finish;
 
 	for (i = 0; (i < 7) && !invalid; i++)
 	{
@@ -288,7 +289,16 @@ Boolean IsScheduleInvalid(ManageClassVariables *pstVars)
 		{
 			oneActive = true;
 
-			invalid = !pstVars->record.classOcurrence[i].timeHasBeenSet; // TODO: Update this to have set status by start and finish fields
+			start.hours = pstVars->record.classOcurrence[i].sHour;
+			start.minutes = pstVars->record.classOcurrence[i].sMinute;
+			
+			finish.hours = pstVars->record.classOcurrence[i].fHour;
+			finish.minutes = pstVars->record.classOcurrence[i].fMinute;
+			
+			invalid = start.hours == 0 && start.minutes == 0;
+			
+			if (!invalid)
+				invalid = finish.hours == 0 && finish.minutes == 0;
 		}
 	}
 
