@@ -633,14 +633,17 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 		frmP = FrmGetActiveForm();
 		FrmDrawForm(frmP);
 
+		// Allocate memory to shared variables
 		pstVars = (ManageClassVariables *)MemPtrNew(sizeof(ManageClassVariables));
 		ErrFatalDisplayIf (((UInt32)pstVars == 0), "Out of memory");
 		MemSet(pstVars, sizeof(ManageClassVariables), 0);
 		
+		// Allocate memory to last start time
 		lastStart = (HMSTime *)MemPtrNew(sizeof(HMSTime));
 		ErrFatalDisplayIf (((UInt32)lastStart == 0), "Out of memory");
 		MemSet(lastStart, sizeof(HMSTime), 0);
 		
+		// Allocate memory to last finish time
 		lastFinish = (HMSTime *)MemPtrNew(sizeof(HMSTime));
 		ErrFatalDisplayIf (((UInt32)lastFinish == 0), "Out of memory");
 		MemSet(lastFinish, sizeof(HMSTime), 0);
@@ -658,16 +661,23 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 
 	case frmCloseEvent:
 	{
-		void *temp;
+		UInt32 pstInt;
+		ManageClassVariables *pstVars;
 		UInt32 *labelPtr;
 		ControlPtr ctl;
 		
-		if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, (UInt32 *)&temp) == errNone)
+		// Free up shared variables, if exists
+		if (FtrGet(appFileCreator, ftrShrdClassesVarsNum, &pstInt) == errNone)
 		{
 			FtrPtrFree(appFileCreator, ftrShrdClassesVarsNum);
 		}
 
 		// Free ManageClass variables
+		FtrGet(appFileCreator, ftrManageClassNum, &pstInt);
+		pstVars = (ManageClassVariables *)pstInt;
+		MemPtrFree(pstVars->lastStartTimeSelected);
+		MemPtrFree(pstVars->lastFinishTimeSelected);
+		
 		FtrPtrFree(appFileCreator, ftrManageClassNum);
 		
 		ctl = GetObjectPtr(ManageClassStartSelectorTrigger);
