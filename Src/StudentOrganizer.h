@@ -53,8 +53,10 @@ typedef struct ClassDB
 
 typedef struct ManageClassVariables
 {
-	Int16 selectedDoW; // Selected Day of Week by the pushbuttons
-	ClassDB record;	   // Current database record
+	Int16 selectedDoW;              // Selected Day of Week by the pushbuttons
+	ClassDB record;	                // Current database record
+	HMSTime *lastStartTimeSelected;  // Remember last start time selected for QoL
+	HMSTime *lastFinishTimeSelected; // Remember last finish time selected for QoL
 } ManageClassVariables;
 
 typedef struct ClassesVariables
@@ -138,7 +140,7 @@ Err LoadSelectedClassIntoMemory(ClassesVariables *pstVars);
 Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars);
 Boolean ManageClassFormHandleEvent(EventPtr eventP);
 void ManageClassFormInit(FormType *frmP, ManageClassVariables *pstVars);
-HMSTime AskTimeToUser(ManageClassVariables *pstVars);
+HMSTime AskTimeToUser(HMSTime *last);
 void ToggleTimeSelectorTrigger();
 void autoSelectCurrentDay();
 void activateSelector(UInt16 field);

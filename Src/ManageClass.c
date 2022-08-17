@@ -37,7 +37,7 @@ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 		break;
 
 	case ManageClassStartSelectorTrigger:
-		selectedTime = AskTimeToUser(pstVars);
+		selectedTime = AskTimeToUser(pstVars->lastStartTimeSelected);
 		if (selectedTime.reserved == 1)
 		{
 			pstVars->record.classOcurrence[pstVars->selectedDoW].sHour = selectedTime.hours;
@@ -50,7 +50,7 @@ Boolean ManageClassFormDoCommand(UInt16 command, ManageClassVariables *pstVars)
 		break;
 
 	case ManageClassFinishSelectorTrigger:
-		selectedTime = AskTimeToUser(pstVars);
+		selectedTime = AskTimeToUser(pstVars->lastFinishTimeSelected);
 		if (selectedTime.reserved == 1)
 		{
 			pstVars->record.classOcurrence[pstVars->selectedDoW].fHour = selectedTime.hours;
@@ -415,24 +415,42 @@ void SetTimeSelectorVisibility(ManageClassVariables *pstVars)
  * field
  *     selector item id
  */
-HMSTime AskTimeToUser(ManageClassVariables *pstVars)
+HMSTime AskTimeToUser(HMSTime *last)
 {
 	Boolean ok = false;
 	DateTimeType now;
 	HMSTime result;
 	Int16 hour, minute;
 
-	TimSecondsToDateTime(TimGetSeconds(), &now);
-	hour = now.hour;
-	minute = 0;
+	// If the user has already selected a start/finish
+	// time, let's re-use it, as it is probably the
+	// same for all week, improving QoL.
+	if (last->reserved == 1)
+	{
+		hour = last->hours;
+		minute = last->minutes;
+	}
+	else
+	{
+		TimSecondsToDateTime(TimGetSeconds(), &now);
+		hour = now.hour;
+		minute = 0;
+	}
+	
 	result.reserved = 0;
 	ok = SelectOneTime(&hour, &minute, "Select time");
 	if (ok)
 	{
+		// Update the return variable
 		result.hours = hour;
 		result.minutes = minute;
 		result.seconds = 0;
 		result.reserved = 1;
+		
+		// Update last selected, for QoL
+		last->hours = hour;
+		last->minutes = minute;
+		last->reserved = 1;
 	}
 	return result;
 }
@@ -605,6 +623,8 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 	Boolean handled = false;
 	FormPtr frmP;
 	ManageClassVariables *pstVars;
+	HMSTime *lastStart;
+	HMSTime *lastFinish;
 
 	switch (eventP->eType)
 	{
@@ -616,6 +636,18 @@ Boolean ManageClassFormHandleEvent(EventPtr eventP)
 		pstVars = (ManageClassVariables *)MemPtrNew(sizeof(ManageClassVariables));
 		ErrFatalDisplayIf (((UInt32)pstVars == 0), "Out of memory");
 		MemSet(pstVars, sizeof(ManageClassVariables), 0);
+		
+		lastStart = (HMSTime *)MemPtrNew(sizeof(HMSTime));
+		ErrFatalDisplayIf (((UInt32)lastStart == 0), "Out of memory");
+		MemSet(lastStart, sizeof(HMSTime), 0);
+		
+		lastFinish = (HMSTime *)MemPtrNew(sizeof(HMSTime));
+		ErrFatalDisplayIf (((UInt32)lastFinish == 0), "Out of memory");
+		MemSet(lastFinish, sizeof(HMSTime), 0);
+		
+		pstVars->lastStartTimeSelected = lastStart;
+		pstVars->lastFinishTimeSelected = lastFinish;
+		
 		FtrSet(appFileCreator, ftrManageClassNum, (UInt32)pstVars);
 		
 		ManageClassFormInit(frmP, pstVars);
